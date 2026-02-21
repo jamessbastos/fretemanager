@@ -1,0 +1,2230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreteManager</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<style>
+  :root {
+    --bg: #0e0f0e;
+    --surface: #161817;
+    --surface2: #1e201e;
+    --border: #2a2d2a;
+    --accent: #c8f560;
+    --accent2: #f5a623;
+    --accent3: #60c8f5;
+    --red: #f56060;
+    --text: #e8ede8;
+    --muted: #7a8a7a;
+    --card-radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+  }
+  .logo span { color: var(--accent); }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab-btn {
+    background: none;
+    border: 1px solid transparent;
+    color: var(--muted);
+    padding: 7px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    transition: all .2s;
+  }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #0e0f0e;
+    font-weight: 500;
+    border-color: var(--accent);
+  }
+  .tab-btn:hover:not(.active) {
+    border-color: var(--border);
+    color: var(--text);
+  }
+
+  /* LAYOUT */
+  main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* DASHBOARD */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .stat-card.green::before { background: var(--accent); }
+  .stat-card.orange::before { background: var(--accent2); }
+  .stat-card.blue::before { background: var(--accent3); }
+  .stat-card.red::before { background: var(--red); }
+
+  .stat-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; }
+  .stat-sub { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 20px;
+  }
+
+  /* VEHICLE CARDS */
+  .vehicle-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 18px;
+  }
+  .vehicle-icon { font-size: 28px; margin-bottom: 8px; }
+  .vehicle-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
+  .vehicle-plate {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    margin: 6px 0;
+    letter-spacing: 2px;
+  }
+  .vehicle-stat { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  .vehicle-stat strong { color: var(--accent); }
+
+  /* RECENT DELIVERIES */
+  .delivery-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .delivery-row:last-child { border-bottom: none; }
+  .delivery-route { flex: 1; }
+  .delivery-from { font-size: 12px; color: var(--muted); }
+  .delivery-to { font-weight: 500; font-size: 13px; }
+  .delivery-value { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent); }
+  .delivery-profit { font-size: 11px; color: var(--muted); }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-done { background: #1a2e1a; color: var(--accent); border: 1px solid #2a4a2a; }
+  .badge-transit { background: #2e2a1a; color: var(--accent2); border: 1px solid #4a3a1a; }
+  .badge-loading { background: #1a2a2e; color: var(--accent3); border: 1px solid #1a3a4a; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    transition: border-color .2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  select option { background: var(--surface2); }
+
+  .btn {
+    background: var(--accent);
+    color: #0e0f0e;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn:hover { background: #b8e550; transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--border); transform: translateY(-1px); }
+  .btn-danger {
+    background: transparent;
+    color: var(--red);
+    border: 1px solid var(--red);
+  }
+  .btn-danger:hover { background: #2e1a1a; }
+
+  /* HISTORY TABLE */
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  /* ACTIVE DELIVERY — CHECKIN */
+  .checkin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .checkin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  .checkin-route {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .checkin-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+  .time-tracker {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .time-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .time-box-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .time-box-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .time-box-value.set { color: var(--accent); }
+  .time-box-value.elapsed { color: var(--accent2); }
+  .time-box.active-border { border-color: var(--accent); }
+
+  .timer-display {
+    text-align: center;
+    padding: 20px;
+    background: var(--surface2);
+    border-radius: 12px;
+    margin: 12px 0;
+  }
+  .timer-display .big-time {
+    font-family: 'Syne', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--accent2);
+    letter-spacing: -2px;
+  }
+  .timer-display .timer-label { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
+  .action-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+
+  /* RANKINGS */
+  .rank-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .rank-item:last-child { border-bottom: none; }
+  .rank-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--border);
+    width: 24px;
+    text-align: center;
+  }
+  .rank-item:nth-child(1) .rank-num { color: var(--accent); }
+  .rank-item:nth-child(2) .rank-num { color: var(--accent2); }
+  .rank-item:nth-child(3) .rank-num { color: var(--accent3); }
+  .rank-info { flex: 1; }
+  .rank-name { font-weight: 500; }
+  .rank-sub { color: var(--muted); font-size: 11px; }
+  .rank-value { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent); }
+
+  .no-data {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    width: 90%;
+    max-width: 580px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .nav-tabs .tab-btn { padding: 7px 10px; font-size: 11px; }
+    header { flex-wrap: wrap; gap: 10px; }
+  }
+
+  /* FROTA */
+  .frota-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+  .frota-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .frota-card:hover { border-color: var(--accent); }
+  .frota-card-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .frota-icon-wrap {
+    width: 52px; height: 52px;
+    background: var(--surface2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .frota-card-info { flex: 1; }
+  .frota-card-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+  }
+  .frota-card-year { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .frota-plate-big {
+    background: #f8f4e0;
+    color: #111;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 3px;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 2px solid #222;
+    flex-shrink: 0;
+  }
+  .frota-card-body { padding: 16px 20px; }
+  .frota-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .frota-spec {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .frota-spec-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .frota-spec-value { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+
+  .revisao-bar {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 10px;
+  }
+  .revisao-bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .revisao-bar-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .revisao-badge-ok { color: var(--accent); font-size: 11px; font-weight: 500; }
+  .revisao-badge-warn { color: var(--accent2); font-size: 11px; font-weight: 500; }
+  .revisao-badge-late { color: var(--red); font-size: 11px; font-weight: 500; }
+  .progress-track {
+    height: 5px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .5s ease;
+  }
+  .revisao-dates { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--muted); }
+
+  .frota-card-footer {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+  .btn-sm {
+    padding: 7px 14px;
+    font-size: 11px;
+    border-radius: 7px;
+  }
+
+  .frota-add-btn {
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    cursor: pointer;
+    transition: all .2s;
+    color: var(--muted);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    gap: 10px;
+  }
+  .frota-add-btn:hover { border-color: var(--accent); color: var(--accent); background: #0e0f0e; }
+  .frota-add-plus { font-size: 36px; line-height: 1; }
+
+  .alert-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #2e2010;
+    border: 1px solid #5a3a10;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+  .alert-strip.red { background: #2e1010; border-color: #5a1010; }
+
+  /* RASTREIO */
+  #map {
+    width: 100%;
+    height: 460px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #1a1a1a;
+    z-index: 1;
+  }
+  .rastreio-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .rastreio-panel { display: flex; flex-direction: column; gap: 12px; }
+
+  .firebase-setup {
+    background: #1a1e2e;
+    border: 1px solid #2a3a6a;
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .firebase-setup h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    color: var(--accent3);
+  }
+  .setup-step {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .setup-num {
+    background: var(--accent3);
+    color: #0e0f0e;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 10px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .firebase-input-group { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
+  .firebase-input-group label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
+  .firebase-input-group input { font-size: 11px; padding: 8px 12px; }
+  .firebase-connected {
+    background: #1a2e1a;
+    border: 1px solid #2a5a2a;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .mode-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .mode-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 12px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .mode-btn.active { background: var(--accent); color: #0e0f0e; border-color: var(--accent); font-weight: 500; }
+  .mode-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+  .mode-icon { font-size: 20px; display: block; margin-bottom: 4px; }
+
+  .vehicle-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .vsel-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 12px;
+  }
+  .vsel-item.selected { border-color: var(--accent); background: #1a2a0a; }
+  .vsel-item:hover:not(.selected) { border-color: var(--border); background: var(--surface); }
+  .vsel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+  .vsel-item.selected .vsel-dot { background: var(--accent); animation: pulse 1.5s infinite; }
+  .vsel-info { flex: 1; }
+  .vsel-name { font-weight: 500; }
+  .vsel-plate { color: var(--muted); font-size: 10px; }
+  .vsel-status { font-size: 10px; color: var(--muted); }
+
+  .stats-row-rastreio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .mini-stat {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .mini-stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .mini-stat-value { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent2); }
+
+  .tracking-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .tracking-btn.stop { background: var(--red) !important; }
+  .tracking-btn.stop:hover { background: #d04040 !important; }
+
+  .map-vehicle-list {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .map-vehicle-chip {
+    background: rgba(14,15,14,0.9);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(4px);
+  }
+  .map-container { position: relative; }
+
+  @media (max-width: 900px) {
+    .rastreio-layout { grid-template-columns: 1fr; }
+    #map { height: 320px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Frete<span>Manager</span></div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="showPage('nova')">+ Entrega</button>
+    <button class="tab-btn" onclick="showPage('ativas')">Em Rota</button>
+    <button class="tab-btn" onclick="showPage('historico')">Histórico</button>
+    <button class="tab-btn" onclick="showPage('rankings')">Rankings</button>
+    <button class="tab-btn" onclick="showPage('frota')">🚗 Frota</button>
+    <button class="tab-btn" onclick="showPage('rastreio')">📡 Rastreio</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="stats-row">
+      <div class="stat-card green">
+        <div class="stat-label">Faturamento Mês</div>
+        <div class="stat-value" id="stat-faturamento">R$ 0</div>
+        <div class="stat-sub" id="stat-fat-sub">0 entregas</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Lucro Líquido</div>
+        <div class="stat-value" id="stat-lucro">R$ 0</div>
+        <div class="stat-sub" id="stat-lucro-sub">após custos</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Tempo Médio Descarga</div>
+        <div class="stat-value" id="stat-tempo">--</div>
+        <div class="stat-sub">por cliente</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Em Rota Agora</div>
+        <div class="stat-value" id="stat-ativas">0</div>
+        <div class="stat-sub" id="stat-ativas-sub">entregas ativas</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div>
+        <div class="section-title"><span class="dot"></span>Frota</div>
+        <div class="three-col" id="fleet-cards"></div>
+      </div>
+      <div>
+        <div class="section-title"><span class="dot"></span>Últimas Entregas</div>
+        <div class="card">
+          <div id="recent-list"><div class="no-data">Nenhuma entrega ainda</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOVA ENTREGA -->
+  <div id="page-nova" class="page">
+    <div class="section-title"><span class="dot"></span>Registrar Nova Entrega</div>
+    <div class="card">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Data</label>
+          <input type="date" id="f-data">
+        </div>
+        <div class="form-group">
+          <label>Veículo</label>
+          <select id="f-veiculo">
+            <option value="">Selecione...</option>
+            <option value="Gol - ABC1234">Gol - ABC1234</option>
+            <option value="Saveiro - DEF5678">Saveiro - DEF5678</option>
+            <option value="Fiorino - GHI9012">Fiorino - GHI9012</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Origem</label>
+          <input type="text" id="f-origem" placeholder="Cidade / Bairro de saída">
+        </div>
+        <div class="form-group">
+          <label>Destino</label>
+          <input type="text" id="f-destino" placeholder="Cidade / Bairro de entrega">
+        </div>
+        <div class="form-group">
+          <label>Cliente</label>
+          <input type="text" id="f-cliente" placeholder="Nome do cliente">
+        </div>
+        <div class="form-group">
+          <label>Tipo de Carga</label>
+          <input type="text" id="f-carga" placeholder="Ex: Eletrônicos, Móveis...">
+        </div>
+        <div class="form-group">
+          <label>Valor do Frete (R$)</label>
+          <input type="number" id="f-valor" placeholder="0,00" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Custo Estimado (R$)</label>
+          <input type="number" id="f-custo" placeholder="Combustível + Pedágio" step="0.01">
+        </div>
+        <div class="form-group">
+          <label>Distância (km)</label>
+          <input type="number" id="f-km" placeholder="km ida+volta">
+        </div>
+        <div class="form-group">
+          <label>Status Inicial</label>
+          <select id="f-status">
+            <option value="agendado">Agendado</option>
+            <option value="em_rota">Saiu para entrega agora</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Observações</label>
+          <textarea id="f-obs" rows="2" placeholder="Informações extras..."></textarea>
+        </div>
+      </div>
+      <div class="action-row" style="margin-top:18px">
+        <button class="btn" onclick="salvarEntrega()">Salvar Entrega</button>
+        <button class="btn btn-secondary" onclick="limparForm()">Limpar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EM ROTA / CHECKIN -->
+  <div id="page-ativas" class="page">
+    <div class="section-title"><span class="dot"></span>Entregas em Rota — Controle de Tempo</div>
+    <div id="ativas-list"><div class="no-data">Nenhuma entrega ativa no momento</div></div>
+  </div>
+
+  <!-- HISTÓRICO -->
+  <div id="page-historico" class="page">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="section-title" style="margin:0"><span class="dot"></span>Histórico de Entregas</div>
+      <div style="display:flex;gap:8px">
+        <select id="filtro-veiculo" onchange="renderHistorico()" style="padding:7px 12px;font-size:11px">
+          <option value="">Todos os veículos</option>
+          <option value="Gol - ABC1234">Gol</option>
+          <option value="Saveiro - DEF5678">Saveiro</option>
+          <option value="Fiorino - GHI9012">Fiorino</option>
+        </select>
+        <select id="filtro-status" onchange="renderHistorico()" style="padding:7px 12px;font-size:11px">
+          <option value="">Todos os status</option>
+          <option value="concluido">Concluídos</option>
+          <option value="em_rota">Em Rota</option>
+          <option value="agendado">Agendados</option>
+        </select>
+      </div>
+    </div>
+    <div class="card" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Rota</th>
+            <th>Cliente</th>
+            <th>Veículo</th>
+            <th>Frete</th>
+            <th>Lucro</th>
+            <th>Descarga</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="historico-tbody"></tbody>
+      </table>
+      <div id="historico-empty" class="no-data" style="display:none">Nenhuma entrega encontrada</div>
+    </div>
+  </div>
+
+  <!-- RANKINGS -->
+  <div id="page-rankings" class="page">
+    <div class="section-title"><span class="dot"></span>Rankings & Insights</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="card">
+        <div class="section-title" style="font-size:13px"><span class="dot" style="background:var(--accent)"></span>Melhores Rotas (Lucro/km)</div>
+        <div id="rank-rotas"><div class="no-data">Dados insuficientes</div></div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:13px"><span class="dot" style="background:var(--accent2)"></span>Clientes Mais Rentáveis</div>
+        <div id="rank-clientes"><div class="no-data">Dados insuficientes</div></div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:13px"><span class="dot" style="background:var(--accent3)"></span>Performance por Veículo</div>
+        <div id="rank-veiculos"><div class="no-data">Dados insuficientes</div></div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="font-size:13px"><span class="dot" style="background:var(--red)"></span>Clientes com Maior Tempo de Descarga</div>
+        <div id="rank-descarga"><div class="no-data">Dados insuficientes</div></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+  <!-- RASTREIO -->
+  <div id="page-rastreio" class="page">
+
+    <!-- SETUP FIREBASE (shown when not configured) -->
+    <div id="rastreio-setup" style="max-width:560px;margin:0 auto">
+      <div class="section-title"><span class="dot" style="background:var(--accent3)"></span>Rastreio em Tempo Real</div>
+      <div class="firebase-setup">
+        <h3>📡 Conectar ao Firebase</h3>
+
+        <div style="background:#1a2e1a;border:1px solid #2a5a2a;border-radius:10px;padding:14px;margin-bottom:16px">
+          <div style="font-size:11px;color:var(--accent);margin-bottom:6px;font-weight:500">✅ Projeto configurado: <strong>fretemanager-60ef8</strong></div>
+          <div style="font-size:10px;color:var(--muted)">Banco: fretemanager-60ef8-default-rtdb.firebaseio.com</div>
+        </div>
+
+        <div class="setup-step"><div class="setup-num" style="background:var(--accent);color:#000">!</div><div>Antes de conectar, certifique-se que as <strong style="color:var(--accent3)">Regras do banco</strong> estão publicadas no Firebase Console:</div></div>
+
+        <div style="background:#080f08;border:1px solid var(--border);border-radius:8px;padding:12px;margin:10px 0;font-size:11px;color:var(--accent3);white-space:pre;overflow-x:auto">{
+  "rules": {
+    "rastreio":      { ".read": true, ".write": true },
+    "historico_gps": { ".read": true, ".write": true },
+    "alertas_parada":{ ".read": true, ".write": true }
+  }
+}</div>
+        <div style="margin-bottom:14px">
+          <a href="https://console.firebase.google.com/project/fretemanager-60ef8/database/fretemanager-60ef8-default-rtdb/rules" target="_blank"
+             style="color:var(--accent3);font-size:11px;text-decoration:none">
+            🔗 Abrir página de Regras no Firebase Console ↗
+          </a>
+        </div>
+
+        <div class="firebase-input-group" style="display:none">
+          <input type="text" id="fb-apiKey" value="AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4">
+          <input type="text" id="fb-authDomain" value="fretemanager-60ef8.firebaseapp.com">
+          <input type="text" id="fb-databaseURL" value="https://fretemanager-60ef8-default-rtdb.firebaseio.com">
+          <input type="text" id="fb-projectId" value="fretemanager-60ef8">
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="btn" style="flex:1;padding:14px;font-size:14px" onclick="conectarFirebase()">
+            🔌 Conectar ao Firebase
+          </button>
+          <button class="btn btn-secondary" onclick="usarModoDemo()" style="font-size:11px">
+            🧪 Demo
+          </button>
+        </div>
+        <div id="fb-error" style="color:var(--red);font-size:11px;margin-top:10px;display:none"></div>
+      </div>
+    </div>
+
+    <!-- MAIN RASTREIO (shown when configured) -->
+    <div id="rastreio-main" style="display:none">
+      <div id="alertas-parada-banner" style="display:none;margin-bottom:12px"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div class="section-title" style="margin:0"><span class="dot" style="background:var(--accent3)"></span>Rastreio em Tempo Real</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="firebase-connected" id="fb-status-badge">
+            <div class="pulse-dot"></div>
+            <span id="fb-status-text">Conectado ao Firebase</span>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="desconectarFirebase()" style="font-size:11px">Desconectar</button>
+        </div>
+      </div>
+
+      <div class="rastreio-layout">
+        <!-- LEFT PANEL -->
+        <div class="rastreio-panel">
+
+          <!-- Mode toggle -->
+          <div>
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Modo de uso</div>
+            <div class="mode-toggle">
+              <div class="mode-btn active" id="btn-modo-motorista" onclick="setModo('motorista')">
+                <span class="mode-icon">🚗</span>Sou o Motorista<br><span style="font-size:9px;opacity:.7">Envio minha posição</span>
+              </div>
+              <div class="mode-btn" id="btn-modo-dono" onclick="setModo('dono')">
+                <span class="mode-icon">👁️</span>Sou o Dono<br><span style="font-size:9px;opacity:.7">Vejo todos os veículos</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Motorista panel -->
+          <div id="painel-motorista">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Selecionar veículo</div>
+            <div class="vehicle-selector" id="vehicle-selector-list">
+              <div class="no-data" style="padding:14px">Cadastre veículos na aba Frota</div>
+            </div>
+            <div style="margin-top:12px">
+              <button class="btn tracking-btn" id="btn-tracking" onclick="toggleTracking()">
+                <span>📍</span> Iniciar Rastreio
+              </button>
+            </div>
+            <div class="stats-row-rastreio" style="margin-top:12px">
+              <div class="mini-stat">
+                <div class="mini-stat-label">Velocidade</div>
+                <div class="mini-stat-value" id="stat-velocidade">-- km/h</div>
+              </div>
+              <div class="mini-stat">
+                <div class="mini-stat-label">Distância</div>
+                <div class="mini-stat-value" id="stat-distancia">0 km</div>
+              </div>
+              <div class="mini-stat">
+                <div class="mini-stat-label">Tempo Ativo</div>
+                <div class="mini-stat-value" id="stat-tempo-ativo">00:00</div>
+              </div>
+            </div>
+            <div id="gps-info" style="margin-top:8px;font-size:10px;color:var(--muted);text-align:center"></div>
+            
+            <!-- Configuracao de parada suspeita -->
+            <div style="margin-top:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px">
+              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">⚙️ Alerta de Parada Suspeita</div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <label style="font-size:11px;color:var(--muted);white-space:nowrap">Alertar após</label>
+                <input type="number" id="stop-threshold-input" value="15" min="5" max="120" style="width:64px;padding:6px 10px;font-size:12px" onchange="atualizarThresholdParada(this.value)">
+                <label style="font-size:11px;color:var(--muted)">minutos parado</label>
+              </div>
+              <div style="font-size:10px;color:var(--muted);margin-top:6px">Raio de tolerância: 150m • Historial: 5 dias</div>
+            </div>
+          </div>
+
+          <!-- Dono panel -->
+          <div id="painel-dono" style="display:none">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Veículos online</div>
+            <div id="dono-vehicle-list">
+              <div class="no-data" style="padding:14px">Aguardando veículos...</div>
+            </div>
+            <div style="margin-top:10px;font-size:10px;color:var(--muted);text-align:center">
+              Atualização automática a cada 5s
+            </div>
+          </div>
+
+        </div>
+
+        <!-- MAP -->
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FROTA -->
+  <div id="page-frota" class="page">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div class="section-title" style="margin:0"><span class="dot"></span>Gestão da Frota</div>
+      <button class="btn btn-sm" onclick="abrirModalVeiculo()">+ Adicionar Veículo</button>
+    </div>
+    <div id="frota-alertas" style="margin-bottom:16px"></div>
+    <div class="frota-grid" id="frota-grid">
+      <div class="frota-add-btn" onclick="abrirModalVeiculo()">
+        <div class="frota-add-plus">＋</div>
+        <div>Adicionar Veículo</div>
+      </div>
+    </div>
+  </div>
+
+<!-- MODAL VEÍCULO -->
+<div class="modal-overlay" id="modal-veiculo">
+  <div class="modal">
+    <div class="modal-title" id="modal-veiculo-title">Novo Veículo</div>
+    <input type="hidden" id="mv-id">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Modelo / Nome</label>
+        <input type="text" id="mv-modelo" placeholder="Ex: Fiorino, Saveiro, Sprinter...">
+      </div>
+      <div class="form-group">
+        <label>Ano</label>
+        <input type="number" id="mv-ano" placeholder="Ex: 2019" min="1990" max="2030">
+      </div>
+      <div class="form-group">
+        <label>Placa</label>
+        <input type="text" id="mv-placa" placeholder="Ex: ABC1D23" maxlength="8" style="text-transform:uppercase">
+      </div>
+      <div class="form-group">
+        <label>Tipo / Ícone</label>
+        <select id="mv-tipo">
+          <option value="🚗">🚗 Carro</option>
+          <option value="🛻">🛻 Picape</option>
+          <option value="🚐">🚐 Van / Furgão</option>
+          <option value="🚚">🚚 Caminhão</option>
+          <option value="🏍️">🏍️ Moto</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Consumo (km/litro)</label>
+        <input type="number" id="mv-consumo" placeholder="Ex: 12.5" step="0.1" min="1">
+      </div>
+      <div class="form-group">
+        <label>Capacidade de Carga (kg)</label>
+        <input type="number" id="mv-carga" placeholder="Ex: 600" min="1">
+      </div>
+      <div class="form-group">
+        <label>Última Revisão</label>
+        <input type="date" id="mv-ultima-revisao">
+      </div>
+      <div class="form-group">
+        <label>Próxima Revisão</label>
+        <input type="date" id="mv-proxima-revisao">
+      </div>
+      <div class="form-group full">
+        <label>Observações</label>
+        <textarea id="mv-obs" rows="2" placeholder="Seguro, IPVA, observações mecânicas..."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-veiculo')">Cancelar</button>
+      <button class="btn" onclick="salvarVeiculo()">Salvar Veículo</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="modal-delete">
+  <div class="modal">
+    <div class="modal-title">Excluir entrega?</div>
+    <p style="color:var(--muted);font-size:12px">Esta ação não pode ser desfeita.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal('modal-delete')">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarDelete()">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- DATA ----
+let entregas = JSON.parse(localStorage.getItem('fm_entregas') || '[]');
+let deleteId = null;
+let timers = {};
+
+function save() {
+  localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+}
+
+// ---- NAVIGATION ----
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  event.target.classList.add('active');
+  if (p === 'dashboard') renderDashboard();
+  if (p === 'ativas') renderAtivas();
+  if (p === 'historico') renderHistorico();
+  if (p === 'rankings') renderRankings();
+  if (p === 'frota') renderFrota();
+  if (p === 'rastreio') initRastreioPage();
+}
+
+// ---- FORM ----
+function salvarEntrega() {
+  const data = document.getElementById('f-data').value;
+  const veiculo = document.getElementById('f-veiculo').value;
+  const origem = document.getElementById('f-origem').value.trim();
+  const destino = document.getElementById('f-destino').value.trim();
+  const cliente = document.getElementById('f-cliente').value.trim();
+
+  if (!data || !veiculo || !origem || !destino || !cliente) {
+    alert('Preencha os campos obrigatórios: data, veículo, origem, destino e cliente.');
+    return;
+  }
+
+  const entrega = {
+    id: Date.now(),
+    data,
+    veiculo,
+    origem,
+    destino,
+    cliente,
+    carga: document.getElementById('f-carga').value,
+    valor: parseFloat(document.getElementById('f-valor').value) || 0,
+    custo: parseFloat(document.getElementById('f-custo').value) || 0,
+    km: parseFloat(document.getElementById('f-km').value) || 0,
+    obs: document.getElementById('f-obs').value,
+    status: document.getElementById('f-status').value,
+    horaSaida: document.getElementById('f-status').value === 'em_rota' ? new Date().toISOString() : null,
+    horaChegada: null,
+    horaSaida2: null,
+    tempoDescarga: null
+  };
+
+  entregas.unshift(entrega);
+  save();
+  limparForm();
+  alert('Entrega salva com sucesso!');
+}
+
+function limparForm() {
+  ['f-data','f-veiculo','f-origem','f-destino','f-cliente','f-carga','f-valor','f-custo','f-km','f-obs'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-data').value = new Date().toISOString().slice(0,10);
+}
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  const now = new Date();
+  const mes = now.getMonth();
+  const ano = now.getFullYear();
+
+  const doMes = entregas.filter(e => {
+    const d = new Date(e.data);
+    return d.getMonth() === mes && d.getFullYear() === ano;
+  });
+
+  const fat = doMes.reduce((s, e) => s + e.valor, 0);
+  const lucro = doMes.reduce((s, e) => s + (e.valor - e.custo), 0);
+  const ativas = entregas.filter(e => e.status === 'em_rota').length;
+
+  document.getElementById('stat-faturamento').textContent = 'R$ ' + fat.toFixed(2).replace('.',',');
+  document.getElementById('stat-fat-sub').textContent = doMes.length + ' entregas no mês';
+  document.getElementById('stat-lucro').textContent = 'R$ ' + lucro.toFixed(2).replace('.',',');
+  document.getElementById('stat-ativas').textContent = ativas;
+
+  // Tempo médio descarga
+  const comTempo = entregas.filter(e => e.tempoDescarga !== null);
+  if (comTempo.length) {
+    const avg = comTempo.reduce((s, e) => s + e.tempoDescarga, 0) / comTempo.length;
+    document.getElementById('stat-tempo').textContent = formatMinutes(avg);
+  }
+
+  // Fleet cards
+  const fleet = [
+    { name: 'Gol', plate: 'ABC1234', icon: '🚗' },
+    { name: 'Saveiro', plate: 'DEF5678', icon: '🛻' },
+    { name: 'Fiorino', plate: 'GHI9012', icon: '🚐' }
+  ];
+  const fc = document.getElementById('fleet-cards');
+  fc.innerHTML = fleet.map(v => {
+    const vKey = v.name + ' - ' + v.plate;
+    const vEntregas = entregas.filter(e => e.veiculo === vKey);
+    const vFat = vEntregas.reduce((s, e) => s + e.valor, 0);
+    const emRota = vEntregas.filter(e => e.status === 'em_rota').length;
+    return `<div class="vehicle-card">
+      <div class="vehicle-icon">${v.icon}</div>
+      <div class="vehicle-name">${v.name}</div>
+      <div class="vehicle-plate">${v.plate}</div>
+      <div class="vehicle-stat">${vEntregas.length} entregas • ${emRota > 0 ? '<strong>EM ROTA</strong>' : '<span style="color:var(--muted)">livre</span>'}</div>
+      <div class="vehicle-stat" style="margin-top:6px">Total: <strong>R$ ${vFat.toFixed(0)}</strong></div>
+    </div>`;
+  }).join('');
+
+  // Recent
+  const recent = entregas.slice(0, 5);
+  const rl = document.getElementById('recent-list');
+  if (!recent.length) { rl.innerHTML = '<div class="no-data">Nenhuma entrega ainda</div>'; return; }
+  rl.innerHTML = recent.map(e => `
+    <div class="delivery-row">
+      <div class="delivery-route">
+        <div class="delivery-from">${e.origem}</div>
+        <div class="delivery-to">→ ${e.destino}</div>
+        <div style="color:var(--muted);font-size:10px;margin-top:2px">${e.cliente}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="delivery-value">R$ ${e.valor.toFixed(0)}</div>
+        <div class="delivery-profit">lucro R$ ${(e.valor - e.custo).toFixed(0)}</div>
+      </div>
+      <span class="badge ${e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' ? 'badge-transit' : 'badge-loading'}">
+        ${e.status === 'concluido' ? 'Feito' : e.status === 'em_rota' ? 'Em rota' : 'Agendado'}
+      </span>
+    </div>`).join('');
+}
+
+// ---- EM ROTA / CHECKIN ----
+function renderAtivas() {
+  const ativas = entregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga');
+  const el = document.getElementById('ativas-list');
+
+  if (!ativas.length) {
+    el.innerHTML = '<div class="no-data">Nenhuma entrega ativa no momento</div>';
+    return;
+  }
+
+  el.innerHTML = ativas.map(e => buildCheckinCard(e)).join('');
+  // start live timers for em_descarga
+  ativas.forEach(e => {
+    if (e.status === 'em_descarga' && e.horaChegada) {
+      startLiveTimer(e.id);
+    }
+  });
+}
+
+function buildCheckinCard(e) {
+  const chegou = e.horaChegada ? new Date(e.horaChegada) : null;
+  const saiu = e.horaSaida2 ? new Date(e.horaSaida2) : null;
+
+  const chegadaStr = chegou ? formatTime(chegou) : '--:--';
+  const saidaStr = saiu ? formatTime(saiu) : '--:--';
+  const descargaStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.status === 'em_descarga' ? '<span id="live-'+e.id+'">...</span>' : '--');
+
+  const saidaRota = e.horaSaida ? formatTime(new Date(e.horaSaida)) : '--:--';
+
+  let actions = '';
+  if (!chegou) {
+    actions += `<button class="btn" onclick="registrarChegada(${e.id})">📍 Cheguei na Entrega</button>`;
+  }
+  if (chegou && !saiu) {
+    actions += `<button class="btn" style="background:var(--accent2);color:#0e0f0e" onclick="registrarSaida(${e.id})">🚀 Saí da Entrega</button>`;
+  }
+  if (chegou && saiu) {
+    actions += `<button class="btn" style="background:var(--accent3);color:#0e0f0e" onclick="concluirEntrega(${e.id})">✅ Concluir Entrega</button>`;
+  }
+  actions += `<button class="btn btn-secondary" style="font-size:11px" onclick="showPage('historico')">Ver Histórico</button>`;
+
+  return `<div class="checkin-card" id="card-${e.id}">
+    <div class="checkin-header">
+      <div>
+        <div class="checkin-route">${e.origem} → ${e.destino}</div>
+        <div class="checkin-sub">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]} • 💰 R$ ${e.valor.toFixed(0)}</div>
+      </div>
+      <span class="badge ${e.status === 'em_descarga' ? 'badge-loading' : 'badge-transit'}">
+        ${e.status === 'em_descarga' ? 'Em Descarga' : 'Em Rota'}
+      </span>
+    </div>
+
+    <div class="time-tracker">
+      <div class="time-box">
+        <div class="time-box-label">Saiu às</div>
+        <div class="time-box-value set">${saidaRota}</div>
+      </div>
+      <div class="time-box ${chegou ? 'active-border' : ''}">
+        <div class="time-box-label">Chegou às</div>
+        <div class="time-box-value ${chegou ? 'set' : ''}">${chegadaStr}</div>
+      </div>
+      <div class="time-box ${saiu ? 'active-border' : ''}">
+        <div class="time-box-label">Saiu às</div>
+        <div class="time-box-value ${saiu ? 'set' : ''}">${saidaStr}</div>
+      </div>
+    </div>
+
+    ${e.status === 'em_descarga' ? `
+    <div class="timer-display">
+      <div class="big-time" id="live-${e.id}">00:00</div>
+      <div class="timer-label">tempo de descarga em andamento</div>
+    </div>` : (e.tempoDescarga !== null ? `
+    <div style="text-align:center;padding:14px;background:var(--surface2);border-radius:10px;margin:10px 0">
+      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent2)">${formatMinutes(e.tempoDescarga)}</div>
+      <div style="color:var(--muted);font-size:11px">tempo de descarga</div>
+    </div>` : '')}
+
+    <div class="action-row">${actions}</div>
+  </div>`;
+}
+
+function registrarChegada(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+  e.horaChegada = new Date().toISOString();
+  e.status = 'em_descarga';
+  save();
+  renderAtivas();
+}
+
+function registrarSaida(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+  e.horaSaida2 = new Date().toISOString();
+  const diff = (new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000; // minutes
+  e.tempoDescarga = Math.round(diff);
+  save();
+  if (timers[id]) { clearInterval(timers[id]); delete timers[id]; }
+  renderAtivas();
+}
+
+function concluirEntrega(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+  e.status = 'concluido';
+  save();
+  renderAtivas();
+  renderDashboard();
+}
+
+function startLiveTimer(id) {
+  if (timers[id]) clearInterval(timers[id]);
+  timers[id] = setInterval(() => {
+    const e = entregas.find(x => x.id === id);
+    if (!e || !e.horaChegada) return;
+    const elapsed = (Date.now() - new Date(e.horaChegada)) / 1000;
+    const el = document.getElementById('live-' + id);
+    if (el) el.textContent = formatSeconds(elapsed);
+  }, 1000);
+}
+
+// ---- HISTÓRICO ----
+function renderHistorico() {
+  const fv = document.getElementById('filtro-veiculo').value;
+  const fs = document.getElementById('filtro-status').value;
+
+  let filtered = entregas;
+  if (fv) filtered = filtered.filter(e => e.veiculo === fv);
+  if (fs) filtered = filtered.filter(e => e.status === fs);
+
+  const tbody = document.getElementById('historico-tbody');
+  const empty = document.getElementById('historico-empty');
+
+  if (!filtered.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = filtered.map(e => {
+    const lucro = e.valor - e.custo;
+    const descStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.horaChegada && !e.horaSaida2 ? '⏳ em curso' : '--');
+    const statusLabel = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : 'badge-loading';
+    const statusText = e.status === 'concluido' ? 'Concluído' : e.status === 'em_rota' ? 'Em Rota' : e.status === 'em_descarga' ? 'Descarga' : 'Agendado';
+    return `<tr>
+      <td>${formatDate(e.data)}</td>
+      <td>${e.origem} → ${e.destino}</td>
+      <td>${e.cliente}</td>
+      <td style="font-size:11px">${e.veiculo.split(' - ')[0]}</td>
+      <td style="color:var(--accent);font-weight:500">R$ ${e.valor.toFixed(2).replace('.',',')}</td>
+      <td style="color:${lucro >= 0 ? 'var(--accent)' : 'var(--red)'}">R$ ${lucro.toFixed(2).replace('.',',')}</td>
+      <td style="color:var(--accent2)">${descStr}</td>
+      <td><span class="badge ${statusLabel}">${statusText}</span></td>
+      <td><button class="btn btn-danger" style="padding:4px 10px;font-size:10px" onclick="deletarEntrega(${e.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ---- RANKINGS ----
+function renderRankings() {
+  const concluidas = entregas.filter(e => e.status === 'concluido');
+
+  // Rotas por lucro/km
+  const rotaMap = {};
+  concluidas.filter(e => e.km > 0).forEach(e => {
+    const k = e.origem + ' → ' + e.destino;
+    if (!rotaMap[k]) rotaMap[k] = { total: 0, km: 0, count: 0 };
+    rotaMap[k].total += (e.valor - e.custo);
+    rotaMap[k].km += e.km;
+    rotaMap[k].count++;
+  });
+  const rotas = Object.entries(rotaMap).map(([k, v]) => ({ name: k, score: v.total / v.km, fat: v.total, count: v.count }))
+    .sort((a, b) => b.score - a.score).slice(0, 5);
+
+  const rankRotas = document.getElementById('rank-rotas');
+  rankRotas.innerHTML = rotas.length ? rotas.map((r, i) => `
+    <div class="rank-item">
+      <div class="rank-num">${i + 1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${r.name}</div>
+        <div class="rank-sub">${r.count} entrega(s) • R$/km: ${r.score.toFixed(2).replace('.',',')}</div>
+      </div>
+      <div class="rank-value">R$ ${r.fat.toFixed(0)}</div>
+    </div>`).join('') : '<div class="no-data">Dados insuficientes</div>';
+
+  // Clientes
+  const clienteMap = {};
+  concluidas.forEach(e => {
+    if (!clienteMap[e.cliente]) clienteMap[e.cliente] = { total: 0, count: 0 };
+    clienteMap[e.cliente].total += (e.valor - e.custo);
+    clienteMap[e.cliente].count++;
+  });
+  const clientes = Object.entries(clienteMap).map(([k, v]) => ({ name: k, ...v }))
+    .sort((a, b) => b.total - a.total).slice(0, 5);
+
+  document.getElementById('rank-clientes').innerHTML = clientes.length ? clientes.map((c, i) => `
+    <div class="rank-item">
+      <div class="rank-num">${i + 1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${c.name}</div>
+        <div class="rank-sub">${c.count} entrega(s)</div>
+      </div>
+      <div class="rank-value">R$ ${c.total.toFixed(0)}</div>
+    </div>`).join('') : '<div class="no-data">Dados insuficientes</div>';
+
+  // Veículos
+  const vMap = {};
+  concluidas.forEach(e => {
+    if (!vMap[e.veiculo]) vMap[e.veiculo] = { fat: 0, lucro: 0, count: 0 };
+    vMap[e.veiculo].fat += e.valor;
+    vMap[e.veiculo].lucro += (e.valor - e.custo);
+    vMap[e.veiculo].count++;
+  });
+  const veiculos = Object.entries(vMap).map(([k, v]) => ({ name: k.split(' - ')[0], ...v }))
+    .sort((a, b) => b.lucro - a.lucro);
+
+  document.getElementById('rank-veiculos').innerHTML = veiculos.length ? veiculos.map((v, i) => `
+    <div class="rank-item">
+      <div class="rank-num">${i + 1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${v.name}</div>
+        <div class="rank-sub">${v.count} entrega(s) • Faturou R$ ${v.fat.toFixed(0)}</div>
+      </div>
+      <div class="rank-value">R$ ${v.lucro.toFixed(0)}</div>
+    </div>`).join('') : '<div class="no-data">Dados insuficientes</div>';
+
+  // Descarga
+  const descMap = {};
+  entregas.filter(e => e.tempoDescarga !== null).forEach(e => {
+    if (!descMap[e.cliente]) descMap[e.cliente] = { total: 0, count: 0 };
+    descMap[e.cliente].total += e.tempoDescarga;
+    descMap[e.cliente].count++;
+  });
+  const descargas = Object.entries(descMap).map(([k, v]) => ({ name: k, avg: v.total / v.count, count: v.count }))
+    .sort((a, b) => b.avg - a.avg).slice(0, 5);
+
+  document.getElementById('rank-descarga').innerHTML = descargas.length ? descargas.map((d, i) => `
+    <div class="rank-item">
+      <div class="rank-num">${i + 1}</div>
+      <div class="rank-info">
+        <div class="rank-name">${d.name}</div>
+        <div class="rank-sub">${d.count} descarga(s)</div>
+      </div>
+      <div class="rank-value" style="color:var(--red)">${formatMinutes(d.avg)}</div>
+    </div>`).join('') : '<div class="no-data">Sem dados de descarga ainda</div>';
+}
+
+// ---- DELETE ----
+function deletarEntrega(id) {
+  deleteId = id;
+  document.getElementById('modal-delete').classList.add('open');
+}
+function confirmarDelete() {
+  entregas = entregas.filter(e => e.id !== deleteId);
+  save();
+  closeModal('modal-delete');
+  renderHistorico();
+  renderDashboard();
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ---- UTILS ----
+function formatTime(d) { return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
+function formatDate(str) {
+  const [y, m, d] = str.split('-');
+  return d + '/' + m + '/' + y;
+}
+function formatMinutes(min) {
+  if (min < 60) return Math.round(min) + ' min';
+  const h = Math.floor(min / 60);
+  const m = Math.round(min % 60);
+  return h + 'h' + (m > 0 ? m + 'min' : '');
+}
+function formatSeconds(sec) {
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+// ---- FROTA ----
+let veiculos = JSON.parse(localStorage.getItem('fm_veiculos') || '[]');
+let editVeiculoId = null;
+
+function saveVeiculos() {
+  localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+}
+
+function abrirModalVeiculo(id) {
+  editVeiculoId = id || null;
+  if (id) {
+    const v = veiculos.find(x => x.id === id);
+    if (!v) return;
+    document.getElementById('modal-veiculo-title').textContent = 'Editar Veículo';
+    document.getElementById('mv-id').value = v.id;
+    document.getElementById('mv-modelo').value = v.modelo;
+    document.getElementById('mv-ano').value = v.ano;
+    document.getElementById('mv-placa').value = v.placa;
+    document.getElementById('mv-tipo').value = v.tipo;
+    document.getElementById('mv-consumo').value = v.consumo;
+    document.getElementById('mv-carga').value = v.carga;
+    document.getElementById('mv-ultima-revisao').value = v.ultimaRevisao || '';
+    document.getElementById('mv-proxima-revisao').value = v.proximaRevisao || '';
+    document.getElementById('mv-obs').value = v.obs || '';
+  } else {
+    document.getElementById('modal-veiculo-title').textContent = 'Novo Veículo';
+    ['mv-modelo','mv-ano','mv-placa','mv-consumo','mv-carga','mv-ultima-revisao','mv-proxima-revisao','mv-obs'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('mv-tipo').value = '🚗';
+  }
+  document.getElementById('modal-veiculo').classList.add('open');
+}
+
+function salvarVeiculo() {
+  const modelo = document.getElementById('mv-modelo').value.trim();
+  const placa = document.getElementById('mv-placa').value.trim().toUpperCase();
+  if (!modelo || !placa) { alert('Preencha Modelo e Placa.'); return; }
+
+  const veiculo = {
+    id: editVeiculoId || Date.now(),
+    modelo,
+    ano: document.getElementById('mv-ano').value,
+    placa,
+    tipo: document.getElementById('mv-tipo').value,
+    consumo: parseFloat(document.getElementById('mv-consumo').value) || 0,
+    carga: parseFloat(document.getElementById('mv-carga').value) || 0,
+    ultimaRevisao: document.getElementById('mv-ultima-revisao').value,
+    proximaRevisao: document.getElementById('mv-proxima-revisao').value,
+    obs: document.getElementById('mv-obs').value
+  };
+
+  if (editVeiculoId) {
+    const idx = veiculos.findIndex(x => x.id === editVeiculoId);
+    veiculos[idx] = veiculo;
+  } else {
+    veiculos.push(veiculo);
+  }
+  saveVeiculos();
+  closeModal('modal-veiculo');
+  renderFrota();
+  syncFrotaSelects();
+}
+
+function deletarVeiculo(id) {
+  if (!confirm('Excluir este veículo da frota?')) return;
+  veiculos = veiculos.filter(v => v.id !== id);
+  saveVeiculos();
+  renderFrota();
+  syncFrotaSelects();
+}
+
+function renderFrota() {
+  // Alertas
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const alertasEl = document.getElementById('frota-alertas');
+  const alertas = [];
+  veiculos.forEach(v => {
+    if (!v.proximaRevisao) return;
+    const pr = new Date(v.proximaRevisao);
+    pr.setHours(0,0,0,0);
+    const diff = Math.ceil((pr - today) / 86400000);
+    if (diff < 0) {
+      alertas.push(`<div class="alert-strip red">🔴 <strong>${v.modelo} (${v.placa})</strong> — Revisão vencida há ${Math.abs(diff)} dia(s)! Agendar imediatamente.</div>`);
+    } else if (diff <= 15) {
+      alertas.push(`<div class="alert-strip">🟡 <strong>${v.modelo} (${v.placa})</strong> — Revisão em <strong>${diff} dia(s)</strong> (${formatDate(v.proximaRevisao)}). Agende com antecedência.</div>`);
+    }
+  });
+  alertasEl.innerHTML = alertas.join('');
+
+  // Cards
+  const grid = document.getElementById('frota-grid');
+  const addBtn = `<div class="frota-add-btn" onclick="abrirModalVeiculo()"><div class="frota-add-plus">＋</div><div>Adicionar Veículo</div></div>`;
+
+  if (!veiculos.length) { grid.innerHTML = addBtn; return; }
+
+  grid.innerHTML = veiculos.map(v => {
+    // Revisão progress
+    let revisaoHTML = '';
+    if (v.ultimaRevisao && v.proximaRevisao) {
+      const inicio = new Date(v.ultimaRevisao); inicio.setHours(0,0,0,0);
+      const fim = new Date(v.proximaRevisao); fim.setHours(0,0,0,0);
+      const total = fim - inicio;
+      const decorrido = today - inicio;
+      const pct = Math.min(100, Math.max(0, Math.round((decorrido / total) * 100)));
+      const diff = Math.ceil((fim - today) / 86400000);
+      let cor, badgeClass, badgeText;
+      if (diff < 0) { cor = '#f56060'; badgeClass = 'revisao-badge-late'; badgeText = 'VENCIDA'; }
+      else if (diff <= 15) { cor = '#f5a623'; badgeClass = 'revisao-badge-warn'; badgeText = diff + ' dias'; }
+      else { cor = '#c8f560'; badgeClass = 'revisao-badge-ok'; badgeText = diff + ' dias'; }
+      revisaoHTML = `
+        <div class="revisao-bar">
+          <div class="revisao-bar-header">
+            <span class="revisao-bar-label">🔧 Próxima Revisão</span>
+            <span class="${badgeClass}">${badgeText}</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" style="width:${pct}%;background:${cor}"></div>
+          </div>
+          <div class="revisao-dates">
+            <span>Última: ${formatDate(v.ultimaRevisao)}</span>
+            <span>Próxima: ${formatDate(v.proximaRevisao)}</span>
+          </div>
+        </div>`;
+    } else if (v.proximaRevisao) {
+      const fim = new Date(v.proximaRevisao); fim.setHours(0,0,0,0);
+      const diff = Math.ceil((fim - today) / 86400000);
+      let badgeClass = diff < 0 ? 'revisao-badge-late' : diff <= 15 ? 'revisao-badge-warn' : 'revisao-badge-ok';
+      let badgeText = diff < 0 ? 'VENCIDA' : diff + ' dias';
+      revisaoHTML = `<div class="revisao-bar"><div class="revisao-bar-header"><span class="revisao-bar-label">🔧 Próxima Revisão</span><span class="${badgeClass}">${badgeText}</span></div><div class="revisao-dates"><span></span><span>${formatDate(v.proximaRevisao)}</span></div></div>`;
+    }
+
+    // Entregas stats
+    const vKey = v.modelo + ' - ' + v.placa;
+    const vEntregas = entregas.filter(e => e.veiculo === vKey);
+    const vFat = vEntregas.filter(e => e.status === 'concluido').reduce((s, e) => s + e.valor, 0);
+
+    return `<div class="frota-card">
+      <div class="frota-card-header">
+        <div class="frota-icon-wrap">${v.tipo}</div>
+        <div class="frota-card-info">
+          <div class="frota-card-name">${v.modelo}</div>
+          <div class="frota-card-year">${v.ano ? 'Ano ' + v.ano : ''}</div>
+        </div>
+        <div class="frota-plate-big">${v.placa}</div>
+      </div>
+      <div class="frota-card-body">
+        <div class="frota-specs">
+          <div class="frota-spec">
+            <div class="frota-spec-label">⛽ Consumo</div>
+            <div class="frota-spec-value">${v.consumo ? v.consumo + ' km/l' : '--'}</div>
+          </div>
+          <div class="frota-spec">
+            <div class="frota-spec-label">📦 Cap. Carga</div>
+            <div class="frota-spec-value">${v.carga ? v.carga + ' kg' : '--'}</div>
+          </div>
+          <div class="frota-spec">
+            <div class="frota-spec-label">🚚 Entregas</div>
+            <div class="frota-spec-value" style="color:var(--accent3)">${vEntregas.length}</div>
+          </div>
+          <div class="frota-spec">
+            <div class="frota-spec-label">💰 Faturado</div>
+            <div class="frota-spec-value" style="color:var(--accent)">R$ ${vFat.toFixed(0)}</div>
+          </div>
+        </div>
+        ${revisaoHTML}
+        ${v.obs ? `<div style="margin-top:10px;padding:10px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--muted)">${v.obs}</div>` : ''}
+      </div>
+      <div class="frota-card-footer">
+        <button class="btn btn-secondary btn-sm" onclick="abrirModalVeiculo(${v.id})">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deletarVeiculo(${v.id})">✕ Remover</button>
+      </div>
+    </div>`;
+  }).join('') + addBtn;
+}
+
+function syncFrotaSelects() {
+  // Sync the vehicle select on the new delivery form
+  const sel = document.getElementById('f-veiculo');
+  const current = sel.value;
+  const opts = veiculos.map(v => `<option value="${v.modelo} - ${v.placa}">${v.tipo} ${v.modelo} — ${v.placa}</option>`).join('');
+  // keep legacy defaults if no custom vehicles
+  if (veiculos.length) {
+    sel.innerHTML = '<option value="">Selecione...</option>' + opts;
+  }
+  sel.value = current;
+
+  // Sync history filter
+  const fv = document.getElementById('filtro-veiculo');
+  if (veiculos.length) {
+    const fopts = veiculos.map(v => `<option value="${v.modelo} - ${v.placa}">${v.modelo} (${v.placa})</option>`).join('');
+    fv.innerHTML = '<option value="">Todos os veículos</option>' + fopts;
+  }
+}
+
+// ==============================
+// RASTREIO EM TEMPO REAL
+// ==============================
+let fbApp = null, fbDb = null;
+let modoRastreio = 'motorista';
+let trackingAtivo = false;
+let watchId = null;
+let selectedVehicleId = null;
+let leafletMap = null;
+let leafletMarkers = {}; // vehicleId -> { marker, polyline, points, stopMarker }
+let myTrailPoints = [];
+let myMarker = null;
+let myPolyline = null;
+let trackingStart = null;
+let trackingTimer = null;
+let lastPos = null;
+let totalDistancia = 0;
+let demoMode = false;
+
+// Historico a cada 20min e deteccao de parada
+const HISTORY_INTERVAL_MS = 20 * 60 * 1000;
+const HISTORY_DAYS = 5;
+const STOP_THRESHOLD_MIN = 15;
+const STOP_RADIUS_M = 150;
+let lastHistorySave = 0;
+let stopStartTime = null;
+let stopPosition = null;
+let stopAlertFired = {};
+let activeAlertas = {};
+
+const VEHICLE_COLORS = ['#c8f560','#f5a623','#60c8f5','#f56060','#c060f5'];
+
+function initRastreioPage() {
+  // Se ja tem config salva, conectar direto
+  const saved = localStorage.getItem('fm_firebase_config');
+  if (saved || demoMode) {
+    if (!fbApp && saved) tentarReconectarFirebase();
+    showRastreioMain();
+  } else {
+    // Nao tem config salva — mostrar tela de setup JA com campos preenchidos
+    document.getElementById('rastreio-setup').style.display = 'block';
+    document.getElementById('rastreio-main').style.display = 'none';
+    // Mostrar banner informando que so precisa clicar em conectar
+    document.getElementById('fb-error').style.display = 'none';
+  }
+}
+
+function usarModoDemo() {
+  demoMode = true;
+  document.getElementById('fb-status-text').textContent = 'Modo Demo (GPS local)';
+  showRastreioMain();
+}
+
+function conectarFirebase() {
+  const apiKey = document.getElementById('fb-apiKey').value.trim();
+  const authDomain = document.getElementById('fb-authDomain').value.trim();
+  const databaseURL = document.getElementById('fb-databaseURL').value.trim();
+  const projectId = document.getElementById('fb-projectId').value.trim();
+  const errEl = document.getElementById('fb-error');
+
+  if (!apiKey || !databaseURL || !projectId) {
+    errEl.textContent = 'Preencha API Key, Database URL e Project ID.';
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  try {
+    const config = { apiKey, authDomain, databaseURL, projectId, storageBucket: projectId + '.appspot.com', messagingSenderId: '0', appId: '0' };
+    if (fbApp) { fbApp.delete(); fbApp = null; }
+    fbApp = firebase.initializeApp(config, 'frete-' + Date.now());
+    fbDb = firebase.database(fbApp);
+    localStorage.setItem('fm_firebase_config', JSON.stringify(config));
+    document.getElementById('fb-status-text').textContent = 'Firebase conectado ✓';
+    showRastreioMain();
+  } catch(e) {
+    errEl.textContent = 'Erro: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function tentarReconectarFirebase() {
+  const saved = localStorage.getItem('fm_firebase_config');
+  if (!saved) return;
+  try {
+    const config = JSON.parse(saved);
+    if (fbApp) return;
+    fbApp = firebase.initializeApp(config, 'frete-' + Date.now());
+    fbDb = firebase.database(fbApp);
+    console.log('Firebase conectado:', config.projectId);
+  } catch(e) { console.warn('Firebase reconect failed', e); }
+}
+
+function desconectarFirebase() {
+  localStorage.removeItem('fm_firebase_config');
+  if (fbApp) { try { fbApp.delete(); } catch(e){} fbApp = null; fbDb = null; }
+  demoMode = false;
+  pararTracking();
+  document.getElementById('rastreio-setup').style.display = 'block';
+  document.getElementById('rastreio-main').style.display = 'none';
+  if (leafletMap) { leafletMap.remove(); leafletMap = null; }
+}
+
+function showRastreioMain() {
+  document.getElementById('rastreio-setup').style.display = 'none';
+  document.getElementById('rastreio-main').style.display = 'block';
+  // Atualizar badge de status
+  const txt = document.getElementById('fb-status-text');
+  if (txt) txt.textContent = demoMode ? 'Modo Demo (GPS local)' : 'Firebase: fretemanager-60ef8 ✓';
+  setTimeout(() => {
+    initMap();
+    renderVehicleSelector();
+    if (modoRastreio === 'dono') startDonoListener();
+  }, 100);
+}
+
+function initMap() {
+  if (leafletMap) return;
+  leafletMap = L.map('map', { zoomControl: true }).setView([-15.7801, -47.9292], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+    maxZoom: 19
+  }).addTo(leafletMap);
+}
+
+function setModo(modo) {
+  modoRastreio = modo;
+  document.getElementById('btn-modo-motorista').classList.toggle('active', modo === 'motorista');
+  document.getElementById('btn-modo-dono').classList.toggle('active', modo === 'dono');
+  document.getElementById('painel-motorista').style.display = modo === 'motorista' ? 'block' : 'none';
+  document.getElementById('painel-dono').style.display = modo === 'dono' ? 'block' : 'none';
+  if (modo === 'dono') startDonoListener();
+}
+
+function renderVehicleSelector() {
+  const el = document.getElementById('vehicle-selector-list');
+  if (!veiculos.length) {
+    el.innerHTML = '<div class="no-data" style="padding:14px">Cadastre veículos na aba Frota</div>';
+    return;
+  }
+  el.innerHTML = veiculos.map((v, i) => `
+    <div class="vsel-item ${selectedVehicleId === v.id ? 'selected' : ''}"
+         onclick="selectVehicle(${v.id})" id="vsel-${v.id}">
+      <div class="vsel-dot"></div>
+      <div style="font-size:18px">${v.tipo}</div>
+      <div class="vsel-info">
+        <div class="vsel-name">${v.modelo}</div>
+        <div class="vsel-plate">${v.placa}</div>
+      </div>
+      <div class="vsel-status" id="vsel-status-${v.id}">—</div>
+    </div>`).join('');
+}
+
+function selectVehicle(id) {
+  if (trackingAtivo) return;
+  selectedVehicleId = id;
+  renderVehicleSelector();
+}
+
+// ---- MOTORISTA: enviar posição ----
+function toggleTracking() {
+  if (trackingAtivo) pararTracking();
+  else iniciarTracking();
+}
+
+function iniciarTracking() {
+  if (!selectedVehicleId) { alert('Selecione um veículo primeiro.'); return; }
+  if (!navigator.geolocation) { alert('Seu dispositivo não suporta GPS.'); return; }
+
+  trackingAtivo = true;
+  myTrailPoints = [];
+  totalDistancia = 0;
+  lastPos = null;
+  trackingStart = Date.now();
+
+  const btn = document.getElementById('btn-tracking');
+  btn.innerHTML = '<span>⏹</span> Parar Rastreio';
+  btn.classList.add('stop');
+  document.getElementById('gps-info').textContent = '⏳ Obtendo sinal GPS...';
+
+  watchId = navigator.geolocation.watchPosition(
+    onGpsUpdate,
+    onGpsError,
+    { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+  );
+
+  // Timer display
+  trackingTimer = setInterval(updateTrackingTimer, 1000);
+}
+
+function onGpsUpdate(pos) {
+  const { latitude: lat, longitude: lng, speed, accuracy } = pos.coords;
+  const speedKmh = speed != null ? Math.round(speed * 3.6) : null;
+  const ts = Date.now();
+
+  if (lastPos) totalDistancia += calcDistance(lastPos.lat, lastPos.lng, lat, lng);
+  lastPos = { lat, lng };
+  myTrailPoints.push([lat, lng]);
+
+  // Detectar parada suspeita
+  detectarParada(lat, lng, speedKmh, ts);
+
+  // Atualizar mapa
+  const vObj = veiculos.find(v => v.id === selectedVehicleId);
+  if (!myMarker) {
+    const icon = createVehicleIcon(VEHICLE_COLORS[0], vObj?.tipo || '🚗');
+    myMarker = L.marker([lat, lng], { icon }).addTo(leafletMap);
+    leafletMap.setView([lat, lng], 15);
+  } else {
+    myMarker.setLatLng([lat, lng]);
+    leafletMap.panTo([lat, lng]);
+  }
+  if (!myPolyline) {
+    myPolyline = L.polyline(myTrailPoints, { color: VEHICLE_COLORS[0], weight: 3, opacity: 0.8 }).addTo(leafletMap);
+  } else {
+    myPolyline.setLatLngs(myTrailPoints);
+  }
+
+  document.getElementById('stat-velocidade').textContent = speedKmh != null ? speedKmh + ' km/h' : '-- km/h';
+  document.getElementById('stat-distancia').textContent = totalDistancia.toFixed(1) + ' km';
+  document.getElementById('gps-info').textContent = 'GPS +/-' + Math.round(accuracy) + 'm';
+
+  // Enviar posicao ao vivo no Firebase
+  const payload = {
+    lat, lng, speed: speedKmh,
+    distancia: parseFloat(totalDistancia.toFixed(2)),
+    accuracy: Math.round(accuracy),
+    veiculo: vObj ? vObj.modelo : 'Veiculo',
+    placa: vObj ? vObj.placa : '',
+    tipo: vObj ? vObj.tipo : '🚗',
+    ts, ativo: true,
+    parada: stopStartTime ? true : false
+  };
+  if (!demoMode && fbDb) {
+    fbDb.ref('rastreio/' + selectedVehicleId).set(payload);
+    // Salvar historico a cada 20 minutos
+    if (ts - lastHistorySave >= HISTORY_INTERVAL_MS) {
+      lastHistorySave = ts;
+      fbDb.ref('historico_gps/' + selectedVehicleId + '/' + String(ts)).set({ lat, lng, speed: speedKmh, distancia: parseFloat(totalDistancia.toFixed(2)), ts });
+      limparHistoricoAntigo(selectedVehicleId);
+    }
+  }
+}
+
+function limparHistoricoAntigo(vehicleId) {
+  if (!fbDb) return;
+  const limite = Date.now() - (HISTORY_DAYS * 24 * 60 * 60 * 1000);
+  fbDb.ref('historico_gps/' + vehicleId).orderByKey().endAt(String(limite)).once('value', snap => {
+    const updates = {};
+    snap.forEach(child => { updates[child.key] = null; });
+    if (Object.keys(updates).length > 0) fbDb.ref('historico_gps/' + vehicleId).update(updates);
+  });
+}
+
+function detectarParada(lat, lng, speedKmh, ts) {
+  const vObj = veiculos.find(v => v.id === selectedVehicleId);
+  const isParado = speedKmh === null || speedKmh < 5;
+
+  if (!isParado) {
+    // Voltou a mover
+    if (stopStartTime) {
+      stopStartTime = null; stopPosition = null;
+      stopAlertFired[selectedVehicleId] = false;
+      delete activeAlertas[selectedVehicleId];
+      if (!demoMode && fbDb) fbDb.ref('alertas_parada/' + selectedVehicleId).remove();
+      renderAlertasBanner();
+    }
+    return;
+  }
+
+  if (!stopPosition) { stopStartTime = ts; stopPosition = { lat, lng }; return; }
+
+  const distM = calcDistance(stopPosition.lat, stopPosition.lng, lat, lng) * 1000;
+  if (distM > STOP_RADIUS_M) { stopStartTime = ts; stopPosition = { lat, lng }; stopAlertFired[selectedVehicleId] = false; return; }
+
+  const minParado = Math.floor((ts - stopStartTime) / 60000);
+  const threshMin = window.STOP_THRESHOLD_OVERRIDE || STOP_THRESHOLD_MIN;
+  if (minParado >= threshMin && !stopAlertFired[selectedVehicleId]) {
+    stopAlertFired[selectedVehicleId] = true;
+    const alerta = { lat: stopPosition.lat, lng: stopPosition.lng, minutos: minParado, veiculo: vObj ? vObj.modelo : 'Veiculo', placa: vObj ? vObj.placa : '', tipo: vObj ? vObj.tipo : '🚗', ts: stopStartTime, vehicleId: selectedVehicleId };
+    activeAlertas[selectedVehicleId] = alerta;
+    if (!demoMode && fbDb) fbDb.ref('alertas_parada/' + selectedVehicleId).set(alerta);
+    adicionarMarcadorParada(stopPosition.lat, stopPosition.lng, vObj, minParado);
+    renderAlertasBanner();
+  } else if (stopAlertFired[selectedVehicleId] && activeAlertas[selectedVehicleId]) {
+    // Atualizar minutos no alerta existente
+    activeAlertas[selectedVehicleId].minutos = minParado;
+    renderAlertasBanner();
+  }
+}
+
+function adicionarMarcadorParada(lat, lng, vObj, minutos) {
+  if (!leafletMap) return;
+  const icon = L.divIcon({
+    html: '<div style="background:#f56060;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid #fff;box-shadow:0 2px 12px rgba(245,96,96,.7)">!</div>',
+    className: '', iconSize: [32, 32], iconAnchor: [16, 16]
+  });
+  const popup = '<b style="color:#f56060">PARADA SUSPEITA</b><br>' + (vObj ? vObj.modelo + ' ' + vObj.placa + '<br>' : '') + 'Parado ha ' + minutos + ' min';
+  if (window._myStopMarker) { try { leafletMap.removeLayer(window._myStopMarker); } catch(e){} }
+  window._myStopMarker = L.marker([lat, lng], { icon }).bindPopup(popup).addTo(leafletMap).openPopup();
+}
+
+function renderAlertasBanner() {
+  const banner = document.getElementById('alertas-parada-banner');
+  if (!banner) return;
+  const lista = Object.values(activeAlertas);
+  if (!lista.length) { banner.style.display = 'none'; return; }
+  banner.style.display = 'block';
+  banner.innerHTML = lista.map(a => {
+    const min = a.minutos || Math.floor((Date.now() - (a.ts||Date.now())) / 60000);
+    return '<div class="alert-strip red" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">' +
+      '<span style="font-size:22px">⚠️</span>' +
+      '<div style="flex:1"><strong>' + a.tipo + ' ' + a.veiculo + ' — ' + a.placa + '</strong><br>' +
+      'Parado ha <strong style="color:#f56060">' + min + ' minutos</strong> fora de rota detectada.' +
+      '<div style="font-size:10px;margin-top:3px;color:var(--muted)">Posicao: ' + (a.lat||0).toFixed(5) + ', ' + (a.lng||0).toFixed(5) + '</div></div>' +
+      '<button onclick="dispensarAlerta(\'' + a.vehicleId + '\')" style="background:transparent;border:1px solid var(--red);color:var(--red);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;white-space:nowrap">Dispensar</button>' +
+      '</div>';
+  }).join('');
+}
+
+function dispensarAlerta(vehicleId) {
+  delete activeAlertas[vehicleId];
+  stopAlertFired[vehicleId] = false;
+  stopStartTime = null;
+  if (window._myStopMarker) { try { leafletMap.removeLayer(window._myStopMarker); } catch(e){} window._myStopMarker = null; }
+  if (!demoMode && fbDb) fbDb.ref('alertas_parada/' + vehicleId).remove();
+  renderAlertasBanner();
+}
+
+function onGpsError(err) {
+  document.getElementById('gps-info').textContent = '❌ Erro GPS: ' + err.message;
+}
+
+function pararTracking() {
+  if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
+  if (trackingTimer) { clearInterval(trackingTimer); trackingTimer = null; }
+  trackingAtivo = false;
+
+  const btn = document.getElementById('btn-tracking');
+  if (btn) {
+    btn.innerHTML = '<span>📍</span> Iniciar Rastreio';
+    btn.classList.remove('stop');
+  }
+
+  // Mark as inactive in Firebase
+  if (!demoMode && fbDb && selectedVehicleId) {
+    fbDb.ref('rastreio/' + selectedVehicleId + '/ativo').set(false);
+  }
+}
+
+function updateTrackingTimer() {
+  if (!trackingStart) return;
+  const elapsed = Math.floor((Date.now() - trackingStart) / 1000);
+  const m = Math.floor(elapsed / 60);
+  const s = elapsed % 60;
+  const el = document.getElementById('stat-tempo-ativo');
+  if (el) el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+// ---- DONO: ouvir posições ----
+let donoListener = null;
+function startDonoListener() {
+  if (demoMode || !fbDb) {
+    document.getElementById('dono-vehicle-list').innerHTML = '<div class="no-data" style="padding:14px">Modo demo: use outro celular como motorista com Firebase configurado.</div>';
+    return;
+  }
+  if (donoListener) return;
+  donoListener = fbDb.ref('rastreio').on('value', snapshot => {
+    const data = snapshot.val() || {};
+    updateDonoMap(data);
+  });
+  // Ouvir alertas de parada de todos os veiculos
+  fbDb.ref('alertas_parada').on('value', snap => {
+    const data = snap.val() || {};
+    activeAlertas = {};
+    Object.entries(data).forEach(([vid, alerta]) => {
+      activeAlertas[vid] = alerta;
+    });
+    renderAlertasBanner();
+  });
+}
+
+function updateDonoMap(data) {
+  const entries = Object.entries(data);
+  const listEl = document.getElementById('dono-vehicle-list');
+
+  if (!entries.length) {
+    listEl.innerHTML = '<div class="no-data" style="padding:14px">Nenhum veículo online</div>';
+    return;
+  }
+
+  listEl.innerHTML = entries.map(([id, v], i) => {
+    const cor = VEHICLE_COLORS[i % VEHICLE_COLORS.length];
+    const ago = v.ts ? Math.floor((Date.now() - v.ts) / 1000) : null;
+    const agoStr = ago != null ? (ago < 60 ? ago + 's atrás' : Math.floor(ago/60) + 'min atrás') : '';
+    const speedStr = v.speed != null ? v.speed + ' km/h' : '--';
+    return `<div class="vsel-item" style="${v.ativo ? 'border-color:' + cor : 'opacity:.6'}">
+      <div class="vsel-dot" style="background:${v.ativo ? cor : 'var(--border)'}; ${v.ativo ? 'animation:pulse 1.5s infinite' : ''}"></div>
+      <div style="font-size:18px">${v.tipo || '🚗'}</div>
+      <div class="vsel-info">
+        <div class="vsel-name">${v.veiculo || 'Veículo'}</div>
+        <div class="vsel-plate">${v.placa || ''} • ${speedStr}</div>
+      </div>
+      <div class="vsel-status">${v.ativo ? '🟢' : '⚫'} ${agoStr}</div>
+    </div>`;
+  }).join('');
+
+  // Update map markers
+  entries.forEach(([id, v], i) => {
+    if (!v.lat || !v.lng) return;
+    const cor = VEHICLE_COLORS[i % VEHICLE_COLORS.length];
+    if (!leafletMarkers[id]) {
+      const icon = createVehicleIcon(cor, v.tipo || '🚗');
+      const marker = L.marker([v.lat, v.lng], { icon })
+        .bindPopup((v.parada ? '<b style="color:#f56060">⚠️ PARADA SUSPEITA</b><br>' : '') + `<b>${v.veiculo}</b><br>${v.placa}<br>${v.speed != null ? v.speed + ' km/h' : ''}<br>${v.distancia != null ? v.distancia + ' km' : ''}`)
+        .addTo(leafletMap);
+      const polyline = L.polyline([[v.lat, v.lng]], { color: cor, weight: 3, opacity: 0.7 }).addTo(leafletMap);
+      leafletMarkers[id] = { marker, polyline, points: [[v.lat, v.lng]] };
+    } else {
+      const m = leafletMarkers[id];
+      m.marker.setLatLng([v.lat, v.lng]);
+      m.marker.setPopupContent(`<b>${v.veiculo}</b><br>${v.placa}<br>${v.speed != null ? v.speed + ' km/h' : ''}<br>${v.distancia != null ? v.distancia.toFixed(1) + ' km' : ''}`);
+      m.points.push([v.lat, v.lng]);
+      m.polyline.setLatLngs(m.points);
+    }
+  });
+
+  // Fit bounds to all vehicles
+  const allPoints = entries.filter(([,v]) => v.lat && v.lng).map(([,v]) => [v.lat, v.lng]);
+  if (allPoints.length) {
+    if (allPoints.length === 1) leafletMap.setView(allPoints[0], 15);
+    else leafletMap.fitBounds(L.latLngBounds(allPoints), { padding: [40, 40] });
+  }
+}
+
+// ---- HELPERS ----
+function createVehicleIcon(color, emoji) {
+  const svg = `<div style="
+    background:${color};
+    color:#0e0f0e;
+    width:36px;height:36px;
+    border-radius:50% 50% 50% 0;
+    transform:rotate(-45deg);
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid rgba(0,0,0,0.3);
+    box-shadow:0 2px 8px rgba(0,0,0,0.5);
+    font-size:16px;
+  "><span style="transform:rotate(45deg)">${emoji}</span></div>`;
+  return L.divIcon({ html: svg, className: '', iconSize: [36, 36], iconAnchor: [18, 36] });
+}
+
+function calcDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function atualizarThresholdParada(val) {
+  const n = parseInt(val);
+  if (n >= 5 && n <= 120) {
+    window.STOP_THRESHOLD_OVERRIDE = n;
+  }
+}
+
+// Override STOP_THRESHOLD_MIN dynamically
+Object.defineProperty(window, 'STOP_THRESHOLD_MIN_EFFECTIVE', {
+  get: () => window.STOP_THRESHOLD_OVERRIDE || 15
+});
+
+// ---- INIT ----
+// Pre-carregar config Firebase real
+(function() {
+  const config = {
+    apiKey: "AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4",
+    authDomain: "fretemanager-60ef8.firebaseapp.com",
+    databaseURL: "https://fretemanager-60ef8-default-rtdb.firebaseio.com",
+    projectId: "fretemanager-60ef8",
+    storageBucket: "fretemanager-60ef8.firebasestorage.app",
+    messagingSenderId: "977410315261",
+    appId: "1:977410315261:web:ebaf0794c7d887321abf94"
+  };
+  if (!localStorage.getItem('fm_firebase_config')) {
+    localStorage.setItem('fm_firebase_config', JSON.stringify(config));
+  }
+})();
+document.getElementById('f-data').value = new Date().toISOString().slice(0, 10);
+syncFrotaSelects();
+renderDashboard();
+tentarReconectarFirebase();
+// restart timers for em_descarga
+entregas.filter(e => e.status === 'em_descarga' && e.horaChegada).forEach(e => {
+  // will start when page opens
+});
+</script>
+</body>
+</html>
