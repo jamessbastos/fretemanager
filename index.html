@@ -10,767 +10,778 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
   :root {
-    --bg: #0e0f0e;
-    --surface: #161817;
-    --surface2: #1e201e;
-    --border: #2a2d2a;
-    --accent: #c8f560;
-    --accent2: #f5a623;
-    --accent3: #60c8f5;
-    --red: #f56060;
-    --text: #e8ede8;
-    --muted: #7a8a7a;
-    --card-radius: 14px;
+    --bg: #0a0e1a;
+    --bg2: #0d1220;
+    --glass: rgba(255,255,255,0.07);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-hover: rgba(255,255,255,0.11);
+    --glass-active: rgba(255,255,255,0.18);
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --green: #00ff88;
+    --red: #ff4466;
+    --yellow: #ffd93d;
+    --text: #f0f4ff;
+    --text2: #8892aa;
+    --muted: #4a5568;
+    --card-radius: 20px;
+    --nav-h: 72px;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    font-family: 'DM Mono', monospace;
+    font-family: 'Outfit', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
-    font-size: 13px;
+    font-size: 15px;
+    overflow-x: hidden;
+    padding-bottom: calc(var(--nav-h) + 16px);
   }
 
-  /* HEADER */
-  header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
+  /* ── BACKGROUND MESH ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 10%, rgba(0,212,255,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,58,237,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 50% 50%, rgba(0,255,136,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  main { position: relative; z-index: 1; padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* ── LIQUID GLASS MIXIN ── */
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+  }
+
+  /* ── TOP HEADER ── */
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    padding: 12px 16px;
+    background: rgba(10,14,26,0.7);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border-bottom: 1px solid var(--glass-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
   }
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: -0.5px;
-  }
-  .logo span { color: var(--accent); }
-  .nav-tabs {
+
+  .app-logo {
     display: flex;
-    gap: 4px;
+    align-items: center;
+    gap: 10px;
   }
-  .tab-btn {
-    background: none;
-    border: 1px solid transparent;
-    color: var(--muted);
-    padding: 7px 16px;
-    border-radius: 8px;
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+  }
+  .logo-text {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text2);
+    margin-top: -2px;
+    letter-spacing: 0.5px;
+  }
+
+  .header-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
     cursor: pointer;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    transition: all .2s;
+    border: 2px solid var(--glass-border);
+    transition: transform .2s;
+    position: relative;
   }
-  .tab-btn.active {
-    background: var(--accent);
-    color: #0e0f0e;
-    font-weight: 500;
-    border-color: var(--accent);
-  }
-  .tab-btn:hover:not(.active) {
-    border-color: var(--border);
-    color: var(--text);
+  .header-avatar:active { transform: scale(0.95); }
+  .avatar-online {
+    position: absolute;
+    bottom: 1px; right: 1px;
+    width: 10px; height: 10px;
+    background: var(--green);
+    border-radius: 50%;
+    border: 2px solid var(--bg);
   }
 
-  /* LAYOUT */
-  main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    z-index: 200;
+    height: var(--nav-h);
+    background: rgba(10,14,26,0.8);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 
-  /* PAGES */
-  .page { display: none; }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid transparent;
+    background: transparent;
+    min-width: 52px;
+    position: relative;
+  }
+  .nav-item.active {
+    background: var(--glass-active);
+    border-color: var(--glass-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .nav-item.active .nav-icon { color: var(--accent); transform: translateY(-2px) scale(1.1); }
+  .nav-item.active .nav-label { color: var(--accent); }
+  .nav-item:active { transform: scale(0.92); }
+  .nav-icon {
+    font-size: 22px;
+    transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: var(--text2);
+  }
+  .nav-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--text2);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-badge {
+    position: absolute;
+    top: 4px; right: 8px;
+    background: var(--red);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    min-width: 16px; height: 16px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 4px;
+  }
+
+  /* ── PAGES ── */
+  .page { display: none; animation: pageIn .35s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
   .page.active { display: block; }
 
-  /* DASHBOARD */
-  .stats-row {
+  @keyframes pageIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PAGE TITLE ── */
+  .page-title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #fff 50%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .page-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+
+  /* ── GLASS CARDS ── */
+  .card {
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    padding: 18px;
+    margin-bottom: 14px;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .card:active { transform: scale(0.99); }
+
+  /* ── STAT CARDS ── */
+  .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 24px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
   }
   .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 20px;
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 16px;
     position: relative;
     overflow: hidden;
+    transition: transform .2s;
   }
-  .stat-card::before {
-    content: '';
+  .stat-card:active { transform: scale(0.97); }
+  .stat-card-glow {
     position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
+    top: -20px; right: -20px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    opacity: 0.3;
+    filter: blur(20px);
   }
-  .stat-card.green::before { background: var(--accent); }
-  .stat-card.orange::before { background: var(--accent2); }
-  .stat-card.blue::before { background: var(--accent3); }
-  .stat-card.red::before { background: var(--red); }
+  .stat-label { font-size: 11px; color: var(--text2); font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .stat-value { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+  .stat-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
 
-  .stat-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .stat-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 700; }
-  .stat-sub { color: var(--muted); font-size: 11px; margin-top: 4px; }
-
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-
+  /* ── SECTION TITLE ── */
   .section-title {
-    font-family: 'Syne', sans-serif;
+    font-size: 13px;
     font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 14px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    margin-top: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
   }
-  .section-title .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--glass-border);
   }
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 20px;
-  }
-
-  /* VEHICLE CARDS */
-  .vehicle-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 18px;
-  }
-  .vehicle-icon { font-size: 28px; margin-bottom: 8px; }
-  .vehicle-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; }
-  .vehicle-plate {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    margin: 6px 0;
-    letter-spacing: 2px;
-  }
-  .vehicle-stat { color: var(--muted); font-size: 11px; margin-top: 4px; }
-  .vehicle-stat strong { color: var(--accent); }
-
-  /* RECENT DELIVERIES */
+  /* ── DELIVERY ROW ── */
   .delivery-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
   }
   .delivery-row:last-child { border-bottom: none; }
-  .delivery-route { flex: 1; }
-  .delivery-from { font-size: 12px; color: var(--muted); }
-  .delivery-to { font-weight: 500; font-size: 13px; }
-  .delivery-value { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent); }
-  .delivery-profit { font-size: 11px; color: var(--muted); }
+  .delivery-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .delivery-info { flex: 1; min-width: 0; }
+  .delivery-route { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .delivery-client { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .delivery-right { text-align: right; flex-shrink: 0; }
+  .delivery-value { font-weight: 800; font-size: 16px; }
+  .delivery-profit { font-size: 11px; color: var(--text2); }
+
+  /* ── BADGES ── */
   .badge {
-    padding: 3px 10px;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px;
     border-radius: 20px;
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .badge-done { background: #1a2e1a; color: var(--accent); border: 1px solid #2a4a2a; }
-  .badge-transit { background: #2e2a1a; color: var(--accent2); border: 1px solid #4a3a1a; }
-  .badge-loading { background: #1a2a2e; color: var(--accent3); border: 1px solid #1a3a4a; }
-
-  /* FORM */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group.full { grid-column: 1 / -1; }
-  label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
-  input, select, textarea {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    transition: border-color .2s;
-    outline: none;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
-  select option { background: var(--surface2); }
-
-  .btn {
-    background: var(--accent);
-    color: #0e0f0e;
-    border: none;
-    padding: 11px 22px;
-    border-radius: 8px;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .2s;
-  }
-  .btn:hover { background: #b8e550; transform: translateY(-1px); }
-  .btn-secondary {
-    background: var(--surface2);
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-secondary:hover { background: var(--border); transform: translateY(-1px); }
-  .btn-danger {
-    background: transparent;
-    color: var(--red);
-    border: 1px solid var(--red);
-  }
-  .btn-danger:hover { background: #2e1a1a; }
-
-  /* HISTORY TABLE */
-  table { width: 100%; border-collapse: collapse; }
-  th {
-    text-align: left;
-    padding: 10px 14px;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-  }
-  td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--surface2); }
-
-  /* ACTIVE DELIVERY — CHECKIN */
-  .checkin-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-    padding: 24px;
-    margin-bottom: 16px;
-  }
-  .checkin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-  .checkin-route {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-  }
-  .checkin-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
-
-  .time-tracker {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin: 16px 0;
-  }
-  .time-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px;
-    text-align: center;
-  }
-  .time-box-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .time-box-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--muted);
-  }
-  .time-box-value.set { color: var(--accent); }
-  .time-box-value.elapsed { color: var(--accent2); }
-  .time-box.active-border { border-color: var(--accent); }
-
-  .timer-display {
-    text-align: center;
-    padding: 20px;
-    background: var(--surface2);
-    border-radius: 12px;
-    margin: 12px 0;
-  }
-  .timer-display .big-time {
-    font-family: 'Syne', sans-serif;
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--accent2);
-    letter-spacing: -2px;
-  }
-  .timer-display .timer-label { color: var(--muted); font-size: 11px; margin-top: 4px; }
-
-  .action-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
-
-  /* RANKINGS */
-  .rank-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .rank-item:last-child { border-bottom: none; }
-  .rank-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--border);
-    width: 24px;
-    text-align: center;
-  }
-  .rank-item:nth-child(1) .rank-num { color: var(--accent); }
-  .rank-item:nth-child(2) .rank-num { color: var(--accent2); }
-  .rank-item:nth-child(3) .rank-num { color: var(--accent3); }
-  .rank-info { flex: 1; }
-  .rank-name { font-weight: 500; }
-  .rank-sub { color: var(--muted); font-size: 11px; }
-  .rank-value { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--accent); }
-
-  .no-data {
-    text-align: center;
-    padding: 40px;
-    color: var(--muted);
-    font-size: 12px;
-  }
-
-  /* MODAL */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.7);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 28px;
-    width: 90%;
-    max-width: 580px;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-  .modal-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
-
-  /* SCROLLBAR */
-  ::-webkit-scrollbar { width: 5px; }
-  ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-  @media (max-width: 768px) {
-    .stats-row { grid-template-columns: 1fr 1fr; }
-    .two-col, .three-col { grid-template-columns: 1fr; }
-    .form-grid { grid-template-columns: 1fr; }
-    .nav-tabs .tab-btn { padding: 7px 10px; font-size: 11px; }
-    header { flex-wrap: wrap; gap: 10px; }
-  }
-
-  /* FROTA */
-  .frota-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 18px;
-    margin-bottom: 28px;
-  }
-  .frota-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    transition: border-color .2s;
-  }
-  .frota-card:hover { border-color: var(--accent); }
-  .frota-card-header {
-    padding: 18px 20px 14px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .frota-icon-wrap {
-    width: 52px; height: 52px;
-    background: var(--surface2);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-  .frota-card-info { flex: 1; }
-  .frota-card-name {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 17px;
-  }
-  .frota-card-year { color: var(--muted); font-size: 11px; margin-top: 2px; }
-  .frota-plate-big {
-    background: #f8f4e0;
-    color: #111;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 13px;
-    letter-spacing: 3px;
-    padding: 5px 12px;
-    border-radius: 6px;
-    border: 2px solid #222;
-    flex-shrink: 0;
-  }
-  .frota-card-body { padding: 16px 20px; }
-  .frota-specs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-  .frota-spec {
-    background: var(--surface2);
-    border-radius: 8px;
-    padding: 10px 12px;
-  }
-  .frota-spec-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
-  .frota-spec-value { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
-
-  .revisao-bar {
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-top: 10px;
-  }
-  .revisao-bar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-  .revisao-bar-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
-  .revisao-badge-ok { color: var(--accent); font-size: 11px; font-weight: 500; }
-  .revisao-badge-warn { color: var(--accent2); font-size: 11px; font-weight: 500; }
-  .revisao-badge-late { color: var(--red); font-size: 11px; font-weight: 500; }
-  .progress-track {
-    height: 5px;
-    background: var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width .5s ease;
-  }
-  .revisao-dates { display: flex; justify-content: space-between; margin-top: 6px; font-size: 10px; color: var(--muted); }
-
-  .frota-card-footer {
-    padding: 12px 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 8px;
-  }
-  .btn-sm {
-    padding: 7px 14px;
     font-size: 11px;
-    border-radius: 7px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
   }
+  .badge-done    { background: rgba(0,255,136,0.15); color: var(--green); border: 1px solid rgba(0,255,136,0.3); }
+  .badge-transit { background: rgba(255,107,53,0.15); color: var(--accent2); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-loading { background: rgba(0,212,255,0.15); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  .badge-sched   { background: rgba(255,217,61,0.15); color: var(--yellow); border: 1px solid rgba(255,217,61,0.3); }
 
-  .frota-add-btn {
-    background: var(--surface);
-    border: 2px dashed var(--border);
-    border-radius: 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 200px;
-    cursor: pointer;
-    transition: all .2s;
-    color: var(--muted);
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    gap: 10px;
-  }
-  .frota-add-btn:hover { border-color: var(--accent); color: var(--accent); background: #0e0f0e; }
-  .frota-add-plus { font-size: 36px; line-height: 1; }
-
-  .alert-strip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #2e2010;
-    border: 1px solid #5a3a10;
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-bottom: 10px;
-    font-size: 12px;
-  }
-  .alert-strip.red { background: #2e1010; border-color: #5a1010; }
-
-  /* RASTREIO */
-  #map {
-    width: 100%;
-    height: 460px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: #1a1a1a;
-    z-index: 1;
-  }
-  .rastreio-layout {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: 16px;
-    align-items: start;
-  }
-  .rastreio-panel { display: flex; flex-direction: column; gap: 12px; }
-
-  .firebase-setup {
-    background: #1a1e2e;
-    border: 1px solid #2a3a6a;
-    border-radius: 14px;
-    padding: 20px;
-  }
-  .firebase-setup h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 800;
-    margin-bottom: 12px;
-    color: var(--accent3);
-  }
-  .setup-step {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    font-size: 11px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-  .setup-num {
-    background: var(--accent3);
-    color: #0e0f0e;
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 10px;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .firebase-input-group { display: flex; flex-direction: column; gap: 6px; margin-top: 14px; }
-  .firebase-input-group label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; }
-  .firebase-input-group input { font-size: 11px; padding: 8px 12px; }
-  .firebase-connected {
-    background: #1a2e1a;
-    border: 1px solid #2a5a2a;
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 11px;
-    color: var(--accent);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .pulse-dot {
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 1.5s infinite;
-    flex-shrink: 0;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  .mode-toggle {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .mode-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--muted);
-    padding: 12px 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    text-align: center;
-    transition: all .2s;
-  }
-  .mode-btn.active { background: var(--accent); color: #0e0f0e; border-color: var(--accent); font-weight: 500; }
-  .mode-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
-  .mode-icon { font-size: 20px; display: block; margin-bottom: 4px; }
-
-  .vehicle-selector {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .vsel-item {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    transition: all .2s;
-    font-size: 12px;
-  }
-  .vsel-item.selected { border-color: var(--accent); background: #1a2a0a; }
-  .vsel-item:hover:not(.selected) { border-color: var(--border); background: var(--surface); }
-  .vsel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
-  .vsel-item.selected .vsel-dot { background: var(--accent); animation: pulse 1.5s infinite; }
-  .vsel-info { flex: 1; }
-  .vsel-name { font-weight: 500; }
-  .vsel-plate { color: var(--muted); font-size: 10px; }
-  .vsel-status { font-size: 10px; color: var(--muted); }
-
-  .stats-row-rastreio {
+  /* ── FLEET MINI CARDS ── */
+  .fleet-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+    margin-bottom: 16px;
   }
-  .mini-stat {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
+  .fleet-mini {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .fleet-mini:active { transform: scale(0.95); }
+  .fleet-mini-icon { font-size: 26px; margin-bottom: 6px; }
+  .fleet-mini-name { font-size: 12px; font-weight: 700; }
+  .fleet-mini-plate {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text2);
+    margin-top: 3px;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .fleet-mini-status { font-size: 10px; margin-top: 6px; }
+
+  /* ── FORMS ── */
+  .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; }
+  .form-input {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    padding: 14px 16px;
+    border-radius: 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: all .2s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .form-input:focus { border-color: var(--accent); background: rgba(0,212,255,0.05); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+  .form-input::placeholder { color: var(--muted); }
+  select.form-input option { background: #0d1220; color: var(--text); }
+  .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px 24px;
+    border-radius: 16px;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    letter-spacing: 0.2px;
+  }
+  .btn:active { transform: scale(0.96); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #0096cc);
+    color: #000;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+    width: 100%;
+  }
+  .btn-primary:hover { box-shadow: 0 6px 28px rgba(0,212,255,0.45); transform: translateY(-1px); }
+  .btn-secondary {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    width: 100%;
+  }
+  .btn-danger {
+    background: rgba(255,68,102,0.15);
+    border: 1px solid rgba(255,68,102,0.3);
+    color: var(--red);
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  .btn-sm { padding: 10px 16px; font-size: 13px; width: auto; }
+
+  /* ── CHECKIN TIMER ── */
+  .timer-big {
+    text-align: center;
+    padding: 24px;
+    background: var(--glass);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    margin: 12px 0;
+  }
+  .timer-digits {
+    font-size: 56px;
+    font-weight: 900;
+    letter-spacing: -2px;
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    text-shadow: 0 0 30px rgba(255,107,53,0.4);
+  }
+  .timer-label { font-size: 12px; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  .time-boxes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .time-box {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 12px 8px;
     text-align: center;
   }
-  .mini-stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
-  .mini-stat-value { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--accent2); }
+  .time-box.active-border { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,212,255,0.2); }
+  .time-box-label { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 5px; }
+  .time-box-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--text2); }
+  .time-box-value.set { color: var(--accent); }
 
-  .tracking-btn {
-    width: 100%;
-    padding: 14px;
-    font-size: 14px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  .tracking-btn.stop { background: var(--red) !important; }
-  .tracking-btn.stop:hover { background: #d04040 !important; }
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--card-radius); }
+  table { width: 100%; border-collapse: collapse; min-width: 560px; }
+  th { padding: 12px 14px; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--glass-border); font-weight: 600; text-align: left; background: var(--glass); }
+  td { padding: 13px 14px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  tr:last-child td { border-bottom: none; }
 
-  .map-vehicle-list {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    z-index: 500;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  /* ── RANK ITEMS ── */
+  .rank-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
   }
-  .map-vehicle-chip {
-    background: rgba(14,15,14,0.9);
-    border: 1px solid var(--border);
-    border-radius: 8px;
+  .rank-item:last-child { border-bottom: none; }
+  .rank-num { font-size: 22px; font-weight: 900; width: 28px; text-align: center; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+  .rank-item:nth-child(1) .rank-num { color: var(--yellow); text-shadow: 0 0 10px rgba(255,217,61,.5); }
+  .rank-item:nth-child(2) .rank-num { color: var(--text2); }
+  .rank-item:nth-child(3) .rank-num { color: var(--accent2); }
+  .rank-info { flex: 1; }
+  .rank-name { font-weight: 600; font-size: 14px; }
+  .rank-sub  { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .rank-value { font-size: 16px; font-weight: 800; color: var(--green); }
+
+  /* ── VEHICLE CARDS (FROTA) ── */
+  .frota-card {
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    transition: transform .2s;
+  }
+  .frota-card:active { transform: scale(0.99); }
+  .frota-card-top {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .frota-card-icon {
+    width: 54px; height: 54px;
+    border-radius: 16px;
+    background: var(--glass-hover);
+    border: 1px solid var(--glass-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .frota-card-name { font-size: 18px; font-weight: 800; }
+  .frota-card-year { font-size: 12px; color: var(--text2); }
+  .frota-plate {
+    margin-left: auto;
+    background: #f8f4e0;
+    color: #111;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 2px;
     padding: 6px 12px;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    backdrop-filter: blur(4px);
+    border-radius: 8px;
+    border: 2px solid #222;
+    flex-shrink: 0;
   }
-  .map-container { position: relative; }
+  .frota-specs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px; padding: 14px 18px;
+  }
+  .frota-spec {
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px; padding: 10px 12px;
+  }
+  .frota-spec-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
+  .frota-spec-value { font-size: 16px; font-weight: 700; }
+  .frota-revisao {
+    margin: 0 18px 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 12px; padding: 12px;
+  }
+  .progress-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin: 8px 0; }
+  .progress-fill  { height: 100%; border-radius: 2px; transition: width .5s; }
+  .frota-footer { display: flex; gap: 8px; padding: 14px 18px; border-top: 1px solid rgba(255,255,255,0.05); }
+  .frota-add-btn {
+    border: 2px dashed var(--glass-border);
+    border-radius: 22px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 160px; cursor: pointer; transition: all .2s;
+    color: var(--text2); font-weight: 700; gap: 10px; font-size: 15px;
+    background: transparent; margin-bottom: 14px;
+  }
+  .frota-add-btn:active { background: var(--glass); border-color: var(--accent); color: var(--accent); }
+  .frota-add-plus { font-size: 32px; line-height: 1; }
 
-  @media (max-width: 900px) {
-    .rastreio-layout { grid-template-columns: 1fr; }
-    #map { height: 320px; }
+  /* ── ALERT STRIP ── */
+  .alert-strip {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,217,61,0.1);
+    border: 1px solid rgba(255,217,61,0.3);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .alert-strip.red { background: rgba(255,68,102,0.1); border-color: rgba(255,68,102,0.3); }
+
+  /* ── RASTREIO ── */
+  #map { width: 100%; height: 380px; border-radius: 20px; border: 1px solid var(--glass-border); background: #1a1a2e; z-index: 1; }
+  .firebase-setup {
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px; padding: 22px;
+  }
+  .firebase-setup h3 { font-size: 16px; font-weight: 800; margin-bottom: 14px; color: var(--accent); }
+  .firebase-connected {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(0,255,136,0.1);
+    border: 1px solid rgba(0,255,136,0.3);
+    border-radius: 10px; padding: 10px 14px;
+    font-size: 12px; color: var(--green);
+  }
+  .pulse-dot { width: 8px; height: 8px; background: var(--green); border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+
+  .mode-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .mode-btn {
+    background: var(--glass); border: 1px solid var(--glass-border);
+    color: var(--text2); padding: 16px 10px; border-radius: 16px;
+    cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 12px;
+    text-align: center; transition: all .2s; font-weight: 600;
+  }
+  .mode-btn.active { background: rgba(0,212,255,0.15); border-color: var(--accent); color: var(--accent); }
+  .mode-icon { font-size: 24px; display: block; margin-bottom: 6px; }
+
+  .vsel-item {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--glass); border: 1px solid var(--glass-border);
+    border-radius: 14px; padding: 12px 14px; cursor: pointer;
+    transition: all .2s; margin-bottom: 8px; font-size: 13px;
+  }
+  .vsel-item.selected { border-color: var(--accent); background: rgba(0,212,255,0.08); }
+  .vsel-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .vsel-item.selected .vsel-dot { background: var(--accent); animation: pulse 1.5s infinite; }
+  .vsel-info { flex: 1; }
+  .vsel-name { font-weight: 600; }
+  .vsel-plate { font-size: 11px; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
+
+  .stats-row-rastreio { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin: 12px 0; }
+  .mini-stat { background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 14px; padding: 12px; text-align: center; }
+  .mini-stat-label { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px; }
+  .mini-stat-value { font-size: 16px; font-weight: 800; color: var(--accent2); font-family: 'JetBrains Mono', monospace; }
+
+  .tracking-btn { width: 100%; padding: 16px; font-size: 15px; border-radius: 16px; }
+  .tracking-btn.stop { background: linear-gradient(135deg, var(--red), #cc0033) !important; color: #fff !important; box-shadow: 0 4px 20px rgba(255,68,102,0.35) !important; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.6); z-index: 500;
+    align-items: flex-end; justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: #0d1220;
+    border: 1px solid var(--glass-border);
+    border-radius: 28px 28px 0 0;
+    padding: 24px 20px;
+    width: 100%; max-width: 600px;
+    max-height: 92vh; overflow-y: auto;
+    animation: slideUp .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle { width: 40px; height: 4px; background: var(--glass-border); border-radius: 2px; margin: 0 auto 20px; }
+  .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 18px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+
+  /* ── SETUP STEP ── */
+  .setup-step { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .setup-num { background: var(--accent); color: #000; font-weight: 800; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .firebase-input-group { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+  .firebase-input-group label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; }
+
+  /* ── NO DATA ── */
+  .no-data { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 13px; }
+  .no-data-icon { font-size: 40px; margin-bottom: 10px; }
+
+  /* ── CHECKIN CARD ── */
+  .checkin-card {
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .checkin-route { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+  .checkin-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
+  .action-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+  /* ── REVISAO BADGES ── */
+  .revisao-badge-ok   { color: var(--green); font-size: 12px; font-weight: 600; }
+  .revisao-badge-warn { color: var(--yellow); font-size: 12px; font-weight: 600; }
+  .revisao-badge-late { color: var(--red); font-size: 12px; font-weight: 600; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+
+  /* ── MOBILE TWEAKS ── */
+  @media (max-width: 400px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .stat-value { font-size: 20px; }
+    .fleet-row { grid-template-columns: repeat(3,1fr); }
   }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="logo">Frete<span>Manager</span></div>
-  <div class="nav-tabs">
-    <button class="tab-btn active" onclick="showPage('dashboard')">Dashboard</button>
-    <button class="tab-btn" onclick="showPage('nova')">+ Entrega</button>
-    <button class="tab-btn" onclick="showPage('ativas')">Em Rota</button>
-    <button class="tab-btn" onclick="showPage('historico')">Histórico</button>
-    <button class="tab-btn" onclick="showPage('rankings')">Rankings</button>
-    <button class="tab-btn" onclick="showPage('frota')">🚗 Frota</button>
-    <button class="tab-btn" onclick="showPage('rastreio')">📡 Rastreio</button>
+<div class="app-header">
+  <div class="app-logo">
+    <div class="logo-icon">🚛</div>
+    <div>
+      <div class="logo-text">FreteManager</div>
+      <div class="logo-sub">Gestão de Frota</div>
+    </div>
   </div>
-</header>
+  <div class="header-avatar" onclick="toggleAvatarMenu()">
+    👤
+    <div class="avatar-online"></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Início</div>
+  </div>
+  <div class="nav-item" id="nav-nova" onclick="showPage('nova')">
+    <div class="nav-icon">＋</div>
+    <div class="nav-label">Entrega</div>
+  </div>
+  <div class="nav-item" id="nav-ativas" onclick="showPage('ativas')">
+    <div class="nav-icon">🚚</div>
+    <div class="nav-label">Em Rota</div>
+    <div class="nav-badge" id="badge-ativas" style="display:none">0</div>
+  </div>
+  <div class="nav-item" id="nav-historico" onclick="showPage('historico')">
+    <div class="nav-icon">📋</div>
+    <div class="nav-label">Histórico</div>
+  </div>
+  <div class="nav-item" id="nav-rankings" onclick="showPage('rankings')">
+    <div class="nav-icon">🏆</div>
+    <div class="nav-label">Rankings</div>
+  </div>
+  <div class="nav-item" id="nav-frota" onclick="showPage('frota')">
+    <div class="nav-icon">🚗</div>
+    <div class="nav-label">Frota</div>
+  </div>
+  <div class="nav-item" id="nav-rastreio" onclick="showPage('rastreio')">
+    <div class="nav-icon">📡</div>
+    <div class="nav-label">Rastreio</div>
+  </div>
+</nav>
 
 <main>
 
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="page active">
-    <div class="stats-row">
-      <div class="stat-card green">
-        <div class="stat-label">Faturamento Mês</div>
-        <div class="stat-value" id="stat-faturamento">R$ 0</div>
-        <div class="stat-sub" id="stat-fat-sub">0 entregas</div>
+    <div class="page-title">Olá, James 👋</div>
+    <div class="page-subtitle" id="dash-date">Hoje é um ótimo dia para faturar</div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-glow" style="background:var(--accent)"></div>
+        <div class="stat-label">Faturamento</div>
+        <div class="stat-value" id="stat-faturamento" style="color:var(--accent)">R$ 0</div>
+        <div class="stat-sub" id="stat-fat-sub">este mês</div>
       </div>
-      <div class="stat-card orange">
+      <div class="stat-card">
+        <div class="stat-card-glow" style="background:var(--green)"></div>
         <div class="stat-label">Lucro Líquido</div>
-        <div class="stat-value" id="stat-lucro">R$ 0</div>
+        <div class="stat-value" id="stat-lucro" style="color:var(--green)">R$ 0</div>
         <div class="stat-sub" id="stat-lucro-sub">após custos</div>
       </div>
-      <div class="stat-card blue">
-        <div class="stat-label">Tempo Médio Descarga</div>
-        <div class="stat-value" id="stat-tempo">--</div>
+      <div class="stat-card">
+        <div class="stat-card-glow" style="background:var(--accent2)"></div>
+        <div class="stat-label">Descarga Média</div>
+        <div class="stat-value" id="stat-tempo" style="color:var(--accent2)">--</div>
         <div class="stat-sub">por cliente</div>
       </div>
-      <div class="stat-card red">
-        <div class="stat-label">Em Rota Agora</div>
-        <div class="stat-value" id="stat-ativas">0</div>
-        <div class="stat-sub" id="stat-ativas-sub">entregas ativas</div>
+      <div class="stat-card">
+        <div class="stat-card-glow" style="background:var(--red)"></div>
+        <div class="stat-label">Em Rota</div>
+        <div class="stat-value" id="stat-ativas" style="color:var(--red)">0</div>
+        <div class="stat-sub" id="stat-ativas-sub">agora</div>
       </div>
     </div>
 
-    <div class="two-col">
-      <div>
-        <div class="section-title"><span class="dot"></span>Frota</div>
-        <div class="three-col" id="fleet-cards"></div>
-      </div>
-      <div>
-        <div class="section-title"><span class="dot"></span>Últimas Entregas</div>
-        <div class="card">
-          <div id="recent-list"><div class="no-data">Nenhuma entrega ainda</div></div>
-        </div>
-      </div>
+    <div class="section-title">Frota</div>
+    <div class="fleet-row" id="fleet-cards"></div>
+
+    <div class="section-title">Últimas Entregas</div>
+    <div class="card">
+      <div id="recent-list"><div class="no-data"><div class="no-data-icon">📦</div>Nenhuma entrega ainda</div></div>
     </div>
   </div>
 
   <!-- NOVA ENTREGA -->
   <div id="page-nova" class="page">
-    <div class="section-title"><span class="dot"></span>Registrar Nova Entrega</div>
+    <div class="page-title">Nova Entrega</div>
+    <div class="page-subtitle">Registre os dados do frete</div>
     <div class="card">
-      <div class="form-grid">
+      <div class="">
         <div class="form-group">
-          <label>Data</label>
-          <input type="date" id="f-data">
+          <div class="form-label">Data</div>
+          <input type="date" id="f-data" class="form-input">
         </div>
         <div class="form-group">
-          <label>Veículo</label>
-          <select id="f-veiculo">
+          <div class="form-label">Veículo</div>
+          <select id="f-veiculo" class="form-input">
             <option value="">Selecione...</option>
             <option value="Gol - ABC1234">Gol - ABC1234</option>
             <option value="Saveiro - DEF5678">Saveiro - DEF5678</option>
@@ -778,70 +789,70 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Origem</label>
-          <input type="text" id="f-origem" placeholder="Cidade / Bairro de saída">
+          <div class="form-label">Origem</div>
+          <input type="text" id="f-origem" class="form-input" placeholder="Cidade / Bairro de saída">
         </div>
         <div class="form-group">
-          <label>Destino</label>
-          <input type="text" id="f-destino" placeholder="Cidade / Bairro de entrega">
+          <div class="form-label">Destino</div>
+          <input type="text" id="f-destino" class="form-input" placeholder="Cidade / Bairro de entrega">
         </div>
         <div class="form-group">
-          <label>Cliente</label>
-          <input type="text" id="f-cliente" placeholder="Nome do cliente">
+          <div class="form-label">Cliente</div>
+          <input type="text" id="f-cliente" class="form-input" placeholder="Nome do cliente">
         </div>
         <div class="form-group">
-          <label>Tipo de Carga</label>
-          <input type="text" id="f-carga" placeholder="Ex: Eletrônicos, Móveis...">
+          <div class="form-label">Tipo de Carga</div>
+          <input type="text" id="f-carga" class="form-input" placeholder="Ex: Eletrônicos, Móveis...">
         </div>
         <div class="form-group">
-          <label>Valor do Frete (R$)</label>
-          <input type="number" id="f-valor" placeholder="0,00" step="0.01">
+          <div class="form-label">Valor do Frete (R$)</div>
+          <input type="number" id="f-valor" class="form-input" placeholder="0,00" step="0.01">
         </div>
         <div class="form-group">
-          <label>Custo Estimado (R$)</label>
-          <input type="number" id="f-custo" placeholder="Combustível + Pedágio" step="0.01">
+          <div class="form-label">Custo Estimado (R$)</div>
+          <input type="number" id="f-custo" class="form-input" placeholder="Combustível + Pedágio" step="0.01">
         </div>
         <div class="form-group">
-          <label>Distância (km)</label>
-          <input type="number" id="f-km" placeholder="km ida+volta">
+          <div class="form-label">Distância (km)</div>
+          <input type="number" id="f-km" class="form-input" placeholder="km ida+volta">
         </div>
         <div class="form-group">
-          <label>Status Inicial</label>
-          <select id="f-status">
+          <div class="form-label">Status Inicial</div>
+          <select id="f-status" class="form-input">
             <option value="agendado">Agendado</option>
             <option value="em_rota">Saiu para entrega agora</option>
           </select>
         </div>
         <div class="form-group full">
-          <label>Observações</label>
-          <textarea id="f-obs" rows="2" placeholder="Informações extras..."></textarea>
+          <div class="form-label">Observações</div>
+          <textarea id="f-obs" class="form-input" rows="3" placeholder="Informações extras..."></textarea>
         </div>
       </div>
       <div class="action-row" style="margin-top:18px">
-        <button class="btn" onclick="salvarEntrega()">Salvar Entrega</button>
-        <button class="btn btn-secondary" onclick="limparForm()">Limpar</button>
+        <button class="btn btn-primary" onclick="salvarEntrega()">💾 Salvar Entrega</button>
+        <button class="btn btn-secondary" onclick="limparForm()">🗑 Limpar</button>
       </div>
     </div>
   </div>
 
   <!-- EM ROTA / CHECKIN -->
   <div id="page-ativas" class="page">
-    <div class="section-title"><span class="dot"></span>Entregas em Rota — Controle de Tempo</div>
+    <div class="page-title">Em Rota</div><div class="page-subtitle">Controle de tempo e descarga</div>
     <div id="ativas-list"><div class="no-data">Nenhuma entrega ativa no momento</div></div>
   </div>
 
   <!-- HISTÓRICO -->
   <div id="page-historico" class="page">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-      <div class="section-title" style="margin:0"><span class="dot"></span>Histórico de Entregas</div>
+      <div class="page-title" style="margin:0">Histórico</div>
       <div style="display:flex;gap:8px">
-        <select id="filtro-veiculo" onchange="renderHistorico()" style="padding:7px 12px;font-size:11px">
+        <select id="filtro-veiculo" onchange="renderHistorico()" class="form-input" style="padding:9px 12px;font-size:12px">
           <option value="">Todos os veículos</option>
           <option value="Gol - ABC1234">Gol</option>
           <option value="Saveiro - DEF5678">Saveiro</option>
           <option value="Fiorino - GHI9012">Fiorino</option>
         </select>
-        <select id="filtro-status" onchange="renderHistorico()" style="padding:7px 12px;font-size:11px">
+        <select id="filtro-status" onchange="renderHistorico()" class="form-input" style="padding:9px 12px;font-size:12px">
           <option value="">Todos os status</option>
           <option value="concluido">Concluídos</option>
           <option value="em_rota">Em Rota</option>
@@ -849,7 +860,7 @@
         </select>
       </div>
     </div>
-    <div class="card" style="overflow-x:auto">
+    <div class="card table-wrap">
       <table>
         <thead>
           <tr>
@@ -872,8 +883,8 @@
 
   <!-- RANKINGS -->
   <div id="page-rankings" class="page">
-    <div class="section-title"><span class="dot"></span>Rankings & Insights</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="page-title">Rankings</div><div class="page-subtitle">Análise de performance da frota</div>
+    <div style="display:grid;grid-template-columns:1fr;gap:14px">
       <div class="card">
         <div class="section-title" style="font-size:13px"><span class="dot" style="background:var(--accent)"></span>Melhores Rotas (Lucro/km)</div>
         <div id="rank-rotas"><div class="no-data">Dados insuficientes</div></div>
@@ -948,7 +959,7 @@
     <div id="rastreio-main" style="display:none">
       <div id="alertas-parada-banner" style="display:none;margin-bottom:12px"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-        <div class="section-title" style="margin:0"><span class="dot" style="background:var(--accent3)"></span>Rastreio em Tempo Real</div>
+        <div class="page-title" style="margin:0">Rastreio GPS</div>
         <div style="display:flex;align-items:center;gap:10px">
           <div class="firebase-connected" id="fb-status-badge">
             <div class="pulse-dot"></div>
@@ -1038,8 +1049,8 @@
   <!-- FROTA -->
   <div id="page-frota" class="page">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div class="section-title" style="margin:0"><span class="dot"></span>Gestão da Frota</div>
-      <button class="btn btn-sm" onclick="abrirModalVeiculo()">+ Adicionar Veículo</button>
+      <div class="page-title" style="margin:0">Minha Frota</div>
+      <button class="btn btn-primary btn-sm" onclick="abrirModalVeiculo()">+ Veículo</button>
     </div>
     <div id="frota-alertas" style="margin-bottom:16px"></div>
     <div class="frota-grid" id="frota-grid">
@@ -1053,24 +1064,24 @@
 <!-- MODAL VEÍCULO -->
 <div class="modal-overlay" id="modal-veiculo">
   <div class="modal">
-    <div class="modal-title" id="modal-veiculo-title">Novo Veículo</div>
+    <div class="modal-handle"></div><div class="modal-title" id="modal-veiculo-title">Novo Veículo</div>
     <input type="hidden" id="mv-id">
-    <div class="form-grid">
+    <div class="">
       <div class="form-group">
-        <label>Modelo / Nome</label>
-        <input type="text" id="mv-modelo" placeholder="Ex: Fiorino, Saveiro, Sprinter...">
+        <div class="form-label">Modelo / Nome</div>
+        <input type="text" id="mv-modelo" class="form-input" placeholder="Ex: Fiorino, Saveiro, Sprinter...">
       </div>
       <div class="form-group">
-        <label>Ano</label>
-        <input type="number" id="mv-ano" placeholder="Ex: 2019" min="1990" max="2030">
+        <div class="form-label">Ano</div>
+        <input type="number" id="mv-ano" class="form-input" placeholder="Ex: 2019" min="1990" max="2030">
       </div>
       <div class="form-group">
-        <label>Placa</label>
-        <input type="text" id="mv-placa" placeholder="Ex: ABC1D23" maxlength="8" style="text-transform:uppercase">
+        <div class="form-label">Placa</div>
+        <input type="text" id="mv-placa" class="form-input" placeholder="Ex: ABC1D23" maxlength="8" style="text-transform:uppercase">
       </div>
       <div class="form-group">
-        <label>Tipo / Ícone</label>
-        <select id="mv-tipo">
+        <div class="form-label">Tipo / Ícone</div>
+        <select id="mv-tipo" class="form-input">
           <option value="🚗">🚗 Carro</option>
           <option value="🛻">🛻 Picape</option>
           <option value="🚐">🚐 Van / Furgão</option>
@@ -1079,29 +1090,29 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Consumo (km/litro)</label>
-        <input type="number" id="mv-consumo" placeholder="Ex: 12.5" step="0.1" min="1">
+        <div class="form-label">Consumo (km/litro)</div>
+        <input type="number" id="mv-consumo" class="form-input" placeholder="Ex: 12.5" step="0.1" min="1">
       </div>
       <div class="form-group">
-        <label>Capacidade de Carga (kg)</label>
-        <input type="number" id="mv-carga" placeholder="Ex: 600" min="1">
+        <div class="form-label">Capacidade de Carga (kg)</div>
+        <input type="number" id="mv-carga" class="form-input" placeholder="Ex: 600" min="1">
       </div>
       <div class="form-group">
-        <label>Última Revisão</label>
-        <input type="date" id="mv-ultima-revisao">
+        <div class="form-label">Última Revisão</div>
+        <input type="date" id="mv-ultima-revisao" class="form-input">
       </div>
       <div class="form-group">
-        <label>Próxima Revisão</label>
-        <input type="date" id="mv-proxima-revisao">
+        <div class="form-label">Próxima Revisão</div>
+        <input type="date" id="mv-proxima-revisao" class="form-input">
       </div>
       <div class="form-group full">
-        <label>Observações</label>
-        <textarea id="mv-obs" rows="2" placeholder="Seguro, IPVA, observações mecânicas..."></textarea>
+        <div class="form-label">Observações</div>
+        <textarea id="mv-obs" class="form-input" rows="2" placeholder="Seguro, IPVA, observações mecânicas..."></textarea>
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('modal-veiculo')">Cancelar</button>
-      <button class="btn" onclick="salvarVeiculo()">Salvar Veículo</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-veiculo')" style="flex:1">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarVeiculo()" style="flex:1">Salvar</button>
     </div>
   </div>
 </div>
@@ -1109,11 +1120,11 @@
 
 <div class="modal-overlay" id="modal-delete">
   <div class="modal">
-    <div class="modal-title">Excluir entrega?</div>
+    <div class="modal-handle"></div><div class="modal-title">Excluir entrega?</div>
     <p style="color:var(--muted);font-size:12px">Esta ação não pode ser desfeita.</p>
     <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="closeModal('modal-delete')">Cancelar</button>
-      <button class="btn btn-danger" onclick="confirmarDelete()">Excluir</button>
+      <button class="btn btn-secondary" onclick="closeModal('modal-delete')" style="flex:1">Cancelar</button>
+      <button class="btn btn-danger" onclick="confirmarDelete()" style="flex:1;background:rgba(255,68,102,0.2);border:1px solid var(--red);color:var(--red)">Excluir</button>
     </div>
   </div>
 </div>
@@ -1131,15 +1142,21 @@ function save() {
 // ---- NAVIGATION ----
 function showPage(p) {
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   document.getElementById('page-' + p).classList.add('active');
-  event.target.classList.add('active');
+  const navEl = document.getElementById('nav-' + p);
+  if (navEl) navEl.classList.add('active');
   if (p === 'dashboard') renderDashboard();
   if (p === 'ativas') renderAtivas();
   if (p === 'historico') renderHistorico();
   if (p === 'rankings') renderRankings();
   if (p === 'frota') renderFrota();
   if (p === 'rastreio') initRastreioPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleAvatarMenu() {
+  // Future: profile/settings modal
 }
 
 // ---- FORM ----
@@ -1206,6 +1223,9 @@ function renderDashboard() {
   document.getElementById('stat-fat-sub').textContent = doMes.length + ' entregas no mês';
   document.getElementById('stat-lucro').textContent = 'R$ ' + lucro.toFixed(2).replace('.',',');
   document.getElementById('stat-ativas').textContent = ativas;
+  // Update bottom nav badge
+  const badge = document.getElementById('badge-ativas');
+  if (badge) { badge.textContent = ativas; badge.style.display = ativas > 0 ? 'flex' : 'none'; }
 
   // Tempo médio descarga
   const comTempo = entregas.filter(e => e.tempoDescarga !== null);
@@ -1221,17 +1241,20 @@ function renderDashboard() {
     { name: 'Fiorino', plate: 'GHI9012', icon: '🚐' }
   ];
   const fc = document.getElementById('fleet-cards');
-  fc.innerHTML = fleet.map(v => {
+  // use dynamic veiculos if available, else fallback
+  const fleetSource = veiculos.length ? veiculos.map(v => ({ name: v.modelo, plate: v.placa, icon: v.tipo })) : fleet;
+  fc.innerHTML = fleetSource.map(v => {
     const vKey = v.name + ' - ' + v.plate;
     const vEntregas = entregas.filter(e => e.veiculo === vKey);
     const vFat = vEntregas.reduce((s, e) => s + e.valor, 0);
-    const emRota = vEntregas.filter(e => e.status === 'em_rota').length;
-    return `<div class="vehicle-card">
-      <div class="vehicle-icon">${v.icon}</div>
-      <div class="vehicle-name">${v.name}</div>
-      <div class="vehicle-plate">${v.plate}</div>
-      <div class="vehicle-stat">${vEntregas.length} entregas • ${emRota > 0 ? '<strong>EM ROTA</strong>' : '<span style="color:var(--muted)">livre</span>'}</div>
-      <div class="vehicle-stat" style="margin-top:6px">Total: <strong>R$ ${vFat.toFixed(0)}</strong></div>
+    const emRota = vEntregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga').length;
+    return `<div class="fleet-mini" onclick="showPage('frota')">
+      <div class="fleet-mini-icon">${v.icon}</div>
+      <div class="fleet-mini-name">${v.name}</div>
+      <div class="fleet-mini-plate">${v.plate}</div>
+      <div class="fleet-mini-status" style="color:${emRota > 0 ? 'var(--accent2)' : 'var(--text2)'}">
+        ${emRota > 0 ? '🟠 Em rota' : '🟢 Livre'}
+      </div>
     </div>`;
   }).join('');
 
@@ -1239,21 +1262,23 @@ function renderDashboard() {
   const recent = entregas.slice(0, 5);
   const rl = document.getElementById('recent-list');
   if (!recent.length) { rl.innerHTML = '<div class="no-data">Nenhuma entrega ainda</div>'; return; }
-  rl.innerHTML = recent.map(e => `
-    <div class="delivery-row">
-      <div class="delivery-route">
-        <div class="delivery-from">${e.origem}</div>
-        <div class="delivery-to">→ ${e.destino}</div>
-        <div style="color:var(--muted);font-size:10px;margin-top:2px">${e.cliente}</div>
+  rl.innerHTML = recent.map(e => {
+    const lucro = e.valor - e.custo;
+    const badgeClass = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
+    const badgeText = e.status === 'concluido' ? '✓ Feito' : e.status === 'em_rota' ? '🚚 Em rota' : e.status === 'em_descarga' ? '📦 Descarga' : '⏰ Agendado';
+    const dotColor = e.status === 'concluido' ? 'var(--green)' : e.status === 'em_rota' ? 'var(--accent2)' : 'var(--accent)';
+    return `<div class="delivery-row">
+      <div class="delivery-dot" style="background:${dotColor}"></div>
+      <div class="delivery-info">
+        <div class="delivery-route">${e.origem} → ${e.destino}</div>
+        <div class="delivery-client">${e.cliente}</div>
       </div>
-      <div style="text-align:right">
-        <div class="delivery-value">R$ ${e.valor.toFixed(0)}</div>
-        <div class="delivery-profit">lucro R$ ${(e.valor - e.custo).toFixed(0)}</div>
+      <div class="delivery-right">
+        <div class="delivery-value" style="color:var(--green)">R$ ${e.valor.toFixed(0)}</div>
+        <div class="delivery-profit">lucro R$ ${lucro.toFixed(0)}</div>
       </div>
-      <span class="badge ${e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' ? 'badge-transit' : 'badge-loading'}">
-        ${e.status === 'concluido' ? 'Feito' : e.status === 'em_rota' ? 'Em rota' : 'Agendado'}
-      </span>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 // ---- EM ROTA / CHECKIN ----
@@ -1287,7 +1312,7 @@ function buildCheckinCard(e) {
 
   let actions = '';
   if (!chegou) {
-    actions += `<button class="btn" onclick="registrarChegada(${e.id})">📍 Cheguei na Entrega</button>`;
+    actions += `<button class="btn" onclick="registrarChegada(${e.id})" style="flex:1">📍 Cheguei</button>`;
   }
   if (chegou && !saiu) {
     actions += `<button class="btn" style="background:var(--accent2);color:#0e0f0e" onclick="registrarSaida(${e.id})">🚀 Saí da Entrega</button>`;
@@ -1399,7 +1424,7 @@ function renderHistorico() {
   tbody.innerHTML = filtered.map(e => {
     const lucro = e.valor - e.custo;
     const descStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.horaChegada && !e.horaSaida2 ? '⏳ em curso' : '--');
-    const statusLabel = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : 'badge-loading';
+    const statusLabel = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
     const statusText = e.status === 'concluido' ? 'Concluído' : e.status === 'em_rota' ? 'Em Rota' : e.status === 'em_descarga' ? 'Descarga' : 'Agendado';
     return `<tr>
       <td>${formatDate(e.data)}</td>
@@ -1673,39 +1698,37 @@ function renderFrota() {
     const vFat = vEntregas.filter(e => e.status === 'concluido').reduce((s, e) => s + e.valor, 0);
 
     return `<div class="frota-card">
-      <div class="frota-card-header">
-        <div class="frota-icon-wrap">${v.tipo}</div>
-        <div class="frota-card-info">
+      <div class="frota-card-top">
+        <div class="frota-card-icon">${v.tipo}</div>
+        <div>
           <div class="frota-card-name">${v.modelo}</div>
           <div class="frota-card-year">${v.ano ? 'Ano ' + v.ano : ''}</div>
         </div>
-        <div class="frota-plate-big">${v.placa}</div>
+        <div class="frota-plate">${v.placa}</div>
       </div>
-      <div class="frota-card-body">
-        <div class="frota-specs">
-          <div class="frota-spec">
-            <div class="frota-spec-label">⛽ Consumo</div>
-            <div class="frota-spec-value">${v.consumo ? v.consumo + ' km/l' : '--'}</div>
-          </div>
-          <div class="frota-spec">
-            <div class="frota-spec-label">📦 Cap. Carga</div>
-            <div class="frota-spec-value">${v.carga ? v.carga + ' kg' : '--'}</div>
-          </div>
-          <div class="frota-spec">
-            <div class="frota-spec-label">🚚 Entregas</div>
-            <div class="frota-spec-value" style="color:var(--accent3)">${vEntregas.length}</div>
-          </div>
-          <div class="frota-spec">
-            <div class="frota-spec-label">💰 Faturado</div>
-            <div class="frota-spec-value" style="color:var(--accent)">R$ ${vFat.toFixed(0)}</div>
-          </div>
+      <div class="frota-specs">
+        <div class="frota-spec">
+          <div class="frota-spec-label">⛽ Consumo</div>
+          <div class="frota-spec-value" style="color:var(--accent)">${v.consumo ? v.consumo + ' km/l' : '--'}</div>
         </div>
-        ${revisaoHTML}
-        ${v.obs ? `<div style="margin-top:10px;padding:10px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--muted)">${v.obs}</div>` : ''}
+        <div class="frota-spec">
+          <div class="frota-spec-label">📦 Cap. Carga</div>
+          <div class="frota-spec-value" style="color:var(--accent2)">${v.carga ? v.carga + ' kg' : '--'}</div>
+        </div>
+        <div class="frota-spec">
+          <div class="frota-spec-label">🚚 Entregas</div>
+          <div class="frota-spec-value" style="color:var(--text)">${vEntregas.length}</div>
+        </div>
+        <div class="frota-spec">
+          <div class="frota-spec-label">💰 Faturado</div>
+          <div class="frota-spec-value" style="color:var(--green)">R$ ${vFat.toFixed(0)}</div>
+        </div>
       </div>
-      <div class="frota-card-footer">
-        <button class="btn btn-secondary btn-sm" onclick="abrirModalVeiculo(${v.id})">✏️ Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="deletarVeiculo(${v.id})">✕ Remover</button>
+      ${revisaoHTML ? '<div style="padding:0 18px 4px">' + revisaoHTML + '</div>' : ''}
+      ${v.obs ? `<div style="margin:0 18px 14px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:12px;font-size:12px;color:var(--text2)">${v.obs}</div>` : ''}
+      <div class="frota-footer">
+        <button class="btn btn-secondary btn-sm" style="flex:1" onclick="abrirModalVeiculo(${v.id})">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="deletarVeiculo(${v.id})">✕</button>
       </div>
     </div>`;
   }).join('') + addBtn;
@@ -2218,6 +2241,14 @@ Object.defineProperty(window, 'STOP_THRESHOLD_MIN_EFFECTIVE', {
   }
 })();
 document.getElementById('f-data').value = new Date().toISOString().slice(0, 10);
+// Set greeting date
+const dashDate = document.getElementById('dash-date');
+if (dashDate) {
+  const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const now = new Date();
+  dashDate.textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
+}
 syncFrotaSelects();
 renderDashboard();
 tentarReconectarFirebase();
