@@ -2997,42 +2997,44 @@ let selectedTipo = 'dono';
 
 // Fixed Firebase config (pre-configured for this project)
 const FB_CONFIG = {
-  apiKey: "AIzaSyCFKHqSjC_q-QRqyUY2LfhKWK2BoHuNq1A",
+  apiKey: "AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4",
   authDomain: "fretemanager-60ef8.firebaseapp.com",
   databaseURL: "https://fretemanager-60ef8-default-rtdb.firebaseio.com",
   projectId: "fretemanager-60ef8",
-  storageBucket: "fretemanager-60ef8.appspot.com",
-  messagingSenderId: "0",
-  appId: "0"
+  storageBucket: "fretemanager-60ef8.firebasestorage.app",
+  messagingSenderId: "977410315261",
+  appId: "1:977410315261:web:ebaf0794c7d887321abf94"
 };
 
 function initFirebase() {
   if (fbApp) return;
-  try {
-    fbApp = firebase.initializeApp(FB_CONFIG, 'frete-main');
-    fbDb   = firebase.database(fbApp);
-    fbAuth = firebase.auth(fbApp);
 
-    // Observe auth state
+  try {
+    fbApp = firebase.initializeApp(FB_CONFIG);
+
+    fbDb   = firebase.database();   // sem parâmetro
+    fbAuth = firebase.auth();       // sem parâmetro
+
     fbAuth.onAuthStateChanged(async user => {
       if (user) {
-        // Load user profile from DB
         const snap = await fbDb.ref('usuarios/' + user.uid).once('value');
         const profile = snap.val();
+
         if (profile) {
           currentUser = { uid: user.uid, email: user.email, ...profile };
           hideAuthScreen();
           applyUserSession();
         } else {
-          // Profile missing — sign out
           fbAuth.signOut();
           showAuthError('Perfil não encontrado. Recrie sua conta.');
         }
+
       } else {
         currentUser = null;
         showAuthScreen();
       }
     });
+
   } catch(e) {
     console.error('Firebase init error:', e);
     showAuthError('Erro ao conectar: ' + e.message);
