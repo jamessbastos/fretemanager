@@ -967,6 +967,38 @@
   .func-carga-item:last-child{border-bottom:none}
   .func-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
   .locked-overlay{position:absolute;inset:0;z-index:5;background:rgba(10,14,26,.94);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;border-radius:inherit}
+
+  /* ══ EQUIPE / TEAM MANAGEMENT ══ */
+  .func-card{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:18px;padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
+  .func-card.inativo{opacity:.5}
+  .func-avatar-sm{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid transparent}
+  .func-avatar-sm.online{border-color:var(--green);box-shadow:0 0 10px rgba(0,255,136,.3)}
+  .func-avatar-sm.offline{border-color:var(--glass-border)}
+  .func-info{flex:1;min-width:0}
+  .func-nome{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .func-email{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .func-veiculo-tag{font-size:10px;color:var(--accent);margin-top:3px;font-weight:600}
+  .func-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .func-status-dot.online{background:var(--green);box-shadow:0 0 6px var(--green)}
+  .func-status-dot.offline{background:var(--muted)}
+  .func-actions{display:flex;gap:6px;flex-shrink:0}
+  .func-action-btn{width:32px;height:32px;border-radius:9px;border:none;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all .2s}
+  .func-action-btn.danger{background:rgba(255,68,102,.15);color:var(--red)}
+  .func-action-btn.warn{background:rgba(255,217,61,.15);color:var(--yellow)}
+  .func-action-btn:hover{transform:scale(1.1)}
+  .equipe-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px}
+  .equipe-stat{background:var(--glass);border:1px solid var(--glass-border);border-radius:14px;padding:12px;text-align:center}
+  .equipe-stat-val{font-size:22px;font-weight:900;font-family:'JetBrains Mono',monospace}
+  .equipe-stat-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
+  .add-func-panel{background:rgba(0,212,255,.05);border:1px dashed rgba(0,212,255,.3);border-radius:18px;padding:20px;margin-bottom:16px}
+  .add-func-panel.hidden{display:none}
+  .saas-plan-banner{background:linear-gradient(135deg,rgba(124,58,237,.15),rgba(0,212,255,.1));border:1px solid rgba(124,58,237,.3);border-radius:16px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+  .plan-icon{font-size:28px;flex-shrink:0}
+  .plan-info{flex:1}
+  .plan-name{font-size:14px;font-weight:800}
+  .plan-sub{font-size:11px;color:var(--text2);margin-top:2px}
+  .plan-price{font-size:18px;font-weight:900;color:var(--accent);font-family:'JetBrains Mono',monospace;text-align:right}
+  .plan-price-sub{font-size:9px;color:var(--text2);text-align:right}
 </style>
 </head>
 <body>
@@ -980,15 +1012,10 @@
       <div class="auth-logo-sub">Sistema de Gestão de Fretes</div>
     </div>
 
-    <div class="auth-tabs" id="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="authTab('login')">Entrar</button>
-      <button class="auth-tab" id="tab-cadastro" onclick="authTab('cadastro')">Criar conta</button>
-    </div>
-
     <div class="auth-error" id="auth-error"></div>
     <div class="auth-success" id="auth-success"></div>
 
-    <!-- LOGIN -->
+    <!-- ENTRAR -->
     <div id="auth-form-login" class="auth-form">
       <div class="auth-group">
         <label class="auth-label">E-mail</label>
@@ -1000,10 +1027,21 @@
           onkeydown="if(event.key==='Enter')fazerLogin()">
       </div>
       <button class="auth-btn" id="btn-login" onclick="fazerLogin()">🔓 Entrar</button>
+      <div style="text-align:center;margin-top:6px">
+        <span style="font-size:12px;color:var(--muted)">Novo por aqui? </span>
+        <span style="font-size:12px;color:var(--accent);cursor:pointer;font-weight:600" onclick="authTab('cadastro')">Criar conta de empresa</span>
+      </div>
     </div>
 
-    <!-- CADASTRO -->
+    <!-- CADASTRO — somente Dono -->
     <div id="auth-form-cadastro" class="auth-form" style="display:none">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <button onclick="authTab('login')" style="background:none;border:none;color:var(--text2);cursor:pointer;font-size:22px;padding:0;line-height:1">←</button>
+        <div>
+          <div style="font-size:15px;font-weight:800">Criar conta de empresa</div>
+          <div style="font-size:11px;color:var(--muted)">Somente para proprietários</div>
+        </div>
+      </div>
       <div class="auth-group">
         <label class="auth-label">Nome da Empresa <span style="color:var(--muted);font-size:10px">máx. 50 caracteres</span></label>
         <input type="text" class="auth-input" id="c-empresa" placeholder="Ex: Transportes Silva Ltda"
@@ -1015,29 +1053,18 @@
         <input type="text" class="auth-input" id="c-nome" placeholder="Nome completo">
       </div>
       <div class="auth-group">
-        <label class="auth-label">E-mail</label>
+        <label class="auth-label">E-mail do proprietário</label>
         <input type="email" class="auth-input" id="c-email" placeholder="seu@email.com" autocomplete="email">
       </div>
       <div class="auth-group">
         <label class="auth-label">Senha <span style="color:var(--muted);font-size:10px">mín. 6 caracteres</span></label>
         <input type="password" class="auth-input" id="c-senha" placeholder="••••••••" autocomplete="new-password">
       </div>
-      <div class="auth-group">
-        <label class="auth-label">Tipo de acesso</label>
-        <div class="auth-tipo-grid">
-          <div class="auth-tipo-btn selected" id="tipo-dono" onclick="selTipo('dono')">
-            <div class="auth-tipo-icon">👑</div>
-            <div class="auth-tipo-label">Dono</div>
-            <div class="auth-tipo-sub">Acesso completo</div>
-          </div>
-          <div class="auth-tipo-btn" id="tipo-funcionario" onclick="selTipo('funcionario')">
-            <div class="auth-tipo-icon">👷</div>
-            <div class="auth-tipo-label">Funcionário</div>
-            <div class="auth-tipo-sub">Acesso restrito</div>
-          </div>
-        </div>
+      <div style="background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:12px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px">
+        👑 Esta conta terá <strong style="color:var(--text)">acesso total</strong>.<br>
+        Funcionários são adicionados pelo painel interno.
       </div>
-      <button class="auth-btn" id="btn-cadastro" onclick="fazerCadastro()">✅ Criar conta</button>
+      <button class="auth-btn" id="btn-cadastro" onclick="fazerCadastro()">✅ Criar conta de empresa</button>
     </div>
 
   </div>
@@ -1150,6 +1177,10 @@
     <div class="nav-icon">📡</div>
     <div class="nav-label">Rastreio</div>
   </div>
+  <div class="nav-item" id="nav-equipe" onclick="showPage('equipe')">
+    <div class="nav-icon">👥</div>
+    <div class="nav-label">Equipe</div>
+  </div>
 </nav>
 
 <main>
@@ -1247,6 +1278,70 @@
           <div class="no-data" style="padding:20px 0">Nenhuma carga realizada</div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- EQUIPE (DONO ONLY) -->
+  <div id="page-equipe" class="page">
+    <div class="page-title">Minha Equipe</div>
+    <div class="page-subtitle">Gerencie acesso dos funcionários</div>
+
+    <div class="saas-plan-banner">
+      <div class="plan-icon">⚡</div>
+      <div class="plan-info">
+        <div class="plan-name" id="plano-nome">Plano Básico</div>
+        <div class="plan-sub" id="plano-desc">0 funcionários</div>
+      </div>
+      <div>
+        <div class="plan-price" id="plano-preco">R$ 97</div>
+        <div class="plan-price-sub">/mês</div>
+      </div>
+    </div>
+
+    <div class="equipe-stats">
+      <div class="equipe-stat">
+        <div class="equipe-stat-val" id="eq-total">0</div>
+        <div class="equipe-stat-label">Funcionários</div>
+      </div>
+      <div class="equipe-stat">
+        <div class="equipe-stat-val" style="color:var(--green)" id="eq-online">0</div>
+        <div class="equipe-stat-label">Online agora</div>
+      </div>
+      <div class="equipe-stat">
+        <div class="equipe-stat-val" style="color:var(--accent2)" id="eq-custo">R$97</div>
+        <div class="equipe-stat-label">Custo/mês</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <button class="btn btn-primary" onclick="toggleAddFunc()" style="width:100%">＋ Adicionar funcionário</button>
+    </div>
+
+    <div class="add-func-panel hidden" id="add-func-panel">
+      <div style="font-size:14px;font-weight:800;margin-bottom:14px;color:var(--accent)">👷 Novo funcionário</div>
+      <div class="form-group">
+        <div class="form-label">Nome completo</div>
+        <input type="text" class="form-input" id="nf-nome" placeholder="Nome do funcionário">
+      </div>
+      <div class="form-group">
+        <div class="form-label">E-mail de acesso</div>
+        <input type="email" class="form-input" id="nf-email" placeholder="email@exemplo.com">
+      </div>
+      <div class="form-group">
+        <div class="form-label">Senha inicial</div>
+        <input type="password" class="form-input" id="nf-senha" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div style="background:rgba(255,217,61,.08);border:1px solid rgba(255,217,61,.2);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.6">
+        💡 O funcionário usará este e-mail e senha para entrar.
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="toggleAddFunc()">Cancelar</button>
+        <button class="btn btn-primary" style="flex:1" id="btn-add-func" onclick="criarFuncionario()">✅ Criar acesso</button>
+      </div>
+    </div>
+
+    <div id="equipe-lista">
+      <div class="no-data"><div class="no-data-icon">👥</div>Nenhum funcionário cadastrado ainda.</div>
     </div>
   </div>
 
@@ -1701,6 +1796,15 @@
 </div>
 
 <script>
+// ---- FIREBASE EARLY INIT ----
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof firebase !== 'undefined') initFirebase();
+  else setTimeout(() => initFirebase(), 500);
+});
+
+// ---- FUSO HORÁRIO: America/Sao_Paulo (BRT/BRST) ----
+const TZ = 'America/Sao_Paulo';
+
 // ---- DATA ----
 let entregas = JSON.parse(localStorage.getItem('fm_entregas') || '[]');
 let deleteId = null;
@@ -1782,12 +1886,12 @@ function carregarDadosFirebase() {
 
 // ---- NAVIGATION ----
 function showPage(p) {
-  // Funcionário não acessa Nova Entrega nem Rankings nem Histórico
-  const restricted = ['nova','rankings','historico'];
+  const restricted = ['nova','rankings','historico','equipe'];
   if (currentUser && currentUser.tipo === 'funcionario' && restricted.includes(p)) {
     showToast('⛔ Acesso restrito para funcionários');
     return;
   }
+  if (p === 'equipe' && currentUser?.tipo !== 'dono') return;
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   document.getElementById('page-' + p)?.classList.add('active');
@@ -1797,6 +1901,7 @@ function showPage(p) {
     if (currentUser?.tipo === 'funcionario') renderFuncDashboard();
     else renderDashboard();
   }
+  if (p === 'equipe') renderEquipe();
   if (p === 'ativas') renderAtivas();
   if (p === 'historico') renderHistorico();
   if (p === 'rankings') renderRankings();
@@ -2712,8 +2817,7 @@ function formatMinutes(min) {
   return h + 'h' + (m > 0 ? m + 'min' : '');
 }
 
-// ---- FUSO HORÁRIO: America/Sao_Paulo (BRT/BRST) ----
-const TZ = 'America/Sao_Paulo';
+// TZ moved to top of script
 
 function nowBrasilia() {
   // Returns "YYYY-MM-DDTHH:MM" in BRT for datetime-local inputs
@@ -2989,13 +3093,11 @@ function conectarFirebase() {
 }
 
 // ═══════════════════════════════════════════════════════
-// AUTH & USER SESSION
+// AUTH & USER SESSION  (SaaS — Dono cria funcionários)
 // ═══════════════════════════════════════════════════════
 let fbApp = null, fbDb = null, fbAuth = null;
-let currentUser = null; // { uid, email, nome, tipo, empresaId, empresaNome }
-let selectedTipo = 'dono';
+let currentUser = null;
 
-// Fixed Firebase config (pre-configured for this project)
 const FB_CONFIG = {
   apiKey: "AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4",
   authDomain: "fretemanager-60ef8.firebaseapp.com",
@@ -3006,35 +3108,43 @@ const FB_CONFIG = {
   appId: "1:977410315261:web:ebaf0794c7d887321abf94"
 };
 
+const SAAS_PRECO_BASE = 97;
+const SAAS_PRECO_FUNC = 29;
+const SAAS_MAX_FUNC_BASE = 3;
+
 function initFirebase() {
   if (fbApp) return;
-
   try {
-    fbApp = firebase.initializeApp(FB_CONFIG);
-
-    fbDb   = firebase.database();   // sem parâmetro
-    fbAuth = firebase.auth();       // sem parâmetro
+    fbApp  = firebase.initializeApp(FB_CONFIG);
+    fbDb   = firebase.database();
+    fbAuth = firebase.auth();
 
     fbAuth.onAuthStateChanged(async user => {
       if (user) {
         const snap = await fbDb.ref('usuarios/' + user.uid).once('value');
         const profile = snap.val();
-
         if (profile) {
           currentUser = { uid: user.uid, email: user.email, ...profile };
+          if (currentUser.tipo === 'funcionario') {
+            const activeSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + user.uid + '/ativo').once('value');
+            if (activeSnap.val() === false) {
+              await fbAuth.signOut();
+              showAuthError('Sua conta foi desativada. Fale com o responsável.');
+              return;
+            }
+          }
+          fbDb.ref('usuarios/' + user.uid + '/online').set(true);
           hideAuthScreen();
           applyUserSession();
         } else {
-          fbAuth.signOut();
-          showAuthError('Perfil não encontrado. Recrie sua conta.');
+          await fbAuth.signOut();
+          showAuthError('Perfil não encontrado. Recadastre-se.');
         }
-
       } else {
         currentUser = null;
         showAuthScreen();
       }
     });
-
   } catch(e) {
     console.error('Firebase init error:', e);
     showAuthError('Erro ao conectar: ' + e.message);
@@ -3043,44 +3153,40 @@ function initFirebase() {
 
 // ── AUTH FORMS ────────────────────────────────────────
 function authTab(tab) {
-  document.getElementById('auth-form-login').style.display   = tab === 'login'    ? 'flex' : 'none';
+  document.getElementById('auth-form-login').style.display    = tab === 'login'    ? 'flex' : 'none';
   document.getElementById('auth-form-cadastro').style.display = tab === 'cadastro' ? 'flex' : 'none';
-  document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
   clearAuthMsg();
 }
 
 function clearAuthMsg() {
-  document.getElementById('auth-error').style.display = 'none';
+  document.getElementById('auth-error').style.display   = 'none';
   document.getElementById('auth-success').style.display = 'none';
 }
 
 function showAuthError(msg) {
   const el = document.getElementById('auth-error');
+  if (!el) return;
   el.textContent = msg; el.style.display = 'block';
   document.getElementById('auth-success').style.display = 'none';
 }
 
 function showAuthSuccess(msg) {
   const el = document.getElementById('auth-success');
+  if (!el) return;
   el.textContent = msg; el.style.display = 'block';
   document.getElementById('auth-error').style.display = 'none';
 }
 
 function contarEmpresa() {
-  const v = document.getElementById('c-empresa').value;
+  const v = document.getElementById('c-empresa')?.value || '';
   const el = document.getElementById('empresa-chars');
-  el.textContent = v.length + ' / 50';
-  el.classList.toggle('warn', v.length > 40);
+  if (el) { el.textContent = v.length + ' / 50'; el.classList.toggle('warn', v.length > 40); }
 }
 
-function selTipo(tipo) {
-  selectedTipo = tipo;
-  document.getElementById('tipo-dono').classList.toggle('selected', tipo === 'dono');
-  document.getElementById('tipo-funcionario').classList.toggle('selected', tipo === 'funcionario');
-}
+function selTipo(tipo) {} // mantido por compatibilidade
 
 async function fazerLogin() {
+  if (!fbAuth) { initFirebase(); showAuthError('Conectando... tente novamente em 2 segundos.'); return; }
   const email = document.getElementById('l-email').value.trim();
   const senha = document.getElementById('l-senha').value;
   if (!email || !senha) { showAuthError('Preencha e-mail e senha.'); return; }
@@ -3089,13 +3195,12 @@ async function fazerLogin() {
   clearAuthMsg();
   try {
     await fbAuth.signInWithEmailAndPassword(email, senha);
-    // onAuthStateChanged will handle the rest
   } catch(e) {
     const msgs = {
       'auth/user-not-found': 'E-mail não cadastrado.',
       'auth/wrong-password': 'Senha incorreta.',
       'auth/invalid-email': 'E-mail inválido.',
-      'auth/too-many-requests': 'Muitas tentativas. Aguarde.',
+      'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
       'auth/invalid-credential': 'E-mail ou senha incorretos.',
     };
     showAuthError(msgs[e.code] || 'Erro: ' + e.message);
@@ -3104,10 +3209,11 @@ async function fazerLogin() {
 }
 
 async function fazerCadastro() {
-  const empresa = document.getElementById('c-empresa').value.trim().slice(0, 50);
-  const nome    = document.getElementById('c-nome').value.trim();
-  const email   = document.getElementById('c-email').value.trim();
-  const senha   = document.getElementById('c-senha').value;
+  if (!fbAuth) { initFirebase(); showAuthError('Conectando... tente novamente em 2 segundos.'); return; }
+  const empresa = (document.getElementById('c-empresa')?.value || '').trim().slice(0, 50);
+  const nome    = (document.getElementById('c-nome')?.value || '').trim();
+  const email   = (document.getElementById('c-email')?.value || '').trim();
+  const senha   = document.getElementById('c-senha')?.value || '';
   if (!empresa) { showAuthError('Informe o nome da empresa.'); return; }
   if (!nome)    { showAuthError('Informe seu nome.'); return; }
   if (!email)   { showAuthError('Informe o e-mail.'); return; }
@@ -3118,61 +3224,64 @@ async function fazerCadastro() {
   try {
     const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
     const uid = cred.user.uid;
-    // Use uid as empresaId for donos; funcionários ligam ao empresaId do dono depois
-    const empresaId = selectedTipo === 'dono' ? uid : ('emp_' + uid);
-    const profile = { nome, email, tipo: selectedTipo, empresaId, empresaNome: empresa };
+    const empresaId = uid;
+    const profile = { nome, email, tipo: 'dono', empresaId, empresaNome: empresa };
     await fbDb.ref('usuarios/' + uid).set(profile);
-    // Save empresa info under empresas/{empresaId}
-    await fbDb.ref('empresas/' + empresaId + '/info').set({ nome: empresa, donoUid: selectedTipo === 'dono' ? uid : null });
-    // onAuthStateChanged will handle rest
+    await fbDb.ref('empresas/' + empresaId + '/info').set({
+      nome: empresa, donoUid: uid, criadoEm: Date.now(),
+      plano: 'basico', maxFuncionarios: SAAS_MAX_FUNC_BASE
+    });
   } catch(e) {
     const msgs = {
       'auth/email-already-in-use': 'E-mail já cadastrado. Faça login.',
       'auth/invalid-email': 'E-mail inválido.',
-      'auth/weak-password': 'Senha muito fraca.',
+      'auth/weak-password': 'Senha muito fraca (mínimo 6 caracteres).',
     };
     showAuthError(msgs[e.code] || 'Erro: ' + e.message);
-    btn.disabled = false; btn.innerHTML = '✅ Criar conta';
+    btn.disabled = false; btn.innerHTML = '✅ Criar conta de empresa';
   }
 }
 
 async function fazerLogout() {
   if (!confirm('Sair da conta?')) return;
   fecharAvatarMenu();
+  if (currentUser && fbDb) {
+    fbDb.ref('usuarios/' + currentUser.uid + '/online').set(false);
+  }
   await fbAuth.signOut();
 }
 
 function showAuthScreen() {
-  document.getElementById('auth-screen').style.display = 'flex';
-  document.getElementById('btn-login').disabled = false;
-  document.getElementById('btn-login').innerHTML = '🔓 Entrar';
-  document.getElementById('btn-cadastro').disabled = false;
-  document.getElementById('btn-cadastro').innerHTML = '✅ Criar conta';
+  const el = document.getElementById('auth-screen');
+  if (el) el.style.display = 'flex';
+  const btn = document.getElementById('btn-login');
+  if (btn) { btn.disabled = false; btn.innerHTML = '🔓 Entrar'; }
+  authTab('login');
 }
 
 function hideAuthScreen() {
-  document.getElementById('auth-screen').style.display = 'none';
+  const el = document.getElementById('auth-screen');
+  if (el) el.style.display = 'none';
 }
 
 // ── SESSION & PERMISSIONS ────────────────────────────
 function applyUserSession() {
   if (!currentUser) return;
   const u = currentUser;
-
-  // Update header / avatar panel
   const empNome = u.empresaNome || 'FreteManager';
-  document.getElementById('app-empresa-nome').textContent = empNome;
-  document.getElementById('auth-empresa-nome').textContent = empNome;
-  document.getElementById('app-user-tipo').textContent = u.tipo === 'dono' ? '👑 Dono' : '👷 Funcionário';
-  document.getElementById('avatar-nome-display').textContent = u.nome || u.email;
-  document.getElementById('avatar-user-email').textContent   = u.email;
-
-  // Connect Firebase and load data
+  const appNome = document.getElementById('app-empresa-nome');
+  const authNome = document.getElementById('auth-empresa-nome');
+  if (appNome)  appNome.textContent  = empNome;
+  if (authNome) authNome.textContent = empNome;
+  const tipoEl = document.getElementById('app-user-tipo');
+  if (tipoEl) tipoEl.textContent = u.tipo === 'dono' ? '👑 Dono' : '👷 Funcionário';
+  const nomeEl = document.getElementById('avatar-nome-display');
+  if (nomeEl) nomeEl.textContent = u.nome || u.email;
+  const emailEl = document.getElementById('avatar-user-email');
+  if (emailEl) emailEl.textContent = u.email;
   carregarDadosFirebase();
-
   if (u.tipo === 'funcionario') {
     applyFuncRestrictions();
-    // Funcionário vai para page-func por padrão
     showPageFunc();
   } else {
     removeFuncRestrictions();
@@ -3181,44 +3290,25 @@ function applyUserSession() {
 }
 
 function applyFuncRestrictions() {
-  // Hide nav items not allowed for funcionário
-  ['nav-nova','nav-historico','nav-rankings'].forEach(id => {
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
   const fn = document.getElementById('nav-func');
   if (fn) fn.style.display = 'flex';
-  const nd = document.getElementById('nav-dashboard');
-  if (nd) nd.style.display = 'none';
-
-  // Hide valor do frete field
-  const cf = document.getElementById('campo-valor-frete');
-  if (cf) cf.style.display = 'none';
-
-  // Hide lucro preview
-  const lp = document.getElementById('lucro-preview');
-  if (lp) lp.style.display = 'none';
-
-  // Hide monetary stats in dashboard
-  document.querySelectorAll('.dono-only').forEach(el => {
-    el.closest('.stat-card') ? el.closest('.stat-card').style.display = 'none' : el.style.display = 'none';
-  });
-
-  // Hide valor column in historico table
   const style = document.getElementById('func-hide-style') || document.createElement('style');
   style.id = 'func-hide-style';
-  style.textContent = '.dono-only { display: none !important; } #campo-valor-frete { display: none !important; } #lucro-preview { display: none !important; }';
+  style.textContent = '.dono-only{display:none!important}#campo-valor-frete{display:none!important}#lucro-preview{display:none!important}';
   document.head.appendChild(style);
 }
 
 function removeFuncRestrictions() {
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard'].forEach(id => {
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = '';
   });
   const fn = document.getElementById('nav-func');
   if (fn) fn.style.display = 'none';
-  // Remove func CSS
   const s = document.getElementById('func-hide-style');
   if (s) s.remove();
 }
@@ -3233,28 +3323,22 @@ function showPageFunc() {
 
 // ── EMPLOYEE DASHBOARD ────────────────────────────────
 function renderFuncDashboard() {
-  // Greeting
   const now = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
   const h = now.getHours();
   const greet = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
   const nome = currentUser?.nome?.split(' ')[0] || '';
-  const days  = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  const months= ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const days   = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const el1 = document.getElementById('func-greeting');
   const el2 = document.getElementById('func-date');
   if (el1) el1.textContent = greet + (nome ? ', ' + nome : '') + ' 👋';
   if (el2) el2.textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
-
-  // Populate vehicle selector
   const sel = document.getElementById('func-veiculo-select');
   if (sel) {
     const saved = localStorage.getItem('fm_func_veiculo_' + currentUser.uid);
     sel.innerHTML = '<option value="">Selecione sua placa...</option>' +
       veiculos.map(v => `<option value="${v.placa}" ${v.placa === saved ? 'selected' : ''}>${v.modelo} — ${v.placa}</option>`).join('');
-    if (saved) {
-      sel.value = saved;
-      funcMostrarVeiculo(saved);
-    }
+    if (saved) { sel.value = saved; funcMostrarVeiculo(saved); }
   }
 }
 
@@ -3263,13 +3347,15 @@ function funcSelecionarVeiculo() {
   const placa = sel.value;
   if (!placa) { funcLimparVeiculo(); return; }
   localStorage.setItem('fm_func_veiculo_' + currentUser.uid, placa);
+  if (fbDb && currentUser) {
+    fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + currentUser.uid + '/veiculo').set(placa);
+  }
   funcMostrarVeiculo(placa);
 }
 
 function funcLimparVeiculo() {
   localStorage.removeItem('fm_func_veiculo_' + (currentUser?.uid || ''));
   document.getElementById('func-veiculo-info').style.display = 'none';
-  document.getElementById('func-selecao-veiculo').style.display = 'block';
   const sel = document.getElementById('func-veiculo-select');
   if (sel) sel.value = '';
 }
@@ -3279,43 +3365,153 @@ function funcMostrarVeiculo(placa) {
   if (!v) return;
   document.getElementById('func-selecao-veiculo').style.display = 'block';
   document.getElementById('func-veiculo-info').style.display = 'block';
-
   document.getElementById('fv-nome').textContent    = v.modelo || '-';
   document.getElementById('fv-ano').textContent     = v.ano ? 'Ano ' + v.ano : '-';
   document.getElementById('fv-placa').textContent   = v.placa || '-';
   document.getElementById('fv-consumo').textContent = v.consumo ? v.consumo + ' km/L' : '-';
-
-  // Próxima revisão
-  const proximaRev = v.proximaRevisao ? formatDate(v.proximaRevisao) : '-';
-  document.getElementById('fv-revisao').textContent = proximaRev;
-
-  // Fretes deste veículo
-  const fretesDeste = entregas.filter(e => e.veiculo && e.veiculo.includes(placa) && e.status === 'concluido');
-  document.getElementById('fv-fretes').textContent = fretesDeste.length;
-
-  // Gastos extras (pedagioExtra + custoExtra)
-  const totalExtras = fretesDeste.reduce((s, e) => s + (e.pedagioExtra||0) + (e.custoExtra||0), 0);
-  document.getElementById('fv-gastos').textContent = 'R$ ' + totalExtras.toFixed(2).replace('.',',');
-
-  // Últimas 5 cargas - SEM valores de frete
-  const cargas = fretesDeste.slice(-5).reverse();
+  document.getElementById('fv-revisao').textContent = v.proximaRevisao ? formatDate(v.proximaRevisao) : '-';
+  const fretes = entregas.filter(e => e.veiculo && e.veiculo.includes(placa) && e.status === 'concluido');
+  document.getElementById('fv-fretes').textContent = fretes.length;
+  const gastos = fretes.reduce((s, e) => s + (e.pedagioExtra||0) + (e.custoExtra||0), 0);
+  document.getElementById('fv-gastos').textContent = 'R$ ' + gastos.toFixed(2).replace('.',',');
+  const cargas = fretes.slice(-5).reverse();
   const listEl = document.getElementById('func-cargas-list');
-  if (!cargas.length) {
-    listEl.innerHTML = '<div class="no-data" style="padding:20px 0">Nenhuma carga realizada neste veículo</div>';
-    return;
-  }
+  if (!cargas.length) { listEl.innerHTML = '<div class="no-data" style="padding:20px 0">Nenhuma carga neste veículo</div>'; return; }
   listEl.innerHTML = cargas.map(e => `
     <div class="func-carga-item">
       <div class="func-dot" style="background:var(--green)"></div>
       <div style="flex:1">
         <div style="font-weight:600">${e.origem} → ${e.destino}</div>
         <div style="font-size:11px;color:var(--text2);margin-top:2px">
-          ${formatDate(e.data)} • ${e.cliente || '-'}
-          ${e.carga ? ' • ' + e.carga : ''}
-          ${e.km ? ' • ' + e.km + ' km' : ''}
+          ${formatDate(e.data)} • ${e.cliente || '-'}${e.carga ? ' • ' + e.carga : ''}${e.km ? ' • ' + e.km + ' km' : ''}
         </div>
       </div>
     </div>`).join('');
+}
+
+// ══ GESTÃO DE EQUIPE (Dono only) ══════════════════════
+let funcionariosCache = [];
+
+function toggleAddFunc() {
+  const p = document.getElementById('add-func-panel');
+  p.classList.toggle('hidden');
+  if (!p.classList.contains('hidden')) {
+    document.getElementById('nf-nome').value  = '';
+    document.getElementById('nf-email').value = '';
+    document.getElementById('nf-senha').value = '';
+  }
+}
+
+async function criarFuncionario() {
+  const nome  = document.getElementById('nf-nome').value.trim();
+  const email = document.getElementById('nf-email').value.trim();
+  const senha = document.getElementById('nf-senha').value;
+  if (!nome)            { showToast('⚠️ Informe o nome'); return; }
+  if (!email)           { showToast('⚠️ Informe o e-mail'); return; }
+  if (senha.length < 6) { showToast('⚠️ Senha com mínimo 6 caracteres'); return; }
+
+  const ativos = funcionariosCache.filter(f => f.ativo !== false).length;
+  const planoSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
+  const maxFunc = planoSnap.val() || SAAS_MAX_FUNC_BASE;
+  if (ativos >= maxFunc) {
+    showToast('⛔ Limite do plano atingido (' + maxFunc + ' funcionários)');
+    return;
+  }
+
+  const btn = document.getElementById('btn-add-func');
+  btn.disabled = true; btn.textContent = 'Criando...';
+  try {
+    // Cria auth numa instância temporária para não deslogar o dono
+    const tempApp  = firebase.initializeApp(FB_CONFIG, 'tmp-' + Date.now());
+    const tempAuth = firebase.auth(tempApp);
+    const cred = await tempAuth.createUserWithEmailAndPassword(email, senha);
+    const uid  = cred.user.uid;
+    const profile = { nome, email, tipo: 'funcionario', empresaId: currentUser.empresaId, empresaNome: currentUser.empresaNome };
+    await fbDb.ref('usuarios/' + uid).set(profile);
+    await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + uid).set({
+      uid, nome, email, ativo: true, criadoEm: Date.now(), online: false, veiculo: null
+    });
+    await tempAuth.signOut();
+    await tempApp.delete();
+    toggleAddFunc();
+    showToast('✅ ' + nome + ' adicionado com sucesso!');
+    renderEquipe();
+  } catch(e) {
+    const msgs = { 'auth/email-already-in-use': 'E-mail já cadastrado no sistema.', 'auth/invalid-email': 'E-mail inválido.' };
+    showToast('❌ ' + (msgs[e.code] || e.message));
+  } finally {
+    btn.disabled = false; btn.textContent = '✅ Criar acesso';
+  }
+}
+
+async function toggleFuncionario(uid, desativar) {
+  if (!confirm(desativar ? 'Desativar acesso deste funcionário?' : 'Reativar acesso?')) return;
+  await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + uid + '/ativo').set(!desativar);
+  showToast(desativar ? '🔒 Acesso desativado' : '🔓 Acesso reativado');
+  renderEquipe();
+}
+
+async function removerFuncionario(uid, nome) {
+  if (!confirm('Remover ' + nome + '? Ele não conseguirá mais fazer login.')) return;
+  await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + uid).remove();
+  await fbDb.ref('usuarios/' + uid + '/desativado').set(true);
+  showToast('🗑 ' + nome + ' removido');
+  renderEquipe();
+}
+
+async function renderEquipe() {
+  if (!currentUser || currentUser.tipo !== 'dono') return;
+  const snap = await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios').once('value');
+  funcionariosCache = [];
+  snap.forEach(child => funcionariosCache.push({ uid: child.key, ...child.val() }));
+
+  const onlineSnaps = await Promise.all(
+    funcionariosCache.map(f => fbDb.ref('usuarios/' + f.uid + '/online').once('value'))
+  );
+  funcionariosCache.forEach((f, i) => { f.online = onlineSnaps[i].val() || false; });
+
+  const ativos  = funcionariosCache.filter(f => f.ativo !== false).length;
+  const online  = funcionariosCache.filter(f => f.online).length;
+  const custoMes = ativos * SAAS_PRECO_FUNC;
+
+  const eqTotal  = document.getElementById('eq-total');
+  const eqOnline = document.getElementById('eq-online');
+  const eqCusto  = document.getElementById('eq-custo');
+  const plNome   = document.getElementById('plano-nome');
+  const plDesc   = document.getElementById('plano-desc');
+  const plPreco  = document.getElementById('plano-preco');
+  if (eqTotal)  eqTotal.textContent  = ativos;
+  if (eqOnline) eqOnline.textContent = online;
+  if (eqCusto)  eqCusto.textContent  = 'R$' + (SAAS_PRECO_BASE + custoMes);
+  if (plNome)   plNome.textContent   = 'Plano Básico';
+  if (plDesc)   plDesc.textContent   = ativos + ' funcionário' + (ativos !== 1 ? 's' : '') + ' · R$ ' + SAAS_PRECO_FUNC + '/mês cada';
+  if (plPreco)  plPreco.textContent  = 'R$ ' + (SAAS_PRECO_BASE + custoMes);
+
+  const lista = document.getElementById('equipe-lista');
+  if (!lista) return;
+  if (!funcionariosCache.length) {
+    lista.innerHTML = '<div class="no-data"><div class="no-data-icon">👥</div>Nenhum funcionário cadastrado ainda.</div>';
+    return;
+  }
+  lista.innerHTML = funcionariosCache.map(f => {
+    const inativo = f.ativo === false;
+    const vTag = f.veiculo ? `<div class="func-veiculo-tag">🚗 ${f.veiculo}</div>` : '';
+    return `<div class="func-card ${inativo ? 'inativo' : ''}">
+      <div class="func-avatar-sm ${f.online && !inativo ? 'online' : 'offline'}" style="background:rgba(0,212,255,.1)">👷</div>
+      <div class="func-info">
+        <div class="func-nome">${f.nome}</div>
+        <div class="func-email">${f.email}</div>
+        ${vTag}
+      </div>
+      <div class="func-status-dot ${f.online && !inativo ? 'online' : 'offline'}"></div>
+      <div class="func-actions">
+        <button class="func-action-btn warn" title="${inativo ? 'Reativar' : 'Desativar'}"
+          onclick="toggleFuncionario('${f.uid}',${!inativo})">${inativo ? '🔓' : '🔒'}</button>
+        <button class="func-action-btn danger" title="Remover"
+          onclick="removerFuncionario('${f.uid}','${f.nome.replace(/'/g,"\'")}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function showToast(msg) {
@@ -3323,13 +3519,14 @@ function showToast(msg) {
   if (!t) {
     t = document.createElement('div');
     t.id = 'app-toast';
-    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e2a40;border:1px solid var(--glass-border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;transition:opacity .3s;white-space:nowrap;font-family:Outfit,sans-serif';
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e2a40;border:1px solid var(--glass-border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;z-index:9999;transition:opacity .3s;white-space:nowrap;font-family:Outfit,sans-serif;pointer-events:none';
     document.body.appendChild(t);
   }
   t.textContent = msg; t.style.opacity = '1';
   clearTimeout(t._to);
-  t._to = setTimeout(() => t.style.opacity = '0', 2500);
+  t._to = setTimeout(() => t.style.opacity = '0', 2800);
 }
+
 
 function tentarReconectarFirebase() {
   // Firebase is now initialized via initFirebase() on page load
@@ -3744,6 +3941,7 @@ if (dashDate) {
   dashDate.textContent = days[nowBRT.getDay()] + ', ' + nowBRT.getDate() + ' de ' + months[nowBRT.getMonth()];
 }
 syncFrotaSelects();
+initFirebase(); // Ensure Firebase starts
 // Don't render dashboard here - initFirebase/applyUserSession handles it after auth
 // tentarReconectarFirebase is now handled by initFirebase
 // Restart timers handled when page opens
