@@ -9,6 +9,7 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -919,16 +920,135 @@
     .stat-value { font-size: 20px; }
     .fleet-row { grid-template-columns: repeat(3,1fr); }
   }
+
+  /* ══ AUTH SCREEN ══ */
+  #auth-screen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #auth-screen::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 20% 10%,rgba(0,212,255,.15) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(124,58,237,.12) 0%,transparent 60%);pointer-events:none}
+  .auth-box{background:rgba(13,18,32,.97);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border:1px solid var(--glass-border);border-radius:28px;padding:36px 28px;width:100%;max-width:420px;position:relative;z-index:1;animation:slideUp .4s cubic-bezier(.25,.46,.45,.94)}
+  .auth-logo{text-align:center;margin-bottom:28px}
+  .auth-logo-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--accent),var(--accent3));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 14px;box-shadow:0 8px 32px rgba(0,212,255,.3)}
+  .auth-logo-name{font-size:22px;font-weight:900;background:linear-gradient(135deg,#fff 40%,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-.5px;max-width:280px;margin:0 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .auth-logo-sub{font-size:12px;color:var(--text2);margin-top:4px}
+  .auth-tabs{display:flex;gap:4px;background:rgba(255,255,255,.05);border-radius:14px;padding:4px;margin-bottom:24px}
+  .auth-tab{flex:1;padding:10px;border:none;border-radius:10px;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;background:transparent;color:var(--text2)}
+  .auth-tab.active{background:var(--glass-active);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+  .auth-form{display:flex;flex-direction:column;gap:14px}
+  .auth-group{display:flex;flex-direction:column;gap:6px}
+  .auth-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.8px}
+  .auth-input{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:14px;padding:14px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;outline:none;transition:all .2s;width:100%;-webkit-appearance:none;box-sizing:border-box}
+  .auth-input:focus{border-color:var(--accent);background:rgba(0,212,255,.05);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
+  .auth-input::placeholder{color:var(--muted)}
+  .auth-char-count{font-size:10px;color:var(--muted);text-align:right;margin-top:2px}
+  .auth-char-count.warn{color:var(--yellow)}
+  .auth-tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .auth-tipo-btn{border:2px solid var(--glass-border);border-radius:14px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(255,255,255,.03)}
+  .auth-tipo-btn.selected{border-color:var(--accent);background:rgba(0,212,255,.08)}
+  .auth-tipo-icon{font-size:28px;margin-bottom:6px}
+  .auth-tipo-label{font-size:13px;font-weight:700}
+  .auth-tipo-sub{font-size:10px;color:var(--text2);margin-top:2px}
+  .auth-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--accent),#0096cc);color:#000;border:none;border-radius:14px;font-family:'Outfit',sans-serif;font-weight:800;font-size:15px;cursor:pointer;transition:all .25s;box-shadow:0 4px 20px rgba(0,212,255,.3)}
+  .auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,212,255,.45)}
+  .auth-btn:active{transform:scale(.98)}
+  .auth-btn:disabled{opacity:.5;pointer-events:none}
+  .auth-error{background:rgba(255,68,102,.1);border:1px solid rgba(255,68,102,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--red);display:none;margin-bottom:4px}
+  .auth-success{background:rgba(0,255,136,.1);border:1px solid rgba(0,255,136,.3);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--green);display:none;margin-bottom:4px}
+  .auth-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ══ FUNCIONÁRIO ══ */
+  .func-vehicle-card{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-border);border-radius:22px;overflow:hidden;margin-bottom:14px}
+  .func-vehicle-top{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,58,237,.05));border-bottom:1px solid var(--glass-border)}
+  .func-vehicle-icon{width:56px;height:56px;border-radius:16px;background:rgba(0,212,255,.15);border:1px solid rgba(0,212,255,.3);display:flex;align-items:center;justify-content:center;font-size:28px}
+  .func-spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 18px}
+  .func-spec{background:rgba(255,255,255,.04);border-radius:12px;padding:12px}
+  .func-spec-label{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+  .func-spec-val{font-size:17px;font-weight:700}
+  .func-carga-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+  .func-carga-item:last-child{border-bottom:none}
+  .func-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .locked-overlay{position:absolute;inset:0;z-index:5;background:rgba(10,14,26,.94);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;border-radius:inherit}
 </style>
 </head>
 <body>
+
+<!-- ═══════════════════════════ AUTH SCREEN ═══════════════════════════ -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">🚛</div>
+      <div class="auth-logo-name" id="auth-empresa-nome">FreteManager</div>
+      <div class="auth-logo-sub">Sistema de Gestão de Fretes</div>
+    </div>
+
+    <div class="auth-tabs" id="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="authTab('login')">Entrar</button>
+      <button class="auth-tab" id="tab-cadastro" onclick="authTab('cadastro')">Criar conta</button>
+    </div>
+
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+
+    <!-- LOGIN -->
+    <div id="auth-form-login" class="auth-form">
+      <div class="auth-group">
+        <label class="auth-label">E-mail</label>
+        <input type="email" class="auth-input" id="l-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label">Senha</label>
+        <input type="password" class="auth-input" id="l-senha" placeholder="••••••••" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')fazerLogin()">
+      </div>
+      <button class="auth-btn" id="btn-login" onclick="fazerLogin()">🔓 Entrar</button>
+    </div>
+
+    <!-- CADASTRO -->
+    <div id="auth-form-cadastro" class="auth-form" style="display:none">
+      <div class="auth-group">
+        <label class="auth-label">Nome da Empresa <span style="color:var(--muted);font-size:10px">máx. 50 caracteres</span></label>
+        <input type="text" class="auth-input" id="c-empresa" placeholder="Ex: Transportes Silva Ltda"
+          maxlength="50" oninput="contarEmpresa()" autocomplete="organization">
+        <div class="auth-char-count" id="empresa-chars">0 / 50</div>
+      </div>
+      <div class="auth-group">
+        <label class="auth-label">Seu nome</label>
+        <input type="text" class="auth-input" id="c-nome" placeholder="Nome completo">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label">E-mail</label>
+        <input type="email" class="auth-input" id="c-email" placeholder="seu@email.com" autocomplete="email">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label">Senha <span style="color:var(--muted);font-size:10px">mín. 6 caracteres</span></label>
+        <input type="password" class="auth-input" id="c-senha" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label">Tipo de acesso</label>
+        <div class="auth-tipo-grid">
+          <div class="auth-tipo-btn selected" id="tipo-dono" onclick="selTipo('dono')">
+            <div class="auth-tipo-icon">👑</div>
+            <div class="auth-tipo-label">Dono</div>
+            <div class="auth-tipo-sub">Acesso completo</div>
+          </div>
+          <div class="auth-tipo-btn" id="tipo-funcionario" onclick="selTipo('funcionario')">
+            <div class="auth-tipo-icon">👷</div>
+            <div class="auth-tipo-label">Funcionário</div>
+            <div class="auth-tipo-sub">Acesso restrito</div>
+          </div>
+        </div>
+      </div>
+      <button class="auth-btn" id="btn-cadastro" onclick="fazerCadastro()">✅ Criar conta</button>
+    </div>
+
+  </div>
+</div>
 
 <div class="app-header">
   <div class="app-logo">
     <div class="logo-icon">🚛</div>
     <div>
-      <div class="logo-text">FreteManager</div>
-      <div class="logo-sub">Gestão de Frota</div>
+      <div class="logo-text" id="app-empresa-nome" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FreteManager</div>
+      <div class="logo-sub" id="app-user-tipo">Gestão de Frota</div>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
@@ -951,7 +1071,7 @@
       <div class="avatar-preview" id="avatar-preview-big">
         <span id="avatar-preview-emoji">👤</span>
       </div>
-      <div class="avatar-name" id="avatar-nome-display">James</div>
+      <div class="avatar-name" id="avatar-nome-display">-</div>
       <div class="avatar-sub">fretemanager-60ef8</div>
     </div>
 
@@ -967,7 +1087,7 @@
       <div class="avatar-action-icon" style="background:rgba(124,58,237,0.15)">🤳</div>
       <div>
         <div class="avatar-action-text">Tirar foto</div>
-        <div class="avatar-action-sub">Abrir câmera</div>
+        <div class="avatar-action-sub">Usar câmera do celular</div>
       </div>
     </div>
 
@@ -980,6 +1100,13 @@
     </div>
 
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--glass-border)">
+      <div class="avatar-action" onclick="fazerLogout()">
+        <div class="avatar-action-icon" style="background:rgba(255,68,102,0.15)">🚪</div>
+        <div>
+          <div class="avatar-action-text" style="color:var(--red)">Sair da conta</div>
+          <div class="avatar-action-sub" id="avatar-user-email">-</div>
+        </div>
+      </div>
       <div class="avatar-action" onclick="fecharAvatarMenu()">
         <div class="avatar-action-icon" style="background:rgba(255,255,255,0.05)">✕</div>
         <div class="avatar-action-text" style="color:var(--text2)">Fechar</div>
@@ -991,6 +1118,10 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Início</div>
+  </div>
+  <div class="nav-item" id="nav-func" onclick="showPageFunc()" style="display:none">
     <div class="nav-icon">🏠</div>
     <div class="nav-label">Início</div>
   </div>
@@ -1025,17 +1156,17 @@
 
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="page active">
-    <div class="page-title">Olá, 👋</div>
+    <div class="page-title" id="dash-greeting">Olá 👋</div>
     <div class="page-subtitle" id="dash-date">Hoje é um ótimo dia para faturar</div>
 
     <div class="stats-grid">
-      <div class="stat-card">
+      <div class="stat-card dono-only">
         <div class="stat-card-glow" style="background:var(--accent)"></div>
         <div class="stat-label">Faturamento</div>
         <div class="stat-value" id="stat-faturamento" style="color:var(--accent)">R$ 0</div>
         <div class="stat-sub" id="stat-fat-sub">este mês</div>
       </div>
-      <div class="stat-card">
+      <div class="stat-card dono-only">
         <div class="stat-card-glow" style="background:var(--green)"></div>
         <div class="stat-label">Lucro Líquido</div>
         <div class="stat-value" id="stat-lucro" style="color:var(--green)">R$ 0</div>
@@ -1061,6 +1192,61 @@
     <div class="section-title">Últimas Entregas</div>
     <div class="card">
       <div id="recent-list"><div class="no-data"><div class="no-data-icon">📦</div>Nenhuma entrega ainda</div></div>
+    </div>
+  </div>
+
+  <!-- FUNCIONÁRIO DASHBOARD -->
+  <div id="page-func" class="page">
+    <div class="page-title" id="func-greeting">Olá 👋</div>
+    <div class="page-subtitle" id="func-date"></div>
+
+    <!-- Selecionar veículo -->
+    <div class="card" id="func-selecao-veiculo">
+      <div class="form-label" style="margin-bottom:10px">🚗 Seu veículo</div>
+      <select id="func-veiculo-select" class="form-input" onchange="funcSelecionarVeiculo()">
+        <option value="">Selecione sua placa...</option>
+      </select>
+    </div>
+
+    <!-- Dados do veículo -->
+    <div id="func-veiculo-info" style="display:none">
+      <div class="func-vehicle-card">
+        <div class="func-vehicle-top">
+          <div class="func-vehicle-icon">🚛</div>
+          <div style="flex:1">
+            <div style="font-size:18px;font-weight:900" id="fv-nome">-</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px" id="fv-ano">-</div>
+            <div style="display:inline-block;background:rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;margin-top:6px" id="fv-placa">-</div>
+          </div>
+          <button onclick="funcLimparVeiculo()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer">trocar</button>
+        </div>
+        <div class="func-spec-grid">
+          <div class="func-spec">
+            <div class="func-spec-label">⛽ Consumo</div>
+            <div class="func-spec-val" id="fv-consumo">-</div>
+          </div>
+          <div class="func-spec">
+            <div class="func-spec-label">🔧 Próx. Revisão</div>
+            <div class="func-spec-val" id="fv-revisao">-</div>
+          </div>
+          <div class="func-spec">
+            <div class="func-spec-label">📦 Fretes realizados</div>
+            <div class="func-spec-val" id="fv-fretes">-</div>
+          </div>
+          <div class="func-spec">
+            <div class="func-spec-label">🔧 Gastos extras</div>
+            <div class="func-spec-val" id="fv-gastos">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Últimas cargas -->
+      <div class="card">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">📦 Últimas cargas</div>
+        <div id="func-cargas-list">
+          <div class="no-data" style="padding:20px 0">Nenhuma carga realizada</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1132,7 +1318,7 @@
           <div class="form-label">Distância (km)</div>
           <input type="number" id="f-km" class="form-input" placeholder="km total" oninput="recalcularCusto()">
         </div>
-        <div class="form-group">
+        <div class="form-group" id="campo-valor-frete">
           <div class="form-label">Valor do Frete (R$)</div>
           <input type="number" id="f-valor" class="form-input" placeholder="0,00" step="0.01" oninput="recalcularCusto()">
         </div>
@@ -1253,7 +1439,7 @@
             <th>Cliente</th>
             <th>Veículo</th>
             <th>Frete</th>
-            <th>Lucro</th>
+            <th class="dono-only">Lucro</th>
             <th>Descarga</th>
             <th>Status</th>
             <th></th>
@@ -1528,12 +1714,14 @@ function save() {
 
 function syncEntregasFirebase() {
   if (!fbDb) return;
-  fbDb.ref('dados/entregas').set(entregas).catch(e => console.warn('Sync entregas falhou:', e));
+  const path = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId + '/entregas' : 'dados/entregas';
+  fbDb.ref(path).set(entregas).catch(e => console.warn('Sync entregas falhou:', e));
 }
 
 function syncVeiculosFirebase() {
   if (!fbDb) return;
-  fbDb.ref('dados/veiculos').set(veiculos).catch(e => console.warn('Sync veiculos falhou:', e));
+  const vpath = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId + '/veiculos' : 'dados/veiculos';
+  fbDb.ref(vpath).set(veiculos).catch(e => console.warn('Sync veiculos falhou:', e));
 }
 
 // Carrega dados do Firebase e substitui localStorage (Firebase é a fonte da verdade)
@@ -1544,7 +1732,8 @@ function carregarDadosFirebase() {
   const loader = document.getElementById('fb-sync-indicator');
   if (loader) { loader.style.display = 'flex'; loader.textContent = '☁️ Sincronizando...'; }
 
-  fbDb.ref('dados').once('value', snapshot => {
+  const basePath = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados';
+  fbDb.ref(basePath).once('value', snapshot => {
     const dados = snapshot.val();
     if (dados) {
       if (dados.entregas && Array.isArray(dados.entregas)) {
@@ -1568,7 +1757,8 @@ function carregarDadosFirebase() {
   });
 
   // Ouvir mudanças em tempo real (ex: outro celular salvar uma entrega)
-  fbDb.ref('dados/entregas').on('value', snapshot => {
+  const epEnt = (currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados') + '/entregas';
+  fbDb.ref(epEnt).on('value', snapshot => {
     if (!fbSyncReady) return;
     const dados = snapshot.val();
     if (dados && Array.isArray(dados)) {
@@ -1578,7 +1768,8 @@ function carregarDadosFirebase() {
     }
   });
 
-  fbDb.ref('dados/veiculos').on('value', snapshot => {
+  const epVei = (currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados') + '/veiculos';
+  fbDb.ref(epVei).on('value', snapshot => {
     if (!fbSyncReady) return;
     const dados = snapshot.val();
     if (dados && Array.isArray(dados)) {
@@ -1591,12 +1782,21 @@ function carregarDadosFirebase() {
 
 // ---- NAVIGATION ----
 function showPage(p) {
+  // Funcionário não acessa Nova Entrega nem Rankings nem Histórico
+  const restricted = ['nova','rankings','historico'];
+  if (currentUser && currentUser.tipo === 'funcionario' && restricted.includes(p)) {
+    showToast('⛔ Acesso restrito para funcionários');
+    return;
+  }
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('page-' + p)?.classList.add('active');
   const navEl = document.getElementById('nav-' + p);
   if (navEl) navEl.classList.add('active');
-  if (p === 'dashboard') renderDashboard();
+  if (p === 'dashboard') {
+    if (currentUser?.tipo === 'funcionario') renderFuncDashboard();
+    else renderDashboard();
+  }
   if (p === 'ativas') renderAtivas();
   if (p === 'historico') renderHistorico();
   if (p === 'rankings') renderRankings();
@@ -1742,7 +1942,7 @@ function salvarEntrega() {
     km: parseFloat(document.getElementById('f-km').value) || 0,
     obs: document.getElementById('f-obs').value,
     status: document.getElementById('f-status').value || 'agendado',
-    horaSaida: document.getElementById('f-status').value === 'em_rota' ? new Date().toISOString() : null,
+    horaSaida: document.getElementById('f-status').value === 'em_rota' ? new Date().toISOString() : null, // stored as UTC, displayed in BRT
     horaChegada: null,
     horaSaida2: null,
     tempoDescarga: null
@@ -1759,7 +1959,7 @@ function limparForm() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
-  document.getElementById('f-data').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-data').value = new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
   const pedagio = document.getElementById('val-pedagio');
   const diaria  = document.getElementById('val-diaria');
   const manut   = document.getElementById('val-manut');
@@ -1865,9 +2065,19 @@ function atualizarObsViagem(id) {
 
 // ---- DASHBOARD ----
 function renderDashboard() {
+  // Update greeting with current user name
+  const nowG = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
+  const hG = nowG.getHours();
+  const greetG = hG < 12 ? 'Bom dia' : hG < 18 ? 'Boa tarde' : 'Boa noite';
+  const nomeG = currentUser?.nome?.split(' ')[0] || '';
+  const greetEl = document.getElementById('dash-greeting');
+  if (greetEl) greetEl.textContent = greetG + (nomeG ? ', ' + nomeG : '') + ' 👋';
+
   const now = new Date();
-  const mes = now.getMonth();
-  const ano = now.getFullYear();
+  // Use BRT for month/year to avoid midnight cutoff issues
+  const nowLocal = new Date(now.toLocaleString('en-US', { timeZone: TZ }));
+  const mes = nowLocal.getMonth();
+  const ano = nowLocal.getFullYear();
 
   const doMes = entregas.filter(e => {
     const d = new Date(e.data);
@@ -2004,8 +2214,7 @@ function selecionarEntrega(id) {
   dispContainer.style.display = 'none';
   confirmaContainer.style.display = 'block';
 
-  const agora = new Date();
-  const agoraISO = agora.toISOString().slice(0,16);
+  const agoraISO = nowBrasilia();
 
   confirmaContainer.innerHTML = `
     <button onclick="voltarDisponiveis()" style="background:none;border:none;color:var(--text2);font-size:14px;cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif">
@@ -2113,7 +2322,7 @@ function buildViagemAtiva(e) {
 
   function statusClass(feito, ativo) { return feito ? 'feito' : ativo ? 'ativo' : 'pendente'; }
 
-  const now = new Date().toISOString().slice(0,16);
+  const now = nowBrasilia();
 
   return `<div class="viagem-active-card">
     <div class="viagem-header">
@@ -2491,7 +2700,7 @@ function confirmarDelete() {
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
 // ---- UTILS ----
-function formatTime(d) { return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); }
+function formatTime(d) { return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }); }
 function formatDate(str) {
   const [y, m, d] = str.split('-');
   return d + '/' + m + '/' + y;
@@ -2502,6 +2711,27 @@ function formatMinutes(min) {
   const m = Math.round(min % 60);
   return h + 'h' + (m > 0 ? m + 'min' : '');
 }
+
+// ---- FUSO HORÁRIO: America/Sao_Paulo (BRT/BRST) ----
+const TZ = 'America/Sao_Paulo';
+
+function nowBrasilia() {
+  // Returns "YYYY-MM-DDTHH:MM" in BRT for datetime-local inputs
+  const now = new Date();
+  const str = now.toLocaleString('sv-SE', { timeZone: TZ }); // sv-SE gives ISO-like format
+  return str.slice(0, 16).replace(' ', 'T');
+}
+
+function formatDateTimeBrasilia(isoStr) {
+  // Formats a stored ISO string for display in BRT
+  const d = new Date(isoStr);
+  return d.toLocaleString('pt-BR', {
+    timeZone: TZ,
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
+
 function formatSeconds(sec) {
   const m = Math.floor(sec / 60);
   const s = Math.floor(sec % 60);
@@ -2704,7 +2934,6 @@ function syncFrotaSelects() {
 // ==============================
 // RASTREIO EM TEMPO REAL
 // ==============================
-let fbApp = null, fbDb = null;
 let modoRastreio = 'motorista';
 let trackingAtivo = false;
 let watchId = null;
@@ -2734,17 +2963,11 @@ let activeAlertas = {};
 const VEHICLE_COLORS = ['#c8f560','#f5a623','#60c8f5','#f56060','#c060f5'];
 
 function initRastreioPage() {
-  // Se ja tem config salva, conectar direto
-  const saved = localStorage.getItem('fm_firebase_config');
-  if (saved || demoMode) {
-    if (!fbApp && saved) tentarReconectarFirebase();
+  if (fbDb || demoMode) {
     showRastreioMain();
   } else {
-    // Nao tem config salva — mostrar tela de setup JA com campos preenchidos
     document.getElementById('rastreio-setup').style.display = 'block';
     document.getElementById('rastreio-main').style.display = 'none';
-    // Mostrar banner informando que so precisa clicar em conectar
-    document.getElementById('fb-error').style.display = 'none';
   }
 }
 
@@ -2755,45 +2978,360 @@ function usarModoDemo() {
 }
 
 function conectarFirebase() {
-  const apiKey = document.getElementById('fb-apiKey').value.trim();
-  const authDomain = document.getElementById('fb-authDomain').value.trim();
-  const databaseURL = document.getElementById('fb-databaseURL').value.trim();
-  const projectId = document.getElementById('fb-projectId').value.trim();
-  const errEl = document.getElementById('fb-error');
-
-  if (!apiKey || !databaseURL || !projectId) {
-    errEl.textContent = 'Preencha API Key, Database URL e Project ID.';
-    errEl.style.display = 'block';
-    return;
-  }
-  errEl.style.display = 'none';
-
-  try {
-    const config = { apiKey, authDomain, databaseURL, projectId, storageBucket: projectId + '.appspot.com', messagingSenderId: '0', appId: '0' };
-    if (fbApp) { fbApp.delete(); fbApp = null; }
-    fbApp = firebase.initializeApp(config, 'frete-' + Date.now());
-    fbDb = firebase.database(fbApp);
-    localStorage.setItem('fm_firebase_config', JSON.stringify(config));
+  // Firebase is pre-configured. Just show rastreio main.
+  if (fbDb) {
     document.getElementById('fb-status-text').textContent = 'Firebase conectado ✓';
-    carregarDadosFirebase();
     showRastreioMain();
-  } catch(e) {
-    errEl.textContent = 'Erro: ' + e.message;
-    errEl.style.display = 'block';
+  } else {
+    document.getElementById('fb-error').textContent = 'Aguarde login para conectar.';
+    document.getElementById('fb-error').style.display = 'block';
   }
 }
 
-function tentarReconectarFirebase() {
-  const saved = localStorage.getItem('fm_firebase_config');
-  if (!saved) return;
+// ═══════════════════════════════════════════════════════
+// AUTH & USER SESSION
+// ═══════════════════════════════════════════════════════
+let fbApp = null, fbDb = null, fbAuth = null;
+let currentUser = null; // { uid, email, nome, tipo, empresaId, empresaNome }
+let selectedTipo = 'dono';
+
+// Fixed Firebase config (pre-configured for this project)
+const FB_CONFIG = {
+  apiKey: "AIzaSyCFKHqSjC_q-QRqyUY2LfhKWK2BoHuNq1A",
+  authDomain: "fretemanager-60ef8.firebaseapp.com",
+  databaseURL: "https://fretemanager-60ef8-default-rtdb.firebaseio.com",
+  projectId: "fretemanager-60ef8",
+  storageBucket: "fretemanager-60ef8.appspot.com",
+  messagingSenderId: "0",
+  appId: "0"
+};
+
+function initFirebase() {
+  if (fbApp) return;
   try {
-    const config = JSON.parse(saved);
-    if (fbApp) return;
-    fbApp = firebase.initializeApp(config, 'frete-' + Date.now());
-    fbDb = firebase.database(fbApp);
-    console.log('Firebase conectado:', config.projectId);
-    carregarDadosFirebase();
-  } catch(e) { console.warn('Firebase reconect failed', e); }
+    fbApp = firebase.initializeApp(FB_CONFIG, 'frete-main');
+    fbDb   = firebase.database(fbApp);
+    fbAuth = firebase.auth(fbApp);
+
+    // Observe auth state
+    fbAuth.onAuthStateChanged(async user => {
+      if (user) {
+        // Load user profile from DB
+        const snap = await fbDb.ref('usuarios/' + user.uid).once('value');
+        const profile = snap.val();
+        if (profile) {
+          currentUser = { uid: user.uid, email: user.email, ...profile };
+          hideAuthScreen();
+          applyUserSession();
+        } else {
+          // Profile missing — sign out
+          fbAuth.signOut();
+          showAuthError('Perfil não encontrado. Recrie sua conta.');
+        }
+      } else {
+        currentUser = null;
+        showAuthScreen();
+      }
+    });
+  } catch(e) {
+    console.error('Firebase init error:', e);
+    showAuthError('Erro ao conectar: ' + e.message);
+  }
+}
+
+// ── AUTH FORMS ────────────────────────────────────────
+function authTab(tab) {
+  document.getElementById('auth-form-login').style.display   = tab === 'login'    ? 'flex' : 'none';
+  document.getElementById('auth-form-cadastro').style.display = tab === 'cadastro' ? 'flex' : 'none';
+  document.querySelectorAll('.auth-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  clearAuthMsg();
+}
+
+function clearAuthMsg() {
+  document.getElementById('auth-error').style.display = 'none';
+  document.getElementById('auth-success').style.display = 'none';
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('auth-success').style.display = 'none';
+}
+
+function showAuthSuccess(msg) {
+  const el = document.getElementById('auth-success');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+function contarEmpresa() {
+  const v = document.getElementById('c-empresa').value;
+  const el = document.getElementById('empresa-chars');
+  el.textContent = v.length + ' / 50';
+  el.classList.toggle('warn', v.length > 40);
+}
+
+function selTipo(tipo) {
+  selectedTipo = tipo;
+  document.getElementById('tipo-dono').classList.toggle('selected', tipo === 'dono');
+  document.getElementById('tipo-funcionario').classList.toggle('selected', tipo === 'funcionario');
+}
+
+async function fazerLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const senha = document.getElementById('l-senha').value;
+  if (!email || !senha) { showAuthError('Preencha e-mail e senha.'); return; }
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span>Entrando...';
+  clearAuthMsg();
+  try {
+    await fbAuth.signInWithEmailAndPassword(email, senha);
+    // onAuthStateChanged will handle the rest
+  } catch(e) {
+    const msgs = {
+      'auth/user-not-found': 'E-mail não cadastrado.',
+      'auth/wrong-password': 'Senha incorreta.',
+      'auth/invalid-email': 'E-mail inválido.',
+      'auth/too-many-requests': 'Muitas tentativas. Aguarde.',
+      'auth/invalid-credential': 'E-mail ou senha incorretos.',
+    };
+    showAuthError(msgs[e.code] || 'Erro: ' + e.message);
+    btn.disabled = false; btn.innerHTML = '🔓 Entrar';
+  }
+}
+
+async function fazerCadastro() {
+  const empresa = document.getElementById('c-empresa').value.trim().slice(0, 50);
+  const nome    = document.getElementById('c-nome').value.trim();
+  const email   = document.getElementById('c-email').value.trim();
+  const senha   = document.getElementById('c-senha').value;
+  if (!empresa) { showAuthError('Informe o nome da empresa.'); return; }
+  if (!nome)    { showAuthError('Informe seu nome.'); return; }
+  if (!email)   { showAuthError('Informe o e-mail.'); return; }
+  if (senha.length < 6) { showAuthError('Senha deve ter pelo menos 6 caracteres.'); return; }
+  const btn = document.getElementById('btn-cadastro');
+  btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span>Criando conta...';
+  clearAuthMsg();
+  try {
+    const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
+    const uid = cred.user.uid;
+    // Use uid as empresaId for donos; funcionários ligam ao empresaId do dono depois
+    const empresaId = selectedTipo === 'dono' ? uid : ('emp_' + uid);
+    const profile = { nome, email, tipo: selectedTipo, empresaId, empresaNome: empresa };
+    await fbDb.ref('usuarios/' + uid).set(profile);
+    // Save empresa info under empresas/{empresaId}
+    await fbDb.ref('empresas/' + empresaId + '/info').set({ nome: empresa, donoUid: selectedTipo === 'dono' ? uid : null });
+    // onAuthStateChanged will handle rest
+  } catch(e) {
+    const msgs = {
+      'auth/email-already-in-use': 'E-mail já cadastrado. Faça login.',
+      'auth/invalid-email': 'E-mail inválido.',
+      'auth/weak-password': 'Senha muito fraca.',
+    };
+    showAuthError(msgs[e.code] || 'Erro: ' + e.message);
+    btn.disabled = false; btn.innerHTML = '✅ Criar conta';
+  }
+}
+
+async function fazerLogout() {
+  if (!confirm('Sair da conta?')) return;
+  fecharAvatarMenu();
+  await fbAuth.signOut();
+}
+
+function showAuthScreen() {
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('btn-login').disabled = false;
+  document.getElementById('btn-login').innerHTML = '🔓 Entrar';
+  document.getElementById('btn-cadastro').disabled = false;
+  document.getElementById('btn-cadastro').innerHTML = '✅ Criar conta';
+}
+
+function hideAuthScreen() {
+  document.getElementById('auth-screen').style.display = 'none';
+}
+
+// ── SESSION & PERMISSIONS ────────────────────────────
+function applyUserSession() {
+  if (!currentUser) return;
+  const u = currentUser;
+
+  // Update header / avatar panel
+  const empNome = u.empresaNome || 'FreteManager';
+  document.getElementById('app-empresa-nome').textContent = empNome;
+  document.getElementById('auth-empresa-nome').textContent = empNome;
+  document.getElementById('app-user-tipo').textContent = u.tipo === 'dono' ? '👑 Dono' : '👷 Funcionário';
+  document.getElementById('avatar-nome-display').textContent = u.nome || u.email;
+  document.getElementById('avatar-user-email').textContent   = u.email;
+
+  // Connect Firebase and load data
+  carregarDadosFirebase();
+
+  if (u.tipo === 'funcionario') {
+    applyFuncRestrictions();
+    // Funcionário vai para page-func por padrão
+    showPageFunc();
+  } else {
+    removeFuncRestrictions();
+    renderDashboard();
+  }
+}
+
+function applyFuncRestrictions() {
+  // Hide nav items not allowed for funcionário
+  ['nav-nova','nav-historico','nav-rankings'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const fn = document.getElementById('nav-func');
+  if (fn) fn.style.display = 'flex';
+  const nd = document.getElementById('nav-dashboard');
+  if (nd) nd.style.display = 'none';
+
+  // Hide valor do frete field
+  const cf = document.getElementById('campo-valor-frete');
+  if (cf) cf.style.display = 'none';
+
+  // Hide lucro preview
+  const lp = document.getElementById('lucro-preview');
+  if (lp) lp.style.display = 'none';
+
+  // Hide monetary stats in dashboard
+  document.querySelectorAll('.dono-only').forEach(el => {
+    el.closest('.stat-card') ? el.closest('.stat-card').style.display = 'none' : el.style.display = 'none';
+  });
+
+  // Hide valor column in historico table
+  const style = document.getElementById('func-hide-style') || document.createElement('style');
+  style.id = 'func-hide-style';
+  style.textContent = '.dono-only { display: none !important; } #campo-valor-frete { display: none !important; } #lucro-preview { display: none !important; }';
+  document.head.appendChild(style);
+}
+
+function removeFuncRestrictions() {
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = '';
+  });
+  const fn = document.getElementById('nav-func');
+  if (fn) fn.style.display = 'none';
+  // Remove func CSS
+  const s = document.getElementById('func-hide-style');
+  if (s) s.remove();
+}
+
+function showPageFunc() {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-func')?.classList.add('active');
+  document.getElementById('nav-func')?.classList.add('active');
+  renderFuncDashboard();
+}
+
+// ── EMPLOYEE DASHBOARD ────────────────────────────────
+function renderFuncDashboard() {
+  // Greeting
+  const now = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
+  const h = now.getHours();
+  const greet = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
+  const nome = currentUser?.nome?.split(' ')[0] || '';
+  const days  = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const months= ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const el1 = document.getElementById('func-greeting');
+  const el2 = document.getElementById('func-date');
+  if (el1) el1.textContent = greet + (nome ? ', ' + nome : '') + ' 👋';
+  if (el2) el2.textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
+
+  // Populate vehicle selector
+  const sel = document.getElementById('func-veiculo-select');
+  if (sel) {
+    const saved = localStorage.getItem('fm_func_veiculo_' + currentUser.uid);
+    sel.innerHTML = '<option value="">Selecione sua placa...</option>' +
+      veiculos.map(v => `<option value="${v.placa}" ${v.placa === saved ? 'selected' : ''}>${v.modelo} — ${v.placa}</option>`).join('');
+    if (saved) {
+      sel.value = saved;
+      funcMostrarVeiculo(saved);
+    }
+  }
+}
+
+function funcSelecionarVeiculo() {
+  const sel = document.getElementById('func-veiculo-select');
+  const placa = sel.value;
+  if (!placa) { funcLimparVeiculo(); return; }
+  localStorage.setItem('fm_func_veiculo_' + currentUser.uid, placa);
+  funcMostrarVeiculo(placa);
+}
+
+function funcLimparVeiculo() {
+  localStorage.removeItem('fm_func_veiculo_' + (currentUser?.uid || ''));
+  document.getElementById('func-veiculo-info').style.display = 'none';
+  document.getElementById('func-selecao-veiculo').style.display = 'block';
+  const sel = document.getElementById('func-veiculo-select');
+  if (sel) sel.value = '';
+}
+
+function funcMostrarVeiculo(placa) {
+  const v = veiculos.find(x => x.placa === placa);
+  if (!v) return;
+  document.getElementById('func-selecao-veiculo').style.display = 'block';
+  document.getElementById('func-veiculo-info').style.display = 'block';
+
+  document.getElementById('fv-nome').textContent    = v.modelo || '-';
+  document.getElementById('fv-ano').textContent     = v.ano ? 'Ano ' + v.ano : '-';
+  document.getElementById('fv-placa').textContent   = v.placa || '-';
+  document.getElementById('fv-consumo').textContent = v.consumo ? v.consumo + ' km/L' : '-';
+
+  // Próxima revisão
+  const proximaRev = v.proximaRevisao ? formatDate(v.proximaRevisao) : '-';
+  document.getElementById('fv-revisao').textContent = proximaRev;
+
+  // Fretes deste veículo
+  const fretesDeste = entregas.filter(e => e.veiculo && e.veiculo.includes(placa) && e.status === 'concluido');
+  document.getElementById('fv-fretes').textContent = fretesDeste.length;
+
+  // Gastos extras (pedagioExtra + custoExtra)
+  const totalExtras = fretesDeste.reduce((s, e) => s + (e.pedagioExtra||0) + (e.custoExtra||0), 0);
+  document.getElementById('fv-gastos').textContent = 'R$ ' + totalExtras.toFixed(2).replace('.',',');
+
+  // Últimas 5 cargas - SEM valores de frete
+  const cargas = fretesDeste.slice(-5).reverse();
+  const listEl = document.getElementById('func-cargas-list');
+  if (!cargas.length) {
+    listEl.innerHTML = '<div class="no-data" style="padding:20px 0">Nenhuma carga realizada neste veículo</div>';
+    return;
+  }
+  listEl.innerHTML = cargas.map(e => `
+    <div class="func-carga-item">
+      <div class="func-dot" style="background:var(--green)"></div>
+      <div style="flex:1">
+        <div style="font-weight:600">${e.origem} → ${e.destino}</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:2px">
+          ${formatDate(e.data)} • ${e.cliente || '-'}
+          ${e.carga ? ' • ' + e.carga : ''}
+          ${e.km ? ' • ' + e.km + ' km' : ''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function showToast(msg) {
+  let t = document.getElementById('app-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'app-toast';
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e2a40;border:1px solid var(--glass-border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;transition:opacity .3s;white-space:nowrap;font-family:Outfit,sans-serif';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+function tentarReconectarFirebase() {
+  // Firebase is now initialized via initFirebase() on page load
+  if (fbDb) carregarDadosFirebase();
 }
 
 function desconectarFirebase() {
@@ -3190,7 +3728,7 @@ Object.defineProperty(window, 'STOP_THRESHOLD_MIN_EFFECTIVE', {
     localStorage.setItem('fm_firebase_config', JSON.stringify(config));
   }
 })();
-document.getElementById('f-data').value = new Date().toISOString().slice(0, 10);
+document.getElementById('f-data').value = new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
 // Render avatar from saved photo
 renderAvatar();
 // Set greeting date
@@ -3199,15 +3737,14 @@ if (dashDate) {
   const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
   const now = new Date();
-  dashDate.textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
+  // Display date in Brasilia timezone
+  const nowBRT = new Date(now.toLocaleString('en-US', { timeZone: TZ }));
+  dashDate.textContent = days[nowBRT.getDay()] + ', ' + nowBRT.getDate() + ' de ' + months[nowBRT.getMonth()];
 }
 syncFrotaSelects();
-renderDashboard();
-tentarReconectarFirebase();
-// restart timers for em_descarga
-entregas.filter(e => e.status === 'em_descarga' && e.horaChegada).forEach(e => {
-  // will start when page opens
-});
+// Don't render dashboard here - initFirebase/applyUserSession handles it after auth
+// tentarReconectarFirebase is now handled by initFirebase
+// Restart timers handled when page opens
 </script>
 </body>
 </html>
