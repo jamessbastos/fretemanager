@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TR Bastos Transportes</title>
+<title>FreteManager</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -115,25 +115,116 @@
   }
 
   .header-avatar {
-    width: 38px; height: 38px;
+    width: 42px; height: 42px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--accent3), var(--accent));
     display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+    font-size: 20px;
     cursor: pointer;
     border: 2px solid var(--glass-border);
-    transition: transform .2s;
+    transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
   }
-  .header-avatar:active { transform: scale(0.95); }
+  .header-avatar:hover { border-color: var(--accent); box-shadow: 0 0 16px rgba(0,212,255,0.3); }
+  .header-avatar:active { transform: scale(0.92); }
+  .header-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute; inset: 0;
+  }
   .avatar-online {
     position: absolute;
     bottom: 1px; right: 1px;
-    width: 10px; height: 10px;
+    width: 11px; height: 11px;
     background: var(--green);
     border-radius: 50%;
     border: 2px solid var(--bg);
+    z-index: 2;
   }
+  .avatar-edit-hint {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.5);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity .2s;
+    z-index: 3;
+  }
+  .header-avatar:hover .avatar-edit-hint { opacity: 1; }
+
+  /* Avatar modal */
+  .avatar-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 600;
+    display: none;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 68px 16px 0;
+  }
+  .avatar-modal.open { display: flex; }
+  .avatar-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(4px);
+    z-index: -1;
+  }
+  .avatar-panel {
+    background: rgba(13,18,32,0.95);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 20px;
+    width: 260px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    animation: fadeScaleIn .2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes fadeScaleIn {
+    from { opacity: 0; transform: scale(0.85) translateY(-10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .avatar-panel-photo {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    margin-bottom: 18px; padding-bottom: 18px;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .avatar-preview {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    border: 3px solid var(--glass-border);
+    overflow: hidden;
+    position: relative;
+  }
+  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-name { font-size: 16px; font-weight: 700; }
+  .avatar-sub  { font-size: 12px; color: var(--text2); margin-top: -8px; }
+  .avatar-action {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background .15s;
+    font-size: 14px; font-weight: 500;
+  }
+  .avatar-action:hover { background: var(--glass); }
+  .avatar-action:active { background: var(--glass-active); }
+  .avatar-action-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .avatar-action-text { font-size: 13px; }
+  .avatar-action-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
 
   /* ── BOTTOM NAV ── */
   .bottom-nav {
@@ -645,6 +736,28 @@
   .no-data { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 13px; }
   .no-data-icon { font-size: 40px; margin-bottom: 10px; }
 
+  /* ── CUSTO BREAKDOWN ── */
+  .custo-panel { background:rgba(0,0,0,0.2); border:1px solid var(--glass-border); border-radius:16px; overflow:hidden; margin-top:8px; }
+  .custo-panel-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--glass-border); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--text2); }
+  .custo-item { display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid rgba(255,255,255,0.04); font-size:13px; }
+  .custo-item:last-child { border-bottom:none; }
+  .custo-item-icon { width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+  .custo-item-name { flex:1; font-weight:500; }
+  .custo-item-sub { font-size:10px; color:var(--muted); margin-top:1px; }
+  .custo-item-val { font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; }
+  .custo-item-input { width:90px; background:rgba(255,255,255,0.07); border:1px solid var(--glass-border); border-radius:8px; color:var(--text); padding:6px 10px; font-size:13px; font-family:'Outfit',sans-serif; outline:none; text-align:right; transition:border-color .2s; }
+  .custo-item-input:focus { border-color:var(--accent); }
+  .custo-toggle { background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:8px; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:12px; flex-shrink:0; transition:all .2s; color:var(--text2); }
+  .custo-toggle.on { background:rgba(0,212,255,0.15); border-color:var(--accent); color:var(--accent); }
+  .custo-total-row { display:flex; justify-content:space-between; align-items:center; padding:14px; background:rgba(255,255,255,0.03); border-top:1px solid var(--glass-border); }
+  .custo-total-label { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.8px; }
+  .custo-total-val { font-size:22px; font-weight:900; color:var(--accent2); font-family:'JetBrains Mono',monospace; }
+  .lucro-preview { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:rgba(0,255,136,0.06); border:1px solid rgba(0,255,136,0.2); border-radius:14px; margin-top:10px; }
+  .lucro-preview.negativo { background:rgba(255,68,102,0.06); border-color:rgba(255,68,102,0.2); }
+  .lucro-preview-label { font-size:12px; font-weight:700; color:var(--text2); text-transform:uppercase; letter-spacing:.8px; }
+  .lucro-preview-val { font-size:22px; font-weight:900; font-family:'JetBrains Mono',monospace; }
+  .config-combustivel { display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(255,107,53,0.08); border:1px solid rgba(255,107,53,0.2); border-radius:12px; margin-bottom:14px; font-size:12px; }
+
   /* ── CHECKIN CARD ── */
   .checkin-card {
     background: var(--glass);
@@ -663,6 +776,137 @@
   .revisao-badge-ok   { color: var(--green); font-size: 12px; font-weight: 600; }
   .revisao-badge-warn { color: var(--yellow); font-size: 12px; font-weight: 600; }
   .revisao-badge-late { color: var(--red); font-size: 12px; font-weight: 600; }
+
+  /* ── VIAGEM CONTROL ── */
+  .entrega-disponivel {
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 18px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all .2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .entrega-disponivel:hover { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .entrega-disponivel:active { transform: scale(0.99); }
+  .entrega-disponivel.selecionada { border-color: var(--accent); background: rgba(0,212,255,0.08); box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+
+  .entrega-rota { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 6px; }
+  .entrega-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .entrega-tag { 
+    background: rgba(255,255,255,0.07); 
+    border: 1px solid var(--glass-border);
+    border-radius: 20px; padding: 3px 10px; 
+    font-size: 11px; color: var(--text2); 
+  }
+
+  /* Etapas da viagem */
+  .viagem-etapas {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 16px 0;
+    position: relative;
+  }
+  .viagem-etapas::before {
+    content: '';
+    position: absolute;
+    left: 19px; top: 24px; bottom: 24px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--green));
+    opacity: 0.3;
+    z-index: 0;
+  }
+  .etapa {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    position: relative;
+    z-index: 1;
+  }
+  .etapa-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 2px solid;
+    transition: all .3s;
+  }
+  .etapa-icon.pendente  { background: rgba(255,255,255,0.05); border-color: var(--glass-border); color: var(--muted); }
+  .etapa-icon.ativo     { background: rgba(0,212,255,0.15); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 16px rgba(0,212,255,0.3); }
+  .etapa-icon.feito     { background: rgba(0,255,136,0.15); border-color: var(--green); color: var(--green); }
+  .etapa-body { flex: 1; }
+  .etapa-titulo { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .etapa-titulo.pendente { color: var(--muted); }
+  .etapa-titulo.ativo    { color: var(--text); }
+  .etapa-titulo.feito    { color: var(--green); }
+  .etapa-hora { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 20px; font-weight: 700; 
+    color: var(--accent); margin: 4px 0; 
+    letter-spacing: -0.5px;
+  }
+  .etapa-hora.feito { color: var(--green); }
+  .etapa-sub { font-size: 11px; color: var(--text2); }
+  .etapa-input-row { display: flex; gap: 8px; margin-top: 10px; align-items: center; flex-wrap: wrap; }
+  .etapa-datetime {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    flex: 1;
+    outline: none;
+    min-width: 0;
+    transition: border-color .2s;
+  }
+  .etapa-datetime:focus { border-color: var(--accent); }
+  .etapa-btn {
+    background: linear-gradient(135deg, var(--accent), #0096cc);
+    color: #000; border: none; border-radius: 10px;
+    padding: 10px 16px; font-family: 'Outfit', sans-serif;
+    font-weight: 700; font-size: 13px; cursor: pointer;
+    transition: all .2s; white-space: nowrap; flex-shrink: 0;
+  }
+  .etapa-btn:active { transform: scale(0.96); }
+  .etapa-btn.orange { background: linear-gradient(135deg, var(--accent2), #cc4400); }
+  .etapa-btn.green  { background: linear-gradient(135deg, var(--green), #00aa55); }
+  .etapa-btn.red    { background: rgba(255,68,102,0.2); border: 1px solid var(--red); color: var(--red); }
+
+  .viagem-active-card {
+    background: var(--glass);
+    backdrop-filter: blur(30px) saturate(200%);
+    -webkit-backdrop-filter: blur(30px) saturate(200%);
+    border: 1px solid var(--accent);
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 0 30px rgba(0,212,255,0.1);
+  }
+  .viagem-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 16px; gap: 10px;
+  }
+  .viagem-rota { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+  .viagem-cliente { font-size: 13px; color: var(--text2); margin-top: 4px; }
+
+  .duracao-total {
+    text-align: center;
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 14px; padding: 14px;
+    margin: 14px 0;
+  }
+  .duracao-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .duracao-value { font-size: 36px; font-weight: 900; color: var(--accent); font-family: 'JetBrains Mono', monospace; letter-spacing: -1px; }
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
@@ -683,13 +927,64 @@
   <div class="app-logo">
     <div class="logo-icon">🚛</div>
     <div>
-      <div class="logo-text">TR Bastos Transportes</div>
+      <div class="logo-text">FreteManager</div>
       <div class="logo-sub">Gestão de Frota</div>
     </div>
   </div>
-  <div class="header-avatar" onclick="toggleAvatarMenu()">
-    👤
-    <div class="avatar-online"></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div id="fb-sync-indicator" style="display:none;align-items:center;gap:6px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);border-radius:20px;padding:5px 12px;font-size:11px;color:#00ff88;font-weight:600"></div>
+    <div class="header-avatar" id="header-avatar" onclick="toggleAvatarMenu()">
+      <span id="avatar-emoji">👤</span>
+      <div class="avatar-edit-hint">📷</div>
+      <div class="avatar-online"></div>
+    </div>
+    <!-- Hidden file input -->
+    <input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="onAvatarFileSelected(event)">
+  </div>
+</div>
+
+<!-- AVATAR MODAL -->
+<div class="avatar-modal" id="avatar-modal">
+  <div class="avatar-modal-backdrop" onclick="fecharAvatarMenu()"></div>
+  <div class="avatar-panel">
+    <div class="avatar-panel-photo">
+      <div class="avatar-preview" id="avatar-preview-big">
+        <span id="avatar-preview-emoji">👤</span>
+      </div>
+      <div class="avatar-name" id="avatar-nome-display">James</div>
+      <div class="avatar-sub">fretemanager-60ef8</div>
+    </div>
+
+    <div class="avatar-action" onclick="escolherFoto()">
+      <div class="avatar-action-icon" style="background:rgba(0,212,255,0.15)">📷</div>
+      <div>
+        <div class="avatar-action-text">Trocar foto</div>
+        <div class="avatar-action-sub">Selecionar da galeria</div>
+      </div>
+    </div>
+
+    <div class="avatar-action" onclick="tirarFoto()">
+      <div class="avatar-action-icon" style="background:rgba(124,58,237,0.15)">🤳</div>
+      <div>
+        <div class="avatar-action-text">Tirar foto</div>
+        <div class="avatar-action-sub">Usar câmera do celular</div>
+      </div>
+    </div>
+
+    <div class="avatar-action" id="avatar-remove-btn" onclick="removerFoto()" style="display:none">
+      <div class="avatar-action-icon" style="background:rgba(255,68,102,0.15)">🗑</div>
+      <div>
+        <div class="avatar-action-text" style="color:var(--red)">Remover foto</div>
+        <div class="avatar-action-sub">Voltar ao ícone padrão</div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--glass-border)">
+      <div class="avatar-action" onclick="fecharAvatarMenu()">
+        <div class="avatar-action-icon" style="background:rgba(255,255,255,0.05)">✕</div>
+        <div class="avatar-action-text" style="color:var(--text2)">Fechar</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -705,7 +1000,7 @@
   </div>
   <div class="nav-item" id="nav-ativas" onclick="showPage('ativas')">
     <div class="nav-icon">🚚</div>
-    <div class="nav-label">Em Rota</div>
+    <div class="nav-label">Viagens</div>
     <div class="nav-badge" id="badge-ativas" style="display:none">0</div>
   </div>
   <div class="nav-item" id="nav-historico" onclick="showPage('historico')">
@@ -730,7 +1025,7 @@
 
   <!-- DASHBOARD -->
   <div id="page-dashboard" class="page active">
-    <div class="page-title">E ai meu parça! 👋</div>
+    <div class="page-title">Olá, James 👋</div>
     <div class="page-subtitle" id="dash-date">Hoje é um ótimo dia para faturar</div>
 
     <div class="stats-grid">
@@ -773,72 +1068,161 @@
   <div id="page-nova" class="page">
     <div class="page-title">Nova Entrega</div>
     <div class="page-subtitle">Registre os dados do frete</div>
+
+    <div class="config-combustivel">
+      <span style="font-size:18px">⛽</span>
+      <div style="flex:1">
+        <div style="font-weight:700;color:var(--accent2)">Preço do combustível</div>
+        <div style="color:var(--muted);font-size:11px">Usado para calcular custo automaticamente</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="color:var(--muted);font-size:12px">R$</span>
+        <input type="number" id="cfg-preco-combustivel" class="custo-item-input"
+          style="width:70px" step="0.01" placeholder="6,00"
+          oninput="salvarConfigCusto(); recalcularCusto()">
+        <span style="color:var(--muted);font-size:11px">/L</span>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="">
+      <div class="form-grid-2">
         <div class="form-group">
           <div class="form-label">Data</div>
           <input type="date" id="f-data" class="form-input">
         </div>
         <div class="form-group">
-          <div class="form-label">Veículo</div>
-          <select id="f-veiculo" class="form-input">
-            <option value="">Selecione...</option>
-            <option value="Gol - ABC1234">Gol - ABC1234</option>
-            <option value="Saveiro - DEF5678">Saveiro - DEF5678</option>
-            <option value="Fiorino - GHI9012">Fiorino - GHI9012</option>
+          <div class="form-label">Status</div>
+          <select id="f-status" class="form-input">
+            <option value="agendado">✅ Disponível</option>
+            <option value="em_rota">🚀 Saiu agora</option>
           </select>
         </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">Veículo</div>
+        <select id="f-veiculo" class="form-input" onchange="recalcularCusto()">
+          <option value="">Selecione...</option>
+          <option value="Gol - ABC1234">Gol - ABC1234</option>
+          <option value="Saveiro - DEF5678">Saveiro - DEF5678</option>
+          <option value="Fiorino - GHI9012">Fiorino - GHI9012</option>
+        </select>
+      </div>
+      <div class="form-grid-2">
         <div class="form-group">
           <div class="form-label">Origem</div>
-          <input type="text" id="f-origem" class="form-input" placeholder="Cidade / Bairro de saída">
+          <input type="text" id="f-origem" class="form-input" placeholder="Cidade / Bairro">
         </div>
         <div class="form-group">
           <div class="form-label">Destino</div>
-          <input type="text" id="f-destino" class="form-input" placeholder="Cidade / Bairro de entrega">
+          <input type="text" id="f-destino" class="form-input" placeholder="Cidade / Bairro">
         </div>
+      </div>
+      <div class="form-grid-2">
         <div class="form-group">
           <div class="form-label">Cliente</div>
           <input type="text" id="f-cliente" class="form-input" placeholder="Nome do cliente">
         </div>
         <div class="form-group">
           <div class="form-label">Tipo de Carga</div>
-          <input type="text" id="f-carga" class="form-input" placeholder="Ex: Eletrônicos, Móveis...">
+          <input type="text" id="f-carga" class="form-input" placeholder="Ex: Eletrônicos">
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-group">
+          <div class="form-label">Distância (km)</div>
+          <input type="number" id="f-km" class="form-input" placeholder="km total" oninput="recalcularCusto()">
         </div>
         <div class="form-group">
           <div class="form-label">Valor do Frete (R$)</div>
-          <input type="number" id="f-valor" class="form-input" placeholder="0,00" step="0.01">
-        </div>
-        <div class="form-group">
-          <div class="form-label">Custo Estimado (R$)</div>
-          <input type="number" id="f-custo" class="form-input" placeholder="Combustível + Pedágio" step="0.01">
-        </div>
-        <div class="form-group">
-          <div class="form-label">Distância (km)</div>
-          <input type="number" id="f-km" class="form-input" placeholder="km ida+volta">
-        </div>
-        <div class="form-group">
-          <div class="form-label">Status Inicial</div>
-          <select id="f-status" class="form-input">
-            <option value="agendado">Agendado</option>
-            <option value="em_rota">Saiu para entrega agora</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <div class="form-label">Observações</div>
-          <textarea id="f-obs" class="form-input" rows="3" placeholder="Informações extras..."></textarea>
+          <input type="number" id="f-valor" class="form-input" placeholder="0,00" step="0.01" oninput="recalcularCusto()">
         </div>
       </div>
-      <div class="action-row" style="margin-top:18px">
+
+      <div class="form-label" style="margin-bottom:8px">💰 Composição de Custo</div>
+      <div class="custo-panel">
+        <div class="custo-panel-header">
+          <span>Item</span><span>Ativo</span><span>Valor</span>
+        </div>
+        <div class="custo-item">
+          <div class="custo-item-icon" style="background:rgba(255,107,53,0.15)">⛽</div>
+          <div style="flex:1">
+            <div class="custo-item-name">Combustível</div>
+            <div class="custo-item-sub" id="custo-comb-sub">Selecione veículo e km</div>
+          </div>
+          <div class="custo-toggle on" id="toggle-comb" onclick="toggleCusto('comb')">✓</div>
+          <div class="custo-item-val" id="val-comb" style="color:var(--accent2);width:80px;text-align:right">R$ --</div>
+        </div>
+        <div class="custo-item">
+          <div class="custo-item-icon" style="background:rgba(255,217,61,0.15)">🛣</div>
+          <div style="flex:1">
+            <div class="custo-item-name">Pedágio</div>
+            <div class="custo-item-sub">Valor fixo por viagem</div>
+          </div>
+          <div class="custo-toggle on" id="toggle-pedagio" onclick="toggleCusto('pedagio')">✓</div>
+          <input type="number" class="custo-item-input" id="val-pedagio" placeholder="0,00" oninput="recalcularCusto()">
+        </div>
+        <div class="custo-item">
+          <div class="custo-item-icon" style="background:rgba(124,58,237,0.15)">👤</div>
+          <div style="flex:1">
+            <div class="custo-item-name">Diária do motorista</div>
+            <div class="custo-item-sub">Valor fixo por entrega</div>
+          </div>
+          <div class="custo-toggle" id="toggle-diaria" onclick="toggleCusto('diaria')">+</div>
+          <input type="number" class="custo-item-input" id="val-diaria" placeholder="0,00" oninput="recalcularCusto()" disabled>
+        </div>
+        <div class="custo-item">
+          <div class="custo-item-icon" style="background:rgba(0,212,255,0.15)">🔧</div>
+          <div style="flex:1">
+            <div class="custo-item-name">Custo extra</div>
+            <div class="custo-item-sub">Pneu, guincho, outros...</div>
+          </div>
+          <div class="custo-toggle" id="toggle-manut" onclick="toggleCusto('manut')">+</div>
+          <input type="number" class="custo-item-input" id="val-manut" placeholder="0,00" oninput="recalcularCusto()" disabled>
+        </div>
+        <div class="custo-total-row">
+          <div class="custo-total-label">Total de custos</div>
+          <div class="custo-total-val" id="custo-total-display">R$ 0,00</div>
+        </div>
+      </div>
+
+      <input type="hidden" id="f-custo">
+
+      <div class="lucro-preview" id="lucro-preview" style="display:none">
+        <div>
+          <div class="lucro-preview-label">Lucro estimado</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px">Frete − Custos</div>
+        </div>
+        <div class="lucro-preview-val" id="lucro-preview-val">R$ 0</div>
+      </div>
+
+      <div class="form-group" style="margin-top:14px">
+        <div class="form-label">Observações</div>
+        <textarea id="f-obs" class="form-input" rows="2" placeholder="Informações extras..."></textarea>
+      </div>
+
+      <div class="action-row" style="margin-top:16px">
         <button class="btn btn-primary" onclick="salvarEntrega()">💾 Salvar Entrega</button>
-        <button class="btn btn-secondary" onclick="limparForm()">🗑 Limpar</button>
+        <button class="btn btn-secondary btn-sm" onclick="limparForm()">🗑</button>
       </div>
     </div>
   </div>
 
   <!-- EM ROTA / CHECKIN -->
   <div id="page-ativas" class="page">
-    <div class="page-title">Em Rota</div><div class="page-subtitle">Controle de tempo e descarga</div>
-    <div id="ativas-list"><div class="no-data">Nenhuma entrega ativa no momento</div></div>
+    <div class="page-title">Controle de Viagem</div>
+    <div class="page-subtitle" id="ativas-subtitle">Selecione uma entrega para iniciar</div>
+
+    <!-- Viagem ativa (mostrado quando há viagem em andamento) -->
+    <div id="viagem-ativa-container" style="display:none"></div>
+
+    <!-- Lista de entregas disponíveis para iniciar -->
+    <div id="disponiveis-container">
+      <div class="section-title">Entregas Disponíveis</div>
+      <div id="disponiveis-list"></div>
+    </div>
+
+    <!-- Painel de confirmação/início de viagem -->
+    <div id="viagem-confirma-container" style="display:none"></div>
   </div>
 
   <!-- HISTÓRICO -->
@@ -856,7 +1240,7 @@
           <option value="">Todos os status</option>
           <option value="concluido">Concluídos</option>
           <option value="em_rota">Em Rota</option>
-          <option value="agendado">Agendados</option>
+          <option value="agendado">Disponíveis</option>
         </select>
       </div>
     </div>
@@ -926,7 +1310,8 @@
   "rules": {
     "rastreio":      { ".read": true, ".write": true },
     "historico_gps": { ".read": true, ".write": true },
-    "alertas_parada":{ ".read": true, ".write": true }
+    "alertas_parada":{ ".read": true, ".write": true },
+    "dados":         { ".read": true, ".write": true }
   }
 }</div>
         <div style="margin-bottom:14px">
@@ -1134,9 +1519,74 @@
 let entregas = JSON.parse(localStorage.getItem('fm_entregas') || '[]');
 let deleteId = null;
 let timers = {};
+let fbSyncReady = false; // true depois que Firebase carregar dados pela 1a vez
 
 function save() {
   localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+  syncEntregasFirebase();
+}
+
+function syncEntregasFirebase() {
+  if (!fbDb) return;
+  fbDb.ref('dados/entregas').set(entregas).catch(e => console.warn('Sync entregas falhou:', e));
+}
+
+function syncVeiculosFirebase() {
+  if (!fbDb) return;
+  fbDb.ref('dados/veiculos').set(veiculos).catch(e => console.warn('Sync veiculos falhou:', e));
+}
+
+// Carrega dados do Firebase e substitui localStorage (Firebase é a fonte da verdade)
+function carregarDadosFirebase() {
+  if (!fbDb) return;
+
+  // Mostrar indicador de carregamento
+  const loader = document.getElementById('fb-sync-indicator');
+  if (loader) { loader.style.display = 'flex'; loader.textContent = '☁️ Sincronizando...'; }
+
+  fbDb.ref('dados').once('value', snapshot => {
+    const dados = snapshot.val();
+    if (dados) {
+      if (dados.entregas && Array.isArray(dados.entregas)) {
+        entregas = dados.entregas;
+        localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+      }
+      if (dados.veiculos && Array.isArray(dados.veiculos)) {
+        veiculos = dados.veiculos;
+        localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+      }
+    }
+    fbSyncReady = true;
+    if (loader) { loader.textContent = '✅ Sincronizado'; setTimeout(() => loader.style.display = 'none', 2000); }
+    // Re-render tudo com dados atualizados
+    renderDashboard();
+    syncFrotaSelects();
+  }).catch(e => {
+    console.warn('Falha ao carregar Firebase:', e);
+    fbSyncReady = true;
+    if (loader) loader.style.display = 'none';
+  });
+
+  // Ouvir mudanças em tempo real (ex: outro celular salvar uma entrega)
+  fbDb.ref('dados/entregas').on('value', snapshot => {
+    if (!fbSyncReady) return;
+    const dados = snapshot.val();
+    if (dados && Array.isArray(dados)) {
+      entregas = dados;
+      localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+      renderDashboard();
+    }
+  });
+
+  fbDb.ref('dados/veiculos').on('value', snapshot => {
+    if (!fbSyncReady) return;
+    const dados = snapshot.val();
+    if (dados && Array.isArray(dados)) {
+      veiculos = dados;
+      localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+      syncFrotaSelects();
+    }
+  });
 }
 
 // ---- NAVIGATION ----
@@ -1152,11 +1602,118 @@ function showPage(p) {
   if (p === 'rankings') renderRankings();
   if (p === 'frota') renderFrota();
   if (p === 'rastreio') initRastreioPage();
+  if (p === 'nova') { carregarConfigCusto(); recalcularCusto(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ---- AVATAR / PERFIL ----
 function toggleAvatarMenu() {
-  // Future: profile/settings modal
+  const modal = document.getElementById('avatar-modal');
+  if (modal.classList.contains('open')) {
+    fecharAvatarMenu();
+  } else {
+    abrirAvatarMenu();
+  }
+}
+
+function abrirAvatarMenu() {
+  const modal = document.getElementById('avatar-modal');
+  modal.classList.add('open');
+  // Sync preview with current avatar
+  const saved = localStorage.getItem('fm_avatar');
+  const previewBig = document.getElementById('avatar-preview-big');
+  const previewEmoji = document.getElementById('avatar-preview-emoji');
+  if (saved) {
+    previewEmoji.style.display = 'none';
+    // Remove old img if any
+    const oldImg = previewBig.querySelector('img');
+    if (oldImg) oldImg.remove();
+    const img = document.createElement('img');
+    img.src = saved;
+    previewBig.appendChild(img);
+    document.getElementById('avatar-remove-btn').style.display = 'flex';
+  } else {
+    previewEmoji.style.display = 'block';
+    const oldImg = previewBig.querySelector('img');
+    if (oldImg) oldImg.remove();
+    document.getElementById('avatar-remove-btn').style.display = 'none';
+  }
+}
+
+function fecharAvatarMenu() {
+  document.getElementById('avatar-modal').classList.remove('open');
+}
+
+function escolherFoto() {
+  const input = document.getElementById('avatar-file-input');
+  input.removeAttribute('capture');
+  input.click();
+  fecharAvatarMenu();
+}
+
+function tirarFoto() {
+  const input = document.getElementById('avatar-file-input');
+  input.setAttribute('capture', 'user');
+  input.click();
+  fecharAvatarMenu();
+}
+
+function onAvatarFileSelected(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Comprimir/redimensionar imagem antes de salvar
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const MAX = 200;
+      let w = img.width, h = img.height;
+      if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
+      else        { if (h > MAX) { w = w * MAX / h; h = MAX; } }
+      canvas.width = w; canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+      aplicarAvatar(dataUrl);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  // Reset input so same file can be selected again
+  event.target.value = '';
+}
+
+function aplicarAvatar(dataUrl) {
+  localStorage.setItem('fm_avatar', dataUrl);
+  renderAvatar();
+carregarConfigCusto();
+}
+
+function removerFoto() {
+  localStorage.removeItem('fm_avatar');
+  renderAvatar();
+  fecharAvatarMenu();
+}
+
+function renderAvatar() {
+  const saved = localStorage.getItem('fm_avatar');
+  const avatarEl = document.getElementById('header-avatar');
+  const emojiEl  = document.getElementById('avatar-emoji');
+
+  // Remove old img from header avatar
+  const oldImg = avatarEl.querySelector('img');
+  if (oldImg) oldImg.remove();
+
+  if (saved) {
+    emojiEl.style.display = 'none';
+    const img = document.createElement('img');
+    img.src = saved;
+    img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;z-index:1';
+    avatarEl.insertBefore(img, avatarEl.firstChild);
+  } else {
+    emojiEl.style.display = 'block';
+  }
 }
 
 // ---- FORM ----
@@ -1184,7 +1741,7 @@ function salvarEntrega() {
     custo: parseFloat(document.getElementById('f-custo').value) || 0,
     km: parseFloat(document.getElementById('f-km').value) || 0,
     obs: document.getElementById('f-obs').value,
-    status: document.getElementById('f-status').value,
+    status: document.getElementById('f-status').value || 'agendado',
     horaSaida: document.getElementById('f-status').value === 'em_rota' ? new Date().toISOString() : null,
     horaChegada: null,
     horaSaida2: null,
@@ -1198,10 +1755,112 @@ function salvarEntrega() {
 }
 
 function limparForm() {
-  ['f-data','f-veiculo','f-origem','f-destino','f-cliente','f-carga','f-valor','f-custo','f-km','f-obs'].forEach(id => {
-    document.getElementById(id).value = '';
+  ['f-data','f-veiculo','f-origem','f-destino','f-cliente','f-carga','f-valor','f-km','f-obs'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
   });
   document.getElementById('f-data').value = new Date().toISOString().slice(0,10);
+  const pedagio = document.getElementById('val-pedagio');
+  const diaria  = document.getElementById('val-diaria');
+  const manut   = document.getElementById('val-manut');
+  if (pedagio) pedagio.value = '';
+  if (diaria)  diaria.value  = '';
+  if (manut)   manut.value   = '';
+  recalcularCusto();
+}
+
+// ---- CUSTO DINÂMICO ----
+const custoAtivos = { comb: true, pedagio: true, diaria: false, manut: false };
+
+function salvarConfigCusto() {
+  const preco = document.getElementById('cfg-preco-combustivel')?.value;
+  if (preco) localStorage.setItem('fm_preco_combustivel', preco);
+}
+
+function carregarConfigCusto() {
+  const saved = localStorage.getItem('fm_preco_combustivel');
+  const input = document.getElementById('cfg-preco-combustivel');
+  if (input) input.value = saved || '6.00';
+}
+
+function toggleCusto(tipo) {
+  custoAtivos[tipo] = !custoAtivos[tipo];
+  const btn = document.getElementById('toggle-' + tipo);
+  if (btn) { btn.textContent = custoAtivos[tipo] ? '✓' : '+'; btn.classList.toggle('on', custoAtivos[tipo]); }
+  if (tipo === 'diaria' || tipo === 'manut') {
+    const inp = document.getElementById('val-' + tipo);
+    if (inp) inp.disabled = !custoAtivos[tipo];
+  }
+  recalcularCusto();
+}
+
+function recalcularCusto() {
+  const km    = parseFloat(document.getElementById('f-km')?.value) || 0;
+  const valor = parseFloat(document.getElementById('f-valor')?.value) || 0;
+  const preco = parseFloat(document.getElementById('cfg-preco-combustivel')?.value) || 6.00;
+
+  const veiculoKey = document.getElementById('f-veiculo')?.value || '';
+  let consumo = 10;
+  if (veiculoKey) {
+    const vObj = veiculos.find(v => (v.modelo + ' - ' + v.placa) === veiculoKey);
+    if (vObj && vObj.consumo) consumo = parseFloat(vObj.consumo);
+  }
+
+  const litros    = km > 0 ? km / consumo : 0;
+  const custoComb = litros * preco;
+  const custoPedagio = parseFloat(document.getElementById('val-pedagio')?.value) || 0;
+  const custoDiaria  = parseFloat(document.getElementById('val-diaria')?.value)  || 0;
+  const custoManut   = parseFloat(document.getElementById('val-manut')?.value)   || 0;
+
+  const valComb = document.getElementById('val-comb');
+  const subComb = document.getElementById('custo-comb-sub');
+  if (valComb) valComb.textContent = custoComb > 0 ? 'R$ ' + custoComb.toFixed(2).replace('.',',') : 'R$ --';
+  if (subComb) subComb.textContent = km > 0 ? litros.toFixed(1) + 'L × R$ ' + preco.toFixed(2) + ' (consumo: ' + consumo + ' km/L)' : 'Preencha km';
+
+  let total = 0;
+  if (custoAtivos.comb)    total += custoComb;
+  if (custoAtivos.pedagio) total += custoPedagio;
+  if (custoAtivos.diaria)  total += custoDiaria;
+  if (custoAtivos.manut)   total += custoManut;
+
+  const totalEl = document.getElementById('custo-total-display');
+  if (totalEl) totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.',',');
+
+  const custoInput = document.getElementById('f-custo');
+  if (custoInput) custoInput.value = total.toFixed(2);
+
+  const lucroEl  = document.getElementById('lucro-preview');
+  const lucroVal = document.getElementById('lucro-preview-val');
+  if (lucroEl && lucroVal) {
+    if (valor > 0 || total > 0) {
+      const lucro = valor - total;
+      lucroEl.style.display = 'flex';
+      lucroEl.classList.toggle('negativo', lucro < 0);
+      lucroVal.textContent = (lucro < 0 ? '-' : '+') + 'R$ ' + Math.abs(lucro).toFixed(2).replace('.',',');
+      lucroVal.style.color = lucro >= 0 ? 'var(--green)' : 'var(--red)';
+    } else {
+      lucroEl.style.display = 'none';
+    }
+  }
+}
+
+// ---- CUSTOS EXTRAS NA VIAGEM ----
+function atualizarCustoViagem(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+  e.pedagioExtra = parseFloat(document.getElementById('viagem-pedagio-' + id)?.value) || 0;
+  e.custoExtra   = parseFloat(document.getElementById('viagem-extra-'   + id)?.value) || 0;
+  const total = (e.custo || 0) + e.pedagioExtra + e.custoExtra;
+  const totalEl = document.getElementById('viagem-custo-total-' + id);
+  if (totalEl) totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.',',');
+  save();
+}
+
+function atualizarObsViagem(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+  e.obsViagem = document.getElementById('viagem-obs-' + id)?.value || '';
+  save();
 }
 
 // ---- DASHBOARD ----
@@ -1216,7 +1875,7 @@ function renderDashboard() {
   });
 
   const fat = doMes.reduce((s, e) => s + e.valor, 0);
-  const lucro = doMes.reduce((s, e) => s + (e.valor - e.custo), 0);
+  const lucro = doMes.reduce((s, e) => s + (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0))), 0);
   const ativas = entregas.filter(e => e.status === 'em_rota').length;
 
   document.getElementById('stat-faturamento').textContent = 'R$ ' + fat.toFixed(2).replace('.',',');
@@ -1263,9 +1922,10 @@ function renderDashboard() {
   const rl = document.getElementById('recent-list');
   if (!recent.length) { rl.innerHTML = '<div class="no-data">Nenhuma entrega ainda</div>'; return; }
   rl.innerHTML = recent.map(e => {
-    const lucro = e.valor - e.custo;
+    const custoTot = (e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0);
+    const lucro = e.valor - custoTot;
     const badgeClass = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
-    const badgeText = e.status === 'concluido' ? '✓ Feito' : e.status === 'em_rota' ? '🚚 Em rota' : e.status === 'em_descarga' ? '📦 Descarga' : '⏰ Agendado';
+    const badgeText = e.status === 'concluido' ? '✓ Feito' : e.status === 'em_rota' ? '🚚 Em rota' : e.status === 'em_descarga' ? '📦 Descarga' : '✅ Disponível';
     const dotColor = e.status === 'concluido' ? 'var(--green)' : e.status === 'em_rota' ? 'var(--accent2)' : 'var(--accent)';
     return `<div class="delivery-row">
       <div class="delivery-dot" style="background:${dotColor}"></div>
@@ -1281,85 +1941,371 @@ function renderDashboard() {
   }).join('');
 }
 
-// ---- EM ROTA / CHECKIN ----
-function renderAtivas() {
-  const ativas = entregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga');
-  const el = document.getElementById('ativas-list');
+// ---- CONTROLE DE VIAGEM ----
 
-  if (!ativas.length) {
-    el.innerHTML = '<div class="no-data">Nenhuma entrega ativa no momento</div>';
+function renderAtivas() {
+  const emAndamento = entregas.find(e => ['em_rota','em_descarga','aguardando_descarga'].includes(e.status));
+  const disponiveis = entregas.filter(e => e.status === 'agendado');
+
+  const ativaContainer = document.getElementById('viagem-ativa-container');
+  const dispContainer  = document.getElementById('disponiveis-container');
+  const confirmaContainer = document.getElementById('viagem-confirma-container');
+
+  // Resetar confirma
+  confirmaContainer.style.display = 'none';
+  confirmaContainer.innerHTML = '';
+
+  if (emAndamento) {
+    ativaContainer.style.display = 'block';
+    dispContainer.style.display = 'none';
+    ativaContainer.innerHTML = buildViagemAtiva(emAndamento);
+    iniciarRelogioViagem(emAndamento);
+  } else {
+    ativaContainer.style.display = 'none';
+    dispContainer.style.display = 'block';
+    renderDisponiveis();
+  }
+}
+
+function renderDisponiveis() {
+  const disponiveis = entregas.filter(e => e.status === 'agendado');
+  const el = document.getElementById('disponiveis-list');
+  if (!disponiveis.length) {
+    el.innerHTML = `<div class="no-data">
+      <div class="no-data-icon">📦</div>
+      Nenhuma entrega agendada.<br>
+      <span style="color:var(--accent);cursor:pointer;font-weight:600" onclick="showPage('nova')">+ Cadastrar entrega</span>
+    </div>`;
+    return;
+  }
+  el.innerHTML = disponiveis.map(e => `
+    <div class="entrega-disponivel" onclick="selecionarEntrega(${e.id})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div class="entrega-rota">${e.origem} → ${e.destino}</div>
+        <span class="badge badge-sched">Disponível</span>
+      </div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px">👤 ${e.cliente}</div>
+      <div class="entrega-tags">
+        <div class="entrega-tag">🚗 ${e.veiculo.split(' - ')[0]}</div>
+        <div class="entrega-tag">📅 ${formatDate(e.data)}</div>
+        ${e.km ? `<div class="entrega-tag">📍 ${e.km} km</div>` : ''}
+        <div class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.08)">R$ ${e.valor.toFixed(0)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selecionarEntrega(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+
+  const dispContainer  = document.getElementById('disponiveis-container');
+  const confirmaContainer = document.getElementById('viagem-confirma-container');
+
+  dispContainer.style.display = 'none';
+  confirmaContainer.style.display = 'block';
+
+  const agora = new Date();
+  const agoraISO = agora.toISOString().slice(0,16);
+
+  confirmaContainer.innerHTML = `
+    <button onclick="voltarDisponiveis()" style="background:none;border:none;color:var(--text2);font-size:14px;cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif">
+      ← Voltar
+    </button>
+
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Entrega selecionada</div>
+      <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px">${e.origem} → ${e.destino}</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:6px">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]}</div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+        ${e.km ? `<span class="entrega-tag">📍 ${e.km} km</span>` : ''}
+        <span class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3)">R$ ${e.valor.toFixed(0)}</span>
+        ${e.carga ? `<span class="entrega-tag">📦 ${e.carga}</span>` : ''}
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:15px;font-weight:800;margin-bottom:16px">⏱ Registrar horários da viagem</div>
+
+      <div class="form-group">
+        <div class="form-label">🚀 Início da viagem</div>
+        <input type="datetime-local" id="confirma-inicio" class="form-input" value="${agoraISO}">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">📍 Início da descarga <span style="color:var(--muted);font-weight:400">(opcional agora)</span></div>
+        <input type="datetime-local" id="confirma-inicio-descarga" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">✅ Fim da descarga <span style="color:var(--muted);font-weight:400">(opcional agora)</span></div>
+        <input type="datetime-local" id="confirma-fim-descarga" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <div class="form-label">🏁 Fim da viagem <span style="color:var(--muted);font-weight:400">(opcional agora)</span></div>
+        <input type="datetime-local" id="confirma-fim" class="form-input">
+      </div>
+
+      <div style="display:flex;gap:10px;margin-top:6px">
+        <button class="btn btn-secondary" style="flex:1" onclick="voltarDisponiveis()">Cancelar</button>
+        <button class="btn btn-primary" style="flex:2" onclick="iniciarViagemConfirmada(${e.id})">🚀 Iniciar Viagem</button>
+      </div>
+    </div>`;
+}
+
+function voltarDisponiveis() {
+  document.getElementById('disponiveis-container').style.display = 'block';
+  document.getElementById('viagem-confirma-container').style.display = 'none';
+  document.getElementById('viagem-confirma-container').innerHTML = '';
+}
+
+function iniciarViagemConfirmada(id) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+
+  const inicio = document.getElementById('confirma-inicio').value;
+  const inicioDescarga = document.getElementById('confirma-inicio-descarga').value;
+  const fimDescarga = document.getElementById('confirma-fim-descarga').value;
+  const fim = document.getElementById('confirma-fim').value;
+
+  if (!inicio) { alert('Informe o horário de início da viagem.'); return; }
+
+  e.horaSaida = inicio ? new Date(inicio).toISOString() : new Date().toISOString();
+  e.horaChegada = inicioDescarga ? new Date(inicioDescarga).toISOString() : null;
+  e.horaSaida2 = fimDescarga ? new Date(fimDescarga).toISOString() : null;
+  e.horaFimViagem = fim ? new Date(fim).toISOString() : null;
+
+  if (e.horaChegada && e.horaSaida2) {
+    e.tempoDescarga = Math.round((new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000);
+  }
+
+  // Se todos preenchidos, já concluir
+  if (e.horaFimViagem && e.horaSaida2) {
+    e.status = 'concluido';
+    save();
+    renderAtivas();
+    renderDashboard();
+    alert('✅ Viagem registrada e concluída!');
     return;
   }
 
-  el.innerHTML = ativas.map(e => buildCheckinCard(e)).join('');
-  // start live timers for em_descarga
-  ativas.forEach(e => {
-    if (e.status === 'em_descarga' && e.horaChegada) {
-      startLiveTimer(e.id);
-    }
-  });
+  e.status = 'em_rota';
+  save();
+  renderAtivas();
+  renderDashboard();
 }
 
-function buildCheckinCard(e) {
-  const chegou = e.horaChegada ? new Date(e.horaChegada) : null;
-  const saiu = e.horaSaida2 ? new Date(e.horaSaida2) : null;
+function buildViagemAtiva(e) {
+  const inicio     = e.horaSaida ? new Date(e.horaSaida) : null;
+  const iniDesc    = e.horaChegada ? new Date(e.horaChegada) : null;
+  const fimDesc    = e.horaSaida2 ? new Date(e.horaSaida2) : null;
+  const fimViagem  = e.horaFimViagem ? new Date(e.horaFimViagem) : null;
 
-  const chegadaStr = chegou ? formatTime(chegou) : '--:--';
-  const saidaStr = saiu ? formatTime(saiu) : '--:--';
-  const descargaStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.status === 'em_descarga' ? '<span id="live-'+e.id+'">...</span>' : '--');
+  const etapa1feito = !!inicio;
+  const etapa2feito = !!iniDesc;
+  const etapa3feito = !!fimDesc;
+  const etapa4feito = !!fimViagem;
 
-  const saidaRota = e.horaSaida ? formatTime(new Date(e.horaSaida)) : '--:--';
+  const etapa1ativo = !etapa1feito;
+  const etapa2ativo = etapa1feito && !etapa2feito;
+  const etapa3ativo = etapa2feito && !etapa3feito;
+  const etapa4ativo = etapa3feito && !etapa4feito;
 
-  let actions = '';
-  if (!chegou) {
-    actions += `<button class="btn" onclick="registrarChegada(${e.id})" style="flex:1">📍 Cheguei</button>`;
-  }
-  if (chegou && !saiu) {
-    actions += `<button class="btn" style="background:var(--accent2);color:#0e0f0e" onclick="registrarSaida(${e.id})">🚀 Saí da Entrega</button>`;
-  }
-  if (chegou && saiu) {
-    actions += `<button class="btn" style="background:var(--accent3);color:#0e0f0e" onclick="concluirEntrega(${e.id})">✅ Concluir Entrega</button>`;
-  }
-  actions += `<button class="btn btn-secondary" style="font-size:11px" onclick="showPage('historico')">Ver Histórico</button>`;
+  function statusClass(feito, ativo) { return feito ? 'feito' : ativo ? 'ativo' : 'pendente'; }
 
-  return `<div class="checkin-card" id="card-${e.id}">
-    <div class="checkin-header">
+  const now = new Date().toISOString().slice(0,16);
+
+  return `<div class="viagem-active-card">
+    <div class="viagem-header">
       <div>
-        <div class="checkin-route">${e.origem} → ${e.destino}</div>
-        <div class="checkin-sub">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]} • 💰 R$ ${e.valor.toFixed(0)}</div>
+        <div class="viagem-rota">${e.origem} → ${e.destino}</div>
+        <div class="viagem-cliente">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]}</div>
       </div>
-      <span class="badge ${e.status === 'em_descarga' ? 'badge-loading' : 'badge-transit'}">
-        ${e.status === 'em_descarga' ? 'Em Descarga' : 'Em Rota'}
-      </span>
+      <span class="badge ${e.status === 'em_descarga' ? 'badge-loading' : 'badge-transit'}">${e.status === 'em_descarga' ? '📦 Descarga' : '🚚 Em rota'}</span>
     </div>
 
-    <div class="time-tracker">
-      <div class="time-box">
-        <div class="time-box-label">Saiu às</div>
-        <div class="time-box-value set">${saidaRota}</div>
+    <div id="duracao-box" class="duracao-total">
+      <div class="duracao-label">Tempo em viagem</div>
+      <div class="duracao-value" id="duracao-live">--:--</div>
+    </div>
+
+    <div class="viagem-etapas">
+
+      <!-- ETAPA 1: Início da viagem -->
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa1feito, etapa1ativo)}">${etapa1feito ? '✓' : '🚀'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa1feito, etapa1ativo)}">Início da viagem</div>
+          ${etapa1feito
+            ? `<div class="etapa-hora feito">${formatTime(inicio)}</div><div class="etapa-sub">${formatDate(e.horaSaida.slice(0,10))}</div>`
+            : `<div class="etapa-input-row">
+                <input type="datetime-local" class="etapa-datetime" id="dt-inicio" value="${now}">
+                <button class="etapa-btn" onclick="registrarEtapa(${e.id},'inicio')">Registrar</button>
+              </div>`
+          }
+        </div>
       </div>
-      <div class="time-box ${chegou ? 'active-border' : ''}">
-        <div class="time-box-label">Chegou às</div>
-        <div class="time-box-value ${chegou ? 'set' : ''}">${chegadaStr}</div>
+
+      <!-- ETAPA 2: Início da descarga -->
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa2feito, etapa2ativo)}">${etapa2feito ? '✓' : '📍'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa2feito, etapa2ativo)}">Cheguei — início da descarga</div>
+          ${etapa2feito
+            ? `<div class="etapa-hora feito">${formatTime(iniDesc)}</div><div class="etapa-sub">${formatDate(e.horaChegada.slice(0,10))}</div>`
+            : etapa2ativo
+              ? `<div class="etapa-input-row">
+                  <input type="datetime-local" class="etapa-datetime" id="dt-ini-desc" value="${now}">
+                  <button class="etapa-btn orange" onclick="registrarEtapa(${e.id},'ini_desc')">Registrar</button>
+                </div>`
+              : `<div class="etapa-sub">Aguardando início da viagem</div>`
+          }
+        </div>
       </div>
-      <div class="time-box ${saiu ? 'active-border' : ''}">
-        <div class="time-box-label">Saiu às</div>
-        <div class="time-box-value ${saiu ? 'set' : ''}">${saidaStr}</div>
+
+      <!-- ETAPA 3: Fim da descarga -->
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa3feito, etapa3ativo)}">${etapa3feito ? '✓' : '📦'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa3feito, etapa3ativo)}">Saí — fim da descarga</div>
+          ${etapa3feito
+            ? `<div class="etapa-hora feito">${formatTime(fimDesc)}</div>
+               <div class="etapa-sub">Descarga: ${formatMinutes(e.tempoDescarga)}</div>`
+            : etapa3ativo
+              ? `<div class="etapa-input-row">
+                  <input type="datetime-local" class="etapa-datetime" id="dt-fim-desc" value="${now}">
+                  <button class="etapa-btn orange" onclick="registrarEtapa(${e.id},'fim_desc')">Registrar</button>
+                </div>`
+              : `<div class="etapa-sub">Aguardando início da descarga</div>`
+          }
+        </div>
+      </div>
+
+      <!-- ETAPA 4: Fim da viagem -->
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa4feito, etapa4ativo)}">${etapa4feito ? '✓' : '🏁'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa4feito, etapa4ativo)}">Fim da viagem</div>
+          ${etapa4feito
+            ? `<div class="etapa-hora feito">${formatTime(fimViagem)}</div><div class="etapa-sub">${formatDate(e.horaFimViagem.slice(0,10))}</div>`
+            : etapa4ativo
+              ? `<div class="etapa-input-row">
+                  <input type="datetime-local" class="etapa-datetime" id="dt-fim" value="${now}">
+                  <button class="etapa-btn green" onclick="registrarEtapa(${e.id},'fim')">Concluir</button>
+                </div>`
+              : `<div class="etapa-sub">Aguardando fim da descarga</div>`
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CUSTOS EXTRAS DA VIAGEM -->
+    <div style="margin-top:6px;background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);border-radius:18px;overflow:hidden">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:13px;font-weight:700">💸 Custos da Viagem</div>
+        <div style="font-size:11px;color:var(--text2)">Base: <strong style="color:var(--accent2)">R$ ${e.custo ? e.custo.toFixed(2).replace('.',',') : '0,00'}</strong></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(255,217,61,0.15);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🛣</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:500">Pedágio</div><div style="font-size:10px;color:var(--muted)">Cobrado na viagem</div></div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:12px;color:var(--muted)">R$</span>
+          <input type="number" id="viagem-pedagio-${e.id}" class="custo-item-input" placeholder="0,00" step="0.01" value="${e.pedagioExtra || ''}" oninput="atualizarCustoViagem(${e.id})">
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <div style="width:32px;height:32px;border-radius:9px;background:rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🔧</div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:500">Custo extra</div><div style="font-size:10px;color:var(--muted)">Pneu, guincho, outros...</div></div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:12px;color:var(--muted)">R$</span>
+          <input type="number" id="viagem-extra-${e.id}" class="custo-item-input" placeholder="0,00" step="0.01" value="${e.custoExtra || ''}" oninput="atualizarCustoViagem(${e.id})">
+        </div>
+      </div>
+      <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)">
+        <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">💬 Observações da viagem</div>
+        <textarea id="viagem-obs-${e.id}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:var(--text);padding:10px 12px;font-family:'Outfit',sans-serif;font-size:13px;outline:none;resize:none;line-height:1.5" rows="2" placeholder="Pneu furado km 45, guincho R$ 200..." oninput="atualizarObsViagem(${e.id})">${e.obsViagem || ''}</textarea>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px">
+        <div><div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Custo total</div></div>
+        <div id="viagem-custo-total-${e.id}" style="font-size:22px;font-weight:900;color:var(--accent2);font-family:'JetBrains Mono',monospace">R$ ${((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)).toFixed(2).replace('.',',')}</div>
       </div>
     </div>
 
-    ${e.status === 'em_descarga' ? `
-    <div class="timer-display">
-      <div class="big-time" id="live-${e.id}">00:00</div>
-      <div class="timer-label">tempo de descarga em andamento</div>
-    </div>` : (e.tempoDescarga !== null ? `
-    <div style="text-align:center;padding:14px;background:var(--surface2);border-radius:10px;margin:10px 0">
-      <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--accent2)">${formatMinutes(e.tempoDescarga)}</div>
-      <div style="color:var(--muted);font-size:11px">tempo de descarga</div>
-    </div>` : '')}
-
-    <div class="action-row">${actions}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn btn-danger btn-sm" onclick="cancelarViagem(${e.id})">✕ Cancelar viagem</button>
+    </div>
   </div>`;
+}
+
+let relogioViagem = null;
+function iniciarRelogioViagem(e) {
+  if (relogioViagem) clearInterval(relogioViagem);
+  function atualizar() {
+    const el = document.getElementById('duracao-live');
+    if (!el) { clearInterval(relogioViagem); return; }
+    if (!e.horaSaida) { el.textContent = '--:--'; return; }
+    const diff = Math.floor((Date.now() - new Date(e.horaSaida)) / 1000);
+    const h = Math.floor(diff / 3600);
+    const m = Math.floor((diff % 3600) / 60);
+    const s = diff % 60;
+    el.textContent = (h > 0 ? String(h).padStart(2,'0') + ':' : '') +
+                     String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  }
+  atualizar();
+  relogioViagem = setInterval(atualizar, 1000);
+}
+
+function registrarEtapa(id, etapa) {
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+
+  if (etapa === 'inicio') {
+    const val = document.getElementById('dt-inicio')?.value;
+    if (!val) return;
+    e.horaSaida = new Date(val).toISOString();
+    e.status = 'em_rota';
+  } else if (etapa === 'ini_desc') {
+    const val = document.getElementById('dt-ini-desc')?.value;
+    if (!val) return;
+    e.horaChegada = new Date(val).toISOString();
+    e.status = 'em_descarga';
+  } else if (etapa === 'fim_desc') {
+    const val = document.getElementById('dt-fim-desc')?.value;
+    if (!val) return;
+    e.horaSaida2 = new Date(val).toISOString();
+    e.tempoDescarga = Math.round((new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000);
+    e.status = 'em_rota';
+  } else if (etapa === 'fim') {
+    const val = document.getElementById('dt-fim')?.value;
+    if (!val) return;
+    e.horaFimViagem = new Date(val).toISOString();
+    e.status = 'concluido';
+    if (relogioViagem) clearInterval(relogioViagem);
+    save();
+    renderAtivas();
+    renderDashboard();
+    alert('✅ Viagem concluída com sucesso!');
+    return;
+  }
+
+  save();
+  renderAtivas();
+  renderDashboard();
+}
+
+function cancelarViagem(id) {
+  if (!confirm('Cancelar esta viagem? O status voltará para Agendado.')) return;
+  const e = entregas.find(x => x.id === id);
+  if (!e) return;
+  e.status = 'agendado';
+  e.horaSaida = null; e.horaChegada = null; e.horaSaida2 = null;
+  e.horaFimViagem = null; e.tempoDescarga = null;
+  e.pedagioExtra = 0; e.custoExtra = 0; e.obsViagem = '';
+  if (relogioViagem) clearInterval(relogioViagem);
+  save();
+  renderAtivas();
+  renderDashboard();
 }
 
 function registrarChegada(id) {
@@ -1375,7 +2321,7 @@ function registrarSaida(id) {
   const e = entregas.find(x => x.id === id);
   if (!e) return;
   e.horaSaida2 = new Date().toISOString();
-  const diff = (new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000; // minutes
+  const diff = (new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000;
   e.tempoDescarga = Math.round(diff);
   save();
   if (timers[id]) { clearInterval(timers[id]); delete timers[id]; }
@@ -1422,10 +2368,11 @@ function renderHistorico() {
   empty.style.display = 'none';
 
   tbody.innerHTML = filtered.map(e => {
-    const lucro = e.valor - e.custo;
+    const custoTotal = (e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0);
+    const lucro = e.valor - custoTotal;
     const descStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.horaChegada && !e.horaSaida2 ? '⏳ em curso' : '--');
     const statusLabel = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
-    const statusText = e.status === 'concluido' ? 'Concluído' : e.status === 'em_rota' ? 'Em Rota' : e.status === 'em_descarga' ? 'Descarga' : 'Agendado';
+    const statusText = e.status === 'concluido' ? 'Concluído' : e.status === 'em_rota' ? 'Em Rota' : e.status === 'em_descarga' ? 'Descarga' : 'Disponível';
     return `<tr>
       <td>${formatDate(e.data)}</td>
       <td>${e.origem} → ${e.destino}</td>
@@ -1449,7 +2396,7 @@ function renderRankings() {
   concluidas.filter(e => e.km > 0).forEach(e => {
     const k = e.origem + ' → ' + e.destino;
     if (!rotaMap[k]) rotaMap[k] = { total: 0, km: 0, count: 0 };
-    rotaMap[k].total += (e.valor - e.custo);
+    rotaMap[k].total += (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)));
     rotaMap[k].km += e.km;
     rotaMap[k].count++;
   });
@@ -1471,7 +2418,7 @@ function renderRankings() {
   const clienteMap = {};
   concluidas.forEach(e => {
     if (!clienteMap[e.cliente]) clienteMap[e.cliente] = { total: 0, count: 0 };
-    clienteMap[e.cliente].total += (e.valor - e.custo);
+    clienteMap[e.cliente].total += (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)));
     clienteMap[e.cliente].count++;
   });
   const clientes = Object.entries(clienteMap).map(([k, v]) => ({ name: k, ...v }))
@@ -1492,7 +2439,7 @@ function renderRankings() {
   concluidas.forEach(e => {
     if (!vMap[e.veiculo]) vMap[e.veiculo] = { fat: 0, lucro: 0, count: 0 };
     vMap[e.veiculo].fat += e.valor;
-    vMap[e.veiculo].lucro += (e.valor - e.custo);
+    vMap[e.veiculo].lucro += (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)));
     vMap[e.veiculo].count++;
   });
   const veiculos = Object.entries(vMap).map(([k, v]) => ({ name: k.split(' - ')[0], ...v }))
@@ -1567,6 +2514,7 @@ let editVeiculoId = null;
 
 function saveVeiculos() {
   localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+  syncVeiculosFirebase();
 }
 
 function abrirModalVeiculo(id) {
@@ -1827,6 +2775,7 @@ function conectarFirebase() {
     fbDb = firebase.database(fbApp);
     localStorage.setItem('fm_firebase_config', JSON.stringify(config));
     document.getElementById('fb-status-text').textContent = 'Firebase conectado ✓';
+    carregarDadosFirebase();
     showRastreioMain();
   } catch(e) {
     errEl.textContent = 'Erro: ' + e.message;
@@ -1843,6 +2792,7 @@ function tentarReconectarFirebase() {
     fbApp = firebase.initializeApp(config, 'frete-' + Date.now());
     fbDb = firebase.database(fbApp);
     console.log('Firebase conectado:', config.projectId);
+    carregarDadosFirebase();
   } catch(e) { console.warn('Firebase reconect failed', e); }
 }
 
@@ -2241,6 +3191,8 @@ Object.defineProperty(window, 'STOP_THRESHOLD_MIN_EFFECTIVE', {
   }
 })();
 document.getElementById('f-data').value = new Date().toISOString().slice(0, 10);
+// Render avatar from saved photo
+renderAvatar();
 // Set greeting date
 const dashDate = document.getElementById('dash-date');
 if (dashDate) {
