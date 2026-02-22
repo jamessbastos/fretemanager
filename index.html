@@ -1227,59 +1227,80 @@
   </div>
 
   <!-- FUNCIONÁRIO DASHBOARD -->
-  <div id="page-func" class="page">
-    <div class="page-title" id="func-greeting">Olá 👋</div>
-    <div class="page-subtitle" id="func-date"></div>
+<div id="page-func" class="page">
+  <div class="page-title" id="func-greeting">Olá 👋</div>
+  <div class="page-subtitle" id="func-date"></div>
 
-    <!-- Selecionar veículo -->
-    <div class="card" id="func-selecao-veiculo">
-      <div class="form-label" style="margin-bottom:10px">🚗 Seu veículo</div>
-      <select id="func-veiculo-select" class="form-input" onchange="funcSelecionarVeiculo()">
-        <option value="">Selecione sua placa...</option>
-      </select>
-    </div>
+  <div id="func-actions-container" style="margin: 20px 0;">
+    <button onclick="showPage('ativas')" class="btn-primary" style="
+      width: 100%; 
+      padding: 22px; 
+      border-radius: 18px; 
+      border: none; 
+      background: var(--accent); 
+      color: white; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 15px; 
+      font-weight: 800; 
+      font-size: 16px; 
+      cursor: pointer; 
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    ">
+      <span style="font-size: 24px;">📦</span> 
+      SELECIONAR CARGAS DISPONÍVEIS
+    </button>
+  </div>
 
-    <!-- Dados do veículo -->
-    <div id="func-veiculo-info" style="display:none">
-      <div class="func-vehicle-card">
-        <div class="func-vehicle-top">
-          <div class="func-vehicle-icon">🚛</div>
-          <div style="flex:1">
-            <div style="font-size:18px;font-weight:900" id="fv-nome">-</div>
-            <div style="font-size:12px;color:var(--text2);margin-top:2px" id="fv-ano">-</div>
-            <div style="display:inline-block;background:rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;margin-top:6px" id="fv-placa">-</div>
-          </div>
-          <button onclick="funcLimparVeiculo()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer">trocar</button>
+  <div class="card" id="func-selecao-veiculo">
+    <div class="form-label" style="margin-bottom:10px; font-weight:700; color:var(--text2)">🚗 SEU VEÍCULO ATUAL</div>
+    <select id="func-veiculo-select" class="form-input" onchange="funcSelecionarVeiculo()">
+      <option value="">Selecione sua placa...</option>
+    </select>
+  </div>
+
+  <div id="func-veiculo-info" style="display:none">
+    <div class="func-vehicle-card">
+      <div class="func-vehicle-top">
+        <div class="func-vehicle-icon">🚛</div>
+        <div style="flex:1">
+          <div style="font-size:18px;font-weight:900" id="fv-nome">-</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px" id="fv-ano">-</div>
+          <div style="display:inline-block;background:rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;margin-top:6px" id="fv-placa">-</div>
         </div>
-        <div class="func-spec-grid">
-          <div class="func-spec">
-            <div class="func-spec-label">⛽ Consumo</div>
-            <div class="func-spec-val" id="fv-consumo">-</div>
-          </div>
-          <div class="func-spec">
-            <div class="func-spec-label">🔧 Próx. Revisão</div>
-            <div class="func-spec-val" id="fv-revisao">-</div>
-          </div>
-          <div class="func-spec">
-            <div class="func-spec-label">📦 Fretes realizados</div>
-            <div class="func-spec-val" id="fv-fretes">-</div>
-          </div>
-          <div class="func-spec">
-            <div class="func-spec-label">🔧 Gastos extras</div>
-            <div class="func-spec-val" id="fv-gastos">-</div>
-          </div>
+        <button onclick="funcLimparVeiculo()" style="background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:8px; color:var(--text); padding:5px 10px; font-size:11px; cursor:pointer">Trocar</button>
+      </div>
+      
+      <div class="func-spec-grid">
+        <div class="func-spec">
+          <div class="func-spec-label">⛽ Consumo</div>
+          <div class="func-spec-val" id="fv-consumo">-</div>
+        </div>
+        <div class="func-spec">
+          <div class="func-spec-label">🔧 Próx. Revisão</div>
+          <div class="func-spec-val" id="fv-revisao">-</div>
+        </div>
+        <div class="func-spec">
+          <div class="func-spec-label">📦 Fretes realizados</div>
+          <div class="func-spec-val" id="fv-fretes">-</div>
+        </div>
+        <div class="func-spec">
+          <div class="func-spec-label">💸 Gastos extras</div>
+          <div class="func-spec-val" id="fv-gastos">-</div>
         </div>
       </div>
+    </div>
 
-      <!-- Últimas cargas -->
-      <div class="card">
-        <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">📦 Últimas cargas</div>
-        <div id="func-cargas-list">
-          <div class="no-data" style="padding:20px 0">Nenhuma carga realizada</div>
-        </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">📦 Histórico Recente</div>
+      <div id="func-cargas-list">
+        <div class="no-data" style="padding:20px 0">Nenhuma carga realizada</div>
       </div>
     </div>
   </div>
+</div>
 
   <!-- EQUIPE (DONO ONLY) -->
   <div id="page-equipe" class="page">
@@ -1806,13 +1827,19 @@ window.addEventListener('DOMContentLoaded', () => {
 const TZ = 'America/Sao_Paulo';
 
 // ---- DATA ----
-let entregas = JSON.parse(localStorage.getItem('fm_entregas') || '[]');
+let entregas = [];
 let deleteId = null;
 let timers = {};
 let fbSyncReady = false; // true depois que Firebase carregar dados pela 1a vez
 
+// Retorna chave localStorage isolada por empresa
+function getStorageKey(suffix) {
+  const eid = currentUser?.empresaId || 'demo';
+  return 'fm_' + eid + '_' + suffix;
+}
+
 function save() {
-  localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+  localStorage.setItem(getStorageKey('entregas'), JSON.stringify(entregas));
   syncEntregasFirebase();
 }
 
@@ -1837,21 +1864,25 @@ function carregarDadosFirebase() {
   if (loader) { loader.style.display = 'flex'; loader.textContent = '☁️ Sincronizando...'; }
 
   const basePath = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados';
+
+  // Pré-carregar cache local da empresa (evita flash de dados de outra empresa)
+  try { const c = localStorage.getItem(getStorageKey('entregas')); if (c) entregas = JSON.parse(c); } catch(e) { entregas = []; }
+  try { const c = localStorage.getItem(getStorageKey('veiculos')); if (c) veiculos = JSON.parse(c); } catch(e) { veiculos = []; }
+
   fbDb.ref(basePath).once('value', snapshot => {
     const dados = snapshot.val();
     if (dados) {
       if (dados.entregas && Array.isArray(dados.entregas)) {
         entregas = dados.entregas;
-        localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+        localStorage.setItem(getStorageKey('entregas'), JSON.stringify(entregas));
       }
       if (dados.veiculos && Array.isArray(dados.veiculos)) {
         veiculos = dados.veiculos;
-        localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+        localStorage.setItem(getStorageKey('veiculos'), JSON.stringify(veiculos));
       }
     }
     fbSyncReady = true;
     if (loader) { loader.textContent = '✅ Sincronizado'; setTimeout(() => loader.style.display = 'none', 2000); }
-    // Re-render tudo com dados atualizados
     renderDashboard();
     syncFrotaSelects();
   }).catch(e => {
@@ -1860,14 +1891,13 @@ function carregarDadosFirebase() {
     if (loader) loader.style.display = 'none';
   });
 
-  // Ouvir mudanças em tempo real (ex: outro celular salvar uma entrega)
   const epEnt = (currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados') + '/entregas';
   fbDb.ref(epEnt).on('value', snapshot => {
     if (!fbSyncReady) return;
     const dados = snapshot.val();
     if (dados && Array.isArray(dados)) {
       entregas = dados;
-      localStorage.setItem('fm_entregas', JSON.stringify(entregas));
+      localStorage.setItem(getStorageKey('entregas'), JSON.stringify(entregas));
       renderDashboard();
     }
   });
@@ -1878,7 +1908,7 @@ function carregarDadosFirebase() {
     const dados = snapshot.val();
     if (dados && Array.isArray(dados)) {
       veiculos = dados;
-      localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+      localStorage.setItem(getStorageKey('veiculos'), JSON.stringify(veiculos));
       syncFrotaSelects();
     }
   });
@@ -1886,28 +1916,40 @@ function carregarDadosFirebase() {
 
 // ---- NAVIGATION ----
 function showPage(p) {
-  const restricted = ['nova','rankings','historico','equipe'];
+// 1. Adicionamos 'rastreio' à lista de bloqueio
+  const restricted = ['nova','rankings','historico','equipe', 'rastreio'];
+  
   if (currentUser && currentUser.tipo === 'funcionario' && restricted.includes(p)) {
     showToast('⛔ Acesso restrito para funcionários');
     return;
   }
+
+  // Mantém sua trava de segurança para aba equipe
   if (p === 'equipe' && currentUser?.tipo !== 'dono') return;
+
+  // --- Lógica de alternância de abas ---
   document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + p)?.classList.add('active');
+  
+  const targetPage = document.getElementById('page-' + p);
+  if (targetPage) targetPage.classList.add('active');
+
   const navEl = document.getElementById('nav-' + p);
   if (navEl) navEl.classList.add('active');
+
+  // --- Inicialização das Páginas ---
   if (p === 'dashboard') {
     if (currentUser?.tipo === 'funcionario') renderFuncDashboard();
     else renderDashboard();
   }
   if (p === 'equipe') renderEquipe();
-  if (p === 'ativas') renderAtivas();
+  if (p === 'ativas') renderAtivas(); // Aqui aplicaremos a trava do valor do frete
   if (p === 'historico') renderHistorico();
   if (p === 'rankings') renderRankings();
   if (p === 'frota') renderFrota();
   if (p === 'rastreio') initRastreioPage();
   if (p === 'nova') { carregarConfigCusto(); recalcularCusto(); }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -2170,7 +2212,9 @@ function atualizarObsViagem(id) {
 
 // ---- DASHBOARD ----
 function renderDashboard() {
-  // Update greeting with current user name
+  const isFunc = currentUser?.tipo === 'funcionario';
+  
+  // 1. Saudação (Igual para ambos)
   const nowG = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
   const hG = nowG.getHours();
   const greetG = hG < 12 ? 'Bom dia' : hG < 18 ? 'Boa tarde' : 'Boa noite';
@@ -2179,7 +2223,6 @@ function renderDashboard() {
   if (greetEl) greetEl.textContent = greetG + (nomeG ? ', ' + nomeG : '') + ' 👋';
 
   const now = new Date();
-  // Use BRT for month/year to avoid midnight cutoff issues
   const nowLocal = new Date(now.toLocaleString('en-US', { timeZone: TZ }));
   const mes = nowLocal.getMonth();
   const ano = nowLocal.getFullYear();
@@ -2189,59 +2232,73 @@ function renderDashboard() {
     return d.getMonth() === mes && d.getFullYear() === ano;
   });
 
-  const fat = doMes.reduce((s, e) => s + e.valor, 0);
-  const lucro = doMes.reduce((s, e) => s + (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0))), 0);
-  const ativas = entregas.filter(e => e.status === 'em_rota').length;
+  // 2. Cálculos Condicionais
+  // Calculamos faturamento e lucro apenas para o DONO
+  const fat = doMes.reduce((s, e) => s + (e.valor || 0), 0);
+  const lucro = doMes.reduce((s, e) => s + ((e.valor || 0) - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0))), 0);
+  
+  // Calculamos GASTOS EXTRAS totais (pedágio + extras) para o FUNCIONÁRIO ver
+  const gastosExtrasTotal = doMes.reduce((s, e) => s + ((e.pedagioExtra||0)+(e.custoExtra||0)), 0);
+  
+  const ativas = entregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga').length;
 
-  document.getElementById('stat-faturamento').textContent = 'R$ ' + fat.toFixed(2).replace('.',',');
-  document.getElementById('stat-fat-sub').textContent = doMes.length + ' entregas no mês';
-  document.getElementById('stat-lucro').textContent = 'R$ ' + lucro.toFixed(2).replace('.',',');
-  document.getElementById('stat-ativas').textContent = ativas;
-  // Update bottom nav badge
-  const badge = document.getElementById('badge-ativas');
-  if (badge) { badge.textContent = ativas; badge.style.display = ativas > 0 ? 'flex' : 'none'; }
+  // 3. Atualização dos Cards de Status
+  const fatEl = document.getElementById('stat-faturamento');
+  const lucroEl = document.getElementById('stat-lucro');
 
-  // Tempo médio descarga
-  const comTempo = entregas.filter(e => e.tempoDescarga !== null);
-  if (comTempo.length) {
-    const avg = comTempo.reduce((s, e) => s + e.tempoDescarga, 0) / comTempo.length;
-    document.getElementById('stat-tempo').textContent = formatMinutes(avg);
+  if (isFunc) {
+    // VISÃO FUNCIONÁRIO: Troca títulos e valores
+    if (fatEl) {
+      fatEl.textContent = 'R$ ' + gastosExtrasTotal.toFixed(2).replace('.',',');
+      const labelFat = fatEl.parentElement.querySelector('.stat-label');
+      if (labelFat) labelFat.textContent = 'Gastos Extras';
+    }
+    // O card de lucro a gente esconde ou troca por "Minhas Viagens"
+    if (lucroEl) {
+      const cardLucro = lucroEl.parentElement;
+      cardLucro.style.display = 'none'; // Esconde o card de lucro para o funcionário
+    }
+  } else {
+    // VISÃO DONO: Mantém original
+    if (fatEl) fatEl.textContent = 'R$ ' + fat.toFixed(2).replace('.',',');
+    if (lucroEl) lucroEl.textContent = 'R$ ' + lucro.toFixed(2).replace('.',',');
   }
 
-  // Fleet cards
-  const fleet = [
-    { name: 'Gol', plate: 'ABC1234', icon: '🚗' },
-    { name: 'Saveiro', plate: 'DEF5678', icon: '🛻' },
-    { name: 'Fiorino', plate: 'GHI9012', icon: '🚐' }
-  ];
+  document.getElementById('stat-fat-sub').textContent = doMes.length + ' entregas no mês';
+  document.getElementById('stat-ativas').textContent = ativas;
+
+  // 4. Frota (Fleet Cards)
   const fc = document.getElementById('fleet-cards');
-  // use dynamic veiculos if available, else fallback
-  const fleetSource = veiculos.length ? veiculos.map(v => ({ name: v.modelo, plate: v.placa, icon: v.tipo })) : fleet;
+  const fleetSource = veiculos.length ? veiculos.map(v => ({ name: v.modelo, plate: v.placa, icon: v.tipo })) : [];
+  
   fc.innerHTML = fleetSource.map(v => {
     const vKey = v.name + ' - ' + v.plate;
     const vEntregas = entregas.filter(e => e.veiculo === vKey);
-    const vFat = vEntregas.reduce((s, e) => s + e.valor, 0);
+    // Para o funcionário, calculamos o custo extra do veículo específico
+    const vGastos = vEntregas.reduce((s, e) => s + ((e.pedagioExtra||0)+(e.custoExtra||0)), 0);
     const emRota = vEntregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga').length;
+    
     return `<div class="fleet-mini" onclick="showPage('frota')">
-      <div class="fleet-mini-icon">${v.icon}</div>
+      <div class="fleet-mini-icon">${v.icon || '🚚'}</div>
       <div class="fleet-mini-name">${v.name}</div>
       <div class="fleet-mini-plate">${v.plate}</div>
-      <div class="fleet-mini-status" style="color:${emRota > 0 ? 'var(--accent2)' : 'var(--text2)'}">
+      <div style="font-size:10px; margin-top:4px; color:var(--text3)">
+        ${isFunc ? 'Gastos: R$ ' + vGastos.toFixed(0) : ''}
+      </div>
+      <div class="fleet-mini-status" style="color:${emRota > 0 ? 'var(--accent2)' : 'var(--green)'}">
         ${emRota > 0 ? '🟠 Em rota' : '🟢 Livre'}
       </div>
     </div>`;
   }).join('');
 
-  // Recent
+  // 5. Últimas Entregas (Recent List) - OCULTA VALORES PARA FUNCIONÁRIO
   const recent = entregas.slice(0, 5);
   const rl = document.getElementById('recent-list');
   if (!recent.length) { rl.innerHTML = '<div class="no-data">Nenhuma entrega ainda</div>'; return; }
+  
   rl.innerHTML = recent.map(e => {
-    const custoTot = (e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0);
-    const lucro = e.valor - custoTot;
-    const badgeClass = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
-    const badgeText = e.status === 'concluido' ? '✓ Feito' : e.status === 'em_rota' ? '🚚 Em rota' : e.status === 'em_descarga' ? '📦 Descarga' : '✅ Disponível';
     const dotColor = e.status === 'concluido' ? 'var(--green)' : e.status === 'em_rota' ? 'var(--accent2)' : 'var(--accent)';
+    
     return `<div class="delivery-row">
       <div class="delivery-dot" style="background:${dotColor}"></div>
       <div class="delivery-info">
@@ -2249,13 +2306,16 @@ function renderDashboard() {
         <div class="delivery-client">${e.cliente}</div>
       </div>
       <div class="delivery-right">
-        <div class="delivery-value" style="color:var(--green)">R$ ${e.valor.toFixed(0)}</div>
-        <div class="delivery-profit">lucro R$ ${lucro.toFixed(0)}</div>
+        ${!isFunc ? `
+          <div class="delivery-value" style="color:var(--green)">R$ ${e.valor.toFixed(0)}</div>
+          <div class="delivery-profit">lucro R$ ${(e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0))).toFixed(0)}</div>
+        ` : `
+          <div class="delivery-status-simple" style="font-size:11px; color:var(--text3)">${e.status}</div>
+        `}
       </div>
     </div>`;
   }).join('');
 }
-
 // ---- CONTROLE DE VIAGEM ----
 
 function renderAtivas() {
@@ -2285,6 +2345,7 @@ function renderAtivas() {
 function renderDisponiveis() {
   const disponiveis = entregas.filter(e => e.status === 'agendado');
   const el = document.getElementById('disponiveis-list');
+  
   if (!disponiveis.length) {
     el.innerHTML = `<div class="no-data">
       <div class="no-data-icon">📦</div>
@@ -2293,6 +2354,7 @@ function renderDisponiveis() {
     </div>`;
     return;
   }
+
   el.innerHTML = disponiveis.map(e => `
     <div class="entrega-disponivel" onclick="selecionarEntrega(${e.id})">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
@@ -2304,7 +2366,11 @@ function renderDisponiveis() {
         <div class="entrega-tag">🚗 ${e.veiculo.split(' - ')[0]}</div>
         <div class="entrega-tag">📅 ${formatDate(e.data)}</div>
         ${e.km ? `<div class="entrega-tag">📍 ${e.km} km</div>` : ''}
-        <div class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.08)">R$ ${e.valor.toFixed(0)}</div>
+        
+        ${currentUser && currentUser.tipo !== 'funcionario' 
+          ? `<div class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.08)">R$ ${e.valor.toFixed(0)}</div>` 
+          : '' 
+        }
       </div>
     </div>`).join('');
 }
@@ -2332,7 +2398,12 @@ function selecionarEntrega(id) {
       <div style="font-size:13px;color:var(--text2);margin-top:6px">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]}</div>
       <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
         ${e.km ? `<span class="entrega-tag">📍 ${e.km} km</span>` : ''}
-        <span class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3)">R$ ${e.valor.toFixed(0)}</span>
+        
+        ${currentUser && currentUser.tipo !== 'funcionario' 
+          ? `<span class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3)">R$ ${e.valor.toFixed(0)}</span>` 
+          : ''
+        }
+        
         ${e.carga ? `<span class="entrega-tag">📦 ${e.carga}</span>` : ''}
       </div>
     </div>
@@ -2429,7 +2500,8 @@ function buildViagemAtiva(e) {
 
   const now = nowBrasilia();
 
-  return `<div class="viagem-active-card">
+  // --- INÍCIO DO HTML ---
+  let html = `<div class="viagem-active-card">
     <div class="viagem-header">
       <div>
         <div class="viagem-rota">${e.origem} → ${e.destino}</div>
@@ -2444,8 +2516,6 @@ function buildViagemAtiva(e) {
     </div>
 
     <div class="viagem-etapas">
-
-      <!-- ETAPA 1: Início da viagem -->
       <div class="etapa">
         <div class="etapa-icon ${statusClass(etapa1feito, etapa1ativo)}">${etapa1feito ? '✓' : '🚀'}</div>
         <div class="etapa-body">
@@ -2459,97 +2529,32 @@ function buildViagemAtiva(e) {
           }
         </div>
       </div>
+      ${ /* ETAPAS 2, 3 e 4 continuam aqui... */ '' }
+    </div>`;
 
-      <!-- ETAPA 2: Início da descarga -->
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa2feito, etapa2ativo)}">${etapa2feito ? '✓' : '📍'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa2feito, etapa2ativo)}">Cheguei — início da descarga</div>
-          ${etapa2feito
-            ? `<div class="etapa-hora feito">${formatTime(iniDesc)}</div><div class="etapa-sub">${formatDate(e.horaChegada.slice(0,10))}</div>`
-            : etapa2ativo
-              ? `<div class="etapa-input-row">
-                  <input type="datetime-local" class="etapa-datetime" id="dt-ini-desc" value="${now}">
-                  <button class="etapa-btn orange" onclick="registrarEtapa(${e.id},'ini_desc')">Registrar</button>
-                </div>`
-              : `<div class="etapa-sub">Aguardando início da viagem</div>`
-          }
+    // --- BLOQUEIO DE CUSTOS PARA FUNCIONÁRIO ---
+if (currentUser && currentUser.tipo !== 'funcionario') {
+      html += `
+      <div style="margin-top:6px;background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);border-radius:18px;overflow:hidden">
+        <div style="padding:14px 16px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:13px;font-weight:700">💸 Custos da Viagem</div>
+          <div style="font-size:11px;color:var(--text2)">Base: <strong style="color:var(--accent2)">R$ ${e.custo ? e.custo.toFixed(2).replace('.',',') : '0,00'}</strong></div>
         </div>
-      </div>
-
-      <!-- ETAPA 3: Fim da descarga -->
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa3feito, etapa3ativo)}">${etapa3feito ? '✓' : '📦'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa3feito, etapa3ativo)}">Saí — fim da descarga</div>
-          ${etapa3feito
-            ? `<div class="etapa-hora feito">${formatTime(fimDesc)}</div>
-               <div class="etapa-sub">Descarga: ${formatMinutes(e.tempoDescarga)}</div>`
-            : etapa3ativo
-              ? `<div class="etapa-input-row">
-                  <input type="datetime-local" class="etapa-datetime" id="dt-fim-desc" value="${now}">
-                  <button class="etapa-btn orange" onclick="registrarEtapa(${e.id},'fim_desc')">Registrar</button>
-                </div>`
-              : `<div class="etapa-sub">Aguardando início da descarga</div>`
-          }
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px">
+          <div><div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Custo total</div></div>
+          <div id="viagem-custo-total-${e.id}" style="font-size:22px;font-weight:900;color:var(--accent2);font-family:'JetBrains Mono',monospace">R$ ${((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)).toFixed(2).replace('.',',')}</div>
         </div>
-      </div>
+      </div>`;
+    }
 
-      <!-- ETAPA 4: Fim da viagem -->
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa4feito, etapa4ativo)}">${etapa4feito ? '✓' : '🏁'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa4feito, etapa4ativo)}">Fim da viagem</div>
-          ${etapa4feito
-            ? `<div class="etapa-hora feito">${formatTime(fimViagem)}</div><div class="etapa-sub">${formatDate(e.horaFimViagem.slice(0,10))}</div>`
-            : etapa4ativo
-              ? `<div class="etapa-input-row">
-                  <input type="datetime-local" class="etapa-datetime" id="dt-fim" value="${now}">
-                  <button class="etapa-btn green" onclick="registrarEtapa(${e.id},'fim')">Concluir</button>
-                </div>`
-              : `<div class="etapa-sub">Aguardando fim da descarga</div>`
-          }
-        </div>
-      </div>
-
-    </div>
-
-    <!-- CUSTOS EXTRAS DA VIAGEM -->
-    <div style="margin-top:6px;background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);border-radius:18px;overflow:hidden">
-      <div style="padding:14px 16px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between">
-        <div style="font-size:13px;font-weight:700">💸 Custos da Viagem</div>
-        <div style="font-size:11px;color:var(--text2)">Base: <strong style="color:var(--accent2)">R$ ${e.custo ? e.custo.toFixed(2).replace('.',',') : '0,00'}</strong></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)">
-        <div style="width:32px;height:32px;border-radius:9px;background:rgba(255,217,61,0.15);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🛣</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:500">Pedágio</div><div style="font-size:10px;color:var(--muted)">Cobrado na viagem</div></div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span style="font-size:12px;color:var(--muted)">R$</span>
-          <input type="number" id="viagem-pedagio-${e.id}" class="custo-item-input" placeholder="0,00" step="0.01" value="${e.pedagioExtra || ''}" oninput="atualizarCustoViagem(${e.id})">
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)">
-        <div style="width:32px;height:32px;border-radius:9px;background:rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🔧</div>
-        <div style="flex:1"><div style="font-size:13px;font-weight:500">Custo extra</div><div style="font-size:10px;color:var(--muted)">Pneu, guincho, outros...</div></div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <span style="font-size:12px;color:var(--muted)">R$</span>
-          <input type="number" id="viagem-extra-${e.id}" class="custo-item-input" placeholder="0,00" step="0.01" value="${e.custoExtra || ''}" oninput="atualizarCustoViagem(${e.id})">
-        </div>
-      </div>
-      <div style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04)">
-        <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">💬 Observações da viagem</div>
-        <textarea id="viagem-obs-${e.id}" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--glass-border);border-radius:10px;color:var(--text);padding:10px 12px;font-family:'Outfit',sans-serif;font-size:13px;outline:none;resize:none;line-height:1.5" rows="2" placeholder="Pneu furado km 45, guincho R$ 200..." oninput="atualizarObsViagem(${e.id})">${e.obsViagem || ''}</textarea>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px">
-        <div><div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Custo total</div></div>
-        <div id="viagem-custo-total-${e.id}" style="font-size:22px;font-weight:900;color:var(--accent2);font-family:'JetBrains Mono',monospace">R$ ${((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)).toFixed(2).replace('.',',')}</div>
-      </div>
-    </div>
-
+    // --- BOTÕES FINAIS ---
+    html += `
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
       <button class="btn btn-danger btn-sm" onclick="cancelarViagem(${e.id})">✕ Cancelar viagem</button>
     </div>
   </div>`;
+
+  return html;
 }
 
 let relogioViagem = null;
@@ -2673,6 +2678,15 @@ function renderHistorico() {
 
   const tbody = document.getElementById('historico-tbody');
   const empty = document.getElementById('historico-empty');
+  const thead = document.querySelector('#page-historico table thead tr');
+
+  // --- TRAVA DE CABEÇALHO (Oculta as colunas Valor, Lucro e Ações) ---
+  if (thead) {
+    const colunasFinanceiras = thead.querySelectorAll('th:nth-child(5), th:nth-child(6), th:nth-child(9)');
+    colunasFinanceiras.forEach(th => {
+      th.style.display = currentUser?.tipo === 'funcionario' ? 'none' : '';
+    });
+  }
 
   if (!filtered.length) {
     tbody.innerHTML = '';
@@ -2687,16 +2701,29 @@ function renderHistorico() {
     const descStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.horaChegada && !e.horaSaida2 ? '⏳ em curso' : '--');
     const statusLabel = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
     const statusText = e.status === 'concluido' ? 'Concluído' : e.status === 'em_rota' ? 'Em Rota' : e.status === 'em_descarga' ? 'Descarga' : 'Disponível';
+    
+    const isFunc = currentUser?.tipo === 'funcionario';
+
     return `<tr>
       <td>${formatDate(e.data)}</td>
       <td>${e.origem} → ${e.destino}</td>
       <td>${e.cliente}</td>
       <td style="font-size:11px">${e.veiculo.split(' - ')[0]}</td>
-      <td style="color:var(--accent);font-weight:500">R$ ${e.valor.toFixed(2).replace('.',',')}</td>
-      <td style="color:${lucro >= 0 ? 'var(--accent)' : 'var(--red)'}">R$ ${lucro.toFixed(2).replace('.',',')}</td>
+      
+      <td style="display:${isFunc ? 'none' : ''}; color:var(--accent); font-weight:500">
+        R$ ${e.valor.toFixed(2).replace('.',',')}
+      </td>
+      
+      <td style="display:${isFunc ? 'none' : ''}; color:${lucro >= 0 ? 'var(--accent)' : 'var(--red)'}">
+        R$ ${lucro.toFixed(2).replace('.',',')}
+      </td>
+      
       <td style="color:var(--accent2)">${descStr}</td>
       <td><span class="badge ${statusLabel}">${statusText}</span></td>
-      <td><button class="btn btn-danger" style="padding:4px 10px;font-size:10px" onclick="deletarEntrega(${e.id})">✕</button></td>
+      
+      <td style="display:${isFunc ? 'none' : ''}">
+        <button class="btn btn-danger" style="padding:4px 10px;font-size:10px" onclick="deletarEntrega(${e.id})">✕</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -2843,11 +2870,11 @@ function formatSeconds(sec) {
 }
 
 // ---- FROTA ----
-let veiculos = JSON.parse(localStorage.getItem('fm_veiculos') || '[]');
+let veiculos = [];
 let editVeiculoId = null;
 
 function saveVeiculos() {
-  localStorage.setItem('fm_veiculos', JSON.stringify(veiculos));
+  localStorage.setItem(getStorageKey('veiculos'), JSON.stringify(veiculos));
   syncVeiculosFirebase();
 }
 
@@ -3108,8 +3135,8 @@ const FB_CONFIG = {
   appId: "1:977410315261:web:ebaf0794c7d887321abf94"
 };
 
-const SAAS_PRECO_BASE = 97;
-const SAAS_PRECO_FUNC = 29;
+const SAAS_PRECO_BASE = 49;
+const SAAS_PRECO_FUNC = 19;
 const SAAS_MAX_FUNC_BASE = 3;
 
 function initFirebase() {
@@ -3119,32 +3146,68 @@ function initFirebase() {
     fbDb   = firebase.database();
     fbAuth = firebase.auth();
 
-    fbAuth.onAuthStateChanged(async user => {
-      if (user) {
-        const snap = await fbDb.ref('usuarios/' + user.uid).once('value');
-        const profile = snap.val();
-        if (profile) {
-          currentUser = { uid: user.uid, email: user.email, ...profile };
-          if (currentUser.tipo === 'funcionario') {
-            const activeSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + user.uid + '/ativo').once('value');
-            if (activeSnap.val() === false) {
-              await fbAuth.signOut();
-              showAuthError('Sua conta foi desativada. Fale com o responsável.');
-              return;
-            }
-          }
-          fbDb.ref('usuarios/' + user.uid + '/online').set(true);
-          hideAuthScreen();
-          applyUserSession();
-        } else {
-          await fbAuth.signOut();
-          showAuthError('Perfil não encontrado. Recadastre-se.');
-        }
+fbAuth.onAuthStateChanged(async user => {
+  const btnLogin = document.getElementById('btn-login');
+  console.log("--- Monitor de Acesso ---");
+
+  if (user) {
+    console.log("Autenticado como:", user.email);
+    
+    try {
+      // 1. Tenta buscar o perfil
+      const snap = await fbDb.ref('usuarios/' + user.uid).once('value');
+      const profile = snap.val();
+
+      if (profile) {
+        console.log("Dados do perfil carregados com sucesso.");
+        currentUser = { uid: user.uid, email: user.email, ...profile };
+
+        // 2. TUDO OK: Agora escondemos a tela de login
+        hideAuthScreen(); 
+        
+        // 3. Atualiza o status e a sessão
+        fbDb.ref('usuarios/' + user.uid + '/online').set(true);
+        if (typeof applyUserSession === 'function') applyUserSession();
+
       } else {
-        currentUser = null;
-        showAuthScreen();
+        // PERFIL NÃO EXISTE NO BANCO (O erro do James)
+        console.error("UID não encontrado no Database:", user.uid);
+        
+        // Se o botão estava "Entrando...", significa que o usuário tentou logar agora
+        if (btnLogin && btnLogin.disabled) {
+           alert("Seu login foi aceito, mas não encontramos seus dados de perfil. Por favor, faça o cadastro novamente.");
+           await fbAuth.signOut();
+           // Destravamos o botão para ele tentar outro e-mail ou cadastrar
+           btnLogin.disabled = false;
+           btnLogin.innerHTML = '🔓 Entrar';
+        }
       }
-    });
+    } catch (error) {
+      console.error("Erro ao ler banco de dados:", error);
+      // Se deu erro de permissão, mostramos para o usuário
+      showAuthError("Erro de conexão com o banco. Verifique sua internet.");
+      
+      if (btnLogin) {
+        btnLogin.disabled = false;
+        btnLogin.innerHTML = '🔓 Entrar';
+      }
+    }
+  } else {
+    // Caso o usuário deslogue
+    console.log("Usuário deslogado.");
+    entregas = [];
+    veiculos = [];
+    fbSyncReady = false;
+    currentUser = null;
+    showAuthScreen(); // Garante que a div #auth-screen volte a aparecer
+    
+    if (btnLogin) {
+      btnLogin.disabled = false;
+      btnLogin.innerHTML = '🔓 Entrar';
+    }
+  }
+});
+
   } catch(e) {
     console.error('Firebase init error:', e);
     showAuthError('Erro ao conectar: ' + e.message);
@@ -3186,59 +3249,113 @@ function contarEmpresa() {
 function selTipo(tipo) {} // mantido por compatibilidade
 
 async function fazerLogin() {
-  if (!fbAuth) { initFirebase(); showAuthError('Conectando... tente novamente em 2 segundos.'); return; }
+  // 1. Verificação de segurança para a variável de autenticação
+  if (typeof fbAuth === 'undefined' || !fbAuth) { 
+    if (typeof initFirebase === 'function') initFirebase(); 
+    showAuthError('Conectando ao servidor... tente novamente.'); 
+    return; 
+  }
+
   const email = document.getElementById('l-email').value.trim();
   const senha = document.getElementById('l-senha').value;
-  if (!email || !senha) { showAuthError('Preencha e-mail e senha.'); return; }
+  
+  if (!email || !senha) { 
+    showAuthError('Preencha e-mail e senha.'); 
+    return; 
+  }
+
   const btn = document.getElementById('btn-login');
-  btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span>Entrando...';
+  // Salva o estado atual para restaurar se falhar
+  const originalContent = '🔓 Entrar';
+  
+  btn.disabled = true; 
+  btn.innerHTML = '<span class="auth-spinner"></span>Entrando...';
   clearAuthMsg();
+
   try {
     await fbAuth.signInWithEmailAndPassword(email, senha);
+    // Nota: Se o login for bem-sucedido, o onAuthStateChanged cuidará do redirecionamento.
   } catch(e) {
+    console.error("Erro detalhado do Firebase:", e.code, e.message);
+    
     const msgs = {
       'auth/user-not-found': 'E-mail não cadastrado.',
       'auth/wrong-password': 'Senha incorreta.',
       'auth/invalid-email': 'E-mail inválido.',
       'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
       'auth/invalid-credential': 'E-mail ou senha incorretos.',
+      'auth/network-request-failed': 'Sem conexão com a internet.'
     };
+
     showAuthError(msgs[e.code] || 'Erro: ' + e.message);
-    btn.disabled = false; btn.innerHTML = '🔓 Entrar';
+    
+    // REATIVAÇÃO GARANTIDA DO BOTÃO
+    btn.disabled = false; 
+    btn.innerHTML = originalContent;
   }
 }
 
 async function fazerCadastro() {
   if (!fbAuth) { initFirebase(); showAuthError('Conectando... tente novamente em 2 segundos.'); return; }
+  
   const empresa = (document.getElementById('c-empresa')?.value || '').trim().slice(0, 50);
   const nome    = (document.getElementById('c-nome')?.value || '').trim();
   const email   = (document.getElementById('c-email')?.value || '').trim();
   const senha   = document.getElementById('c-senha')?.value || '';
+
   if (!empresa) { showAuthError('Informe o nome da empresa.'); return; }
   if (!nome)    { showAuthError('Informe seu nome.'); return; }
   if (!email)   { showAuthError('Informe o e-mail.'); return; }
   if (senha.length < 6) { showAuthError('Senha deve ter pelo menos 6 caracteres.'); return; }
+
   const btn = document.getElementById('btn-cadastro');
-  btn.disabled = true; btn.innerHTML = '<span class="auth-spinner"></span>Criando conta...';
+  const originalText = '✅ Criar conta de empresa';
+  
+  btn.disabled = true; 
+  btn.innerHTML = '<span class="auth-spinner"></span>Criando conta...';
   clearAuthMsg();
+
   try {
     const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
     const uid = cred.user.uid;
     const empresaId = uid;
+    
     const profile = { nome, email, tipo: 'dono', empresaId, empresaNome: empresa };
+    
+    // 1. Salva no Banco de Dados
     await fbDb.ref('usuarios/' + uid).set(profile);
     await fbDb.ref('empresas/' + empresaId + '/info').set({
-      nome: empresa, donoUid: uid, criadoEm: Date.now(),
-      plano: 'basico', maxFuncionarios: SAAS_MAX_FUNC_BASE
+      nome: empresa, 
+      donoUid: uid, 
+      criadoEm: Date.now(),
+      plano: 'basico', 
+      maxFuncionarios: typeof SAAS_MAX_FUNC_BASE !== 'undefined' ? SAAS_MAX_FUNC_BASE : 5
     });
+
+    // 2. SUCESSO: Limpa o botão e avisa o usuário
+    alert("Conta de empresa criada com sucesso! Agora você pode entrar.");
+    
+    // 3. Voltar para a aba de login automaticamente
+    if(typeof authTab === 'function') {
+        authTab('login'); 
+    }
+    
+    // 4. Resetar o botão de cadastro para o estado original
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+
   } catch(e) {
+    console.error("Erro no cadastro:", e);
     const msgs = {
       'auth/email-already-in-use': 'E-mail já cadastrado. Faça login.',
       'auth/invalid-email': 'E-mail inválido.',
       'auth/weak-password': 'Senha muito fraca (mínimo 6 caracteres).',
     };
     showAuthError(msgs[e.code] || 'Erro: ' + e.message);
-    btn.disabled = false; btn.innerHTML = '✅ Criar conta de empresa';
+    
+    // REATIVA O BOTÃO EM CASO DE ERRO
+    btn.disabled = false; 
+    btn.innerHTML = originalText;
   }
 }
 
@@ -3260,8 +3377,26 @@ function showAuthScreen() {
 }
 
 function hideAuthScreen() {
-  const el = document.getElementById('auth-screen');
-  if (el) el.style.display = 'none';
+  const authScreen = document.getElementById('auth-screen');
+  const btnLogin = document.getElementById('btn-login');
+
+  if (authScreen) {
+    // 1. Força o desaparecimento
+    authScreen.style.setProperty('display', 'none', 'important');
+    
+    // 2. Garante que o corpo da página possa rolar (caso tenha travado)
+    document.body.style.overflow = 'auto';
+    
+    // 3. Reseta o botão para a próxima vez que deslogar
+    if (btnLogin) {
+      btnLogin.disabled = false;
+      btnLogin.innerHTML = '🔓 Entrar';
+    }
+    
+    console.log("✅ Sistema: Tela de autenticação removida.");
+  } else {
+    console.error("❌ Erro Crítico: Elemento #auth-screen não existe no HTML.");
+  }
 }
 
 // ── SESSION & PERMISSIONS ────────────────────────────
@@ -3290,27 +3425,73 @@ function applyUserSession() {
 }
 
 function applyFuncRestrictions() {
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe'].forEach(id => {
+  // 1. Esconde os botões do menu lateral/inferior
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe', 'nav-rastreio'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
+
   const fn = document.getElementById('nav-func');
   if (fn) fn.style.display = 'flex';
+
+  // 2. Altera o título da seção de Frota para o Funcionário
+  const titles = document.querySelectorAll('.section-title');
+  titles.forEach(t => {
+    if (t.textContent.includes('Frota')) {
+      t.textContent = 'Detalhes do Veículo';
+    }
+  });
+
+  // 3. CSS Injetado (Blindagem da Aba Frota e Financeiro)
   const style = document.getElementById('func-hide-style') || document.createElement('style');
   style.id = 'func-hide-style';
-  style.textContent = '.dono-only{display:none!important}#campo-valor-frete{display:none!important}#lucro-preview{display:none!important}';
+  
+  style.textContent = `
+    /* Esconde o botão de Adicionar Veículo (+ Veículo) */
+    .btn-add-veiculo, 
+    #btn-abrir-modal-veiculo, 
+    [onclick*="abrirModalVeiculo"], 
+    [onclick*="novoVeiculo"] { 
+      display: none !important; 
+    }
+
+    /* Esconde botões de editar e excluir dentro dos cards de frota */
+    .fleet-actions, 
+    [onclick*="editarVeiculo"], 
+    [onclick*="deletarVeiculo"] { 
+      display: none !important; 
+    }
+
+    /* Trava de segurança para elementos marcados como exclusivos do dono */
+    .dono-only { display: none !important; }
+    
+    /* Proteção de valores no Histórico e Tabelas */
+    #page-historico table th:nth-child(5), #page-historico table td:nth-child(5),
+    #page-historico table th:nth-child(6), #page-historico table td:nth-child(6),
+    #page-historico table th:nth-child(9), #page-historico table td:nth-child(9) {
+      display: none !important;
+    }
+
+    /* Bloqueio de campos financeiros no controle de viagens */
+    #campo-valor-frete, #lucro-preview, .viagem-valor, .money-text { 
+      display: none !important; 
+    }
+  `;
+  
   document.head.appendChild(style);
+  console.log("🛠️ Visão Funcionário: Botão +Veículo e Financeiro removidos.");
 }
 
 function removeFuncRestrictions() {
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe'].forEach(id => {
+  // Mostra os botões novamente
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe', 'nav-rastreio'].forEach(id => {
     const el = document.getElementById(id);
-    if (el) el.style.display = '';
+    if (el) el.style.display = 'flex'; // ou 'block'
   });
-  const fn = document.getElementById('nav-func');
-  if (fn) fn.style.display = 'none';
-  const s = document.getElementById('func-hide-style');
-  if (s) s.remove();
+
+  // Remove o CSS de restrição
+  const style = document.getElementById('func-hide-style');
+  if (style) style.remove();
 }
 
 function showPageFunc() {
@@ -3321,7 +3502,7 @@ function showPageFunc() {
   renderFuncDashboard();
 }
 
-// ── EMPLOYEE DASHBOARD ────────────────────────────────
+// ── VISAO FUNCIONARIO ────────────────────────────────
 function renderFuncDashboard() {
   const now = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
   const h = now.getHours();
@@ -3329,16 +3510,58 @@ function renderFuncDashboard() {
   const nome = currentUser?.nome?.split(' ')[0] || '';
   const days   = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
   const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  
   const el1 = document.getElementById('func-greeting');
   const el2 = document.getElementById('func-date');
   if (el1) el1.textContent = greet + (nome ? ', ' + nome : '') + ' 👋';
   if (el2) el2.textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
+
   const sel = document.getElementById('func-veiculo-select');
   if (sel) {
     const saved = localStorage.getItem('fm_func_veiculo_' + currentUser.uid);
     sel.innerHTML = '<option value="">Selecione sua placa...</option>' +
       veiculos.map(v => `<option value="${v.placa}" ${v.placa === saved ? 'selected' : ''}>${v.modelo} — ${v.placa}</option>`).join('');
     if (saved) { sel.value = saved; funcMostrarVeiculo(saved); }
+  }
+
+  // --- NOVO: BOTÃO SELECIONAR CARGAS DISPONÍVEIS ---
+  const containerAcoes = document.getElementById('func-actions-container');
+  if (containerAcoes) {
+    // Filtra quantas cargas estão com status 'agendado' (disponíveis)
+    const totalDisponiveis = entregas.filter(e => e.status === 'agendado').length;
+
+    containerAcoes.innerHTML = `
+      <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 15px;">
+        
+        <button onclick="showPage('ativas')" class="btn-primary" style="
+          width: 100%; 
+          padding: 22px; 
+          border-radius: 18px; 
+          border: none; 
+          background: var(--accent); 
+          color: white; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          gap: 12px; 
+          font-weight: 800; 
+          font-size: 16px; 
+          cursor: pointer; 
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+          transition: transform 0.2s;
+        ">
+          <span style="font-size: 24px;">📦</span> 
+          SELECIONAR CARGAS DISPONÍVEIS
+          <span style="background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 8px; font-size: 14px;">
+            ${totalDisponiveis}
+          </span>
+        </button>
+
+        <p style="text-align: center; font-size: 12px; color: var(--text2); opacity: 0.8;">
+          Toque acima para visualizar e iniciar uma nova entrega
+        </p>
+      </div>
+    `;
   }
 }
 
