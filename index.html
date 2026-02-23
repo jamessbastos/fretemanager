@@ -96,8 +96,16 @@
     background: linear-gradient(135deg, var(--accent), var(--accent3));
     border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 20px;
     box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+    flex-shrink: 0;
+  }
+  .logo-icon svg {
+    width: 22px; height: 22px;
+    stroke: #000;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
   .logo-text {
     font-size: 20px;
@@ -233,29 +241,37 @@
     bottom: 0; left: 0; right: 0;
     z-index: 200;
     height: var(--nav-h);
-    background: rgba(10,14,26,0.8);
+    background: rgba(10,14,26,0.85);
     backdrop-filter: blur(30px) saturate(200%);
     -webkit-backdrop-filter: blur(30px) saturate(200%);
     border-top: 1px solid var(--glass-border);
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     padding: 0 8px;
     padding-bottom: env(safe-area-inset-bottom);
+    gap: 2px;
   }
+  .bottom-nav::-webkit-scrollbar { display: none; }
 
   .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    padding: 8px 12px;
+    padding: 8px 14px;
     border-radius: 16px;
     cursor: pointer;
     transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
     border: 1px solid transparent;
     background: transparent;
-    min-width: 52px;
+    min-width: 62px;
+    flex-shrink: 0;
+    scroll-snap-align: start;
     position: relative;
   }
   .nav-item.active {
@@ -265,12 +281,23 @@
     -webkit-backdrop-filter: blur(20px);
   }
   .nav-item.active .nav-icon { color: var(--accent); transform: translateY(-2px) scale(1.1); }
+  .nav-item.active .nav-icon svg { stroke: var(--accent); }
   .nav-item.active .nav-label { color: var(--accent); }
   .nav-item:active { transform: scale(0.92); }
   .nav-icon {
-    font-size: 22px;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
     transition: all .25s cubic-bezier(0.34, 1.56, 0.64, 1);
     color: var(--text2);
+  }
+  .nav-icon svg {
+    width: 22px; height: 22px;
+    stroke: var(--text2);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke .25s;
   }
   .nav-label {
     font-size: 9px;
@@ -279,6 +306,7 @@
     letter-spacing: 0.3px;
     text-transform: uppercase;
     transition: color .2s;
+    white-space: nowrap;
   }
   .nav-badge {
     position: absolute;
@@ -1072,7 +1100,11 @@
 
 <div class="app-header">
   <div class="app-logo">
-    <div class="logo-icon">🚛</div>
+    <div class="logo-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 3h15v13H1z"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+    </div>
     <div>
       <div class="logo-text" id="app-empresa-nome" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">FreteManager</div>
       <div class="logo-sub" id="app-user-tipo">Gestão de Frota</div>
@@ -1145,40 +1177,58 @@
 <!-- BOTTOM NAV -->
 <nav class="bottom-nav">
   <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
-    <div class="nav-icon">🏠</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
     <div class="nav-label">Início</div>
   </div>
   <div class="nav-item" id="nav-func" onclick="showPageFunc()" style="display:none">
-    <div class="nav-icon">🏠</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    </div>
     <div class="nav-label">Início</div>
   </div>
   <div class="nav-item" id="nav-nova" onclick="showPage('nova')">
-    <div class="nav-icon">＋</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+    </div>
     <div class="nav-label">Entrega</div>
   </div>
   <div class="nav-item" id="nav-ativas" onclick="showPage('ativas')">
-    <div class="nav-icon">🚚</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    </div>
     <div class="nav-label">Viagens</div>
     <div class="nav-badge" id="badge-ativas" style="display:none">0</div>
   </div>
   <div class="nav-item" id="nav-historico" onclick="showPage('historico')">
-    <div class="nav-icon">📋</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    </div>
     <div class="nav-label">Histórico</div>
   </div>
   <div class="nav-item" id="nav-rankings" onclick="showPage('rankings')">
-    <div class="nav-icon">🏆</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    </div>
     <div class="nav-label">Rankings</div>
   </div>
   <div class="nav-item" id="nav-frota" onclick="showPage('frota')">
-    <div class="nav-icon">🚗</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+    </div>
     <div class="nav-label">Frota</div>
   </div>
   <div class="nav-item" id="nav-rastreio" onclick="showPage('rastreio')">
-    <div class="nav-icon">📡</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/><path d="M16.24 7.76a6 6 0 010 8.49M7.76 7.76a6 6 0 000 8.49"/></svg>
+    </div>
     <div class="nav-label">Rastreio</div>
   </div>
   <div class="nav-item" id="nav-equipe" onclick="showPage('equipe')">
-    <div class="nav-icon">👥</div>
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
     <div class="nav-label">Equipe</div>
   </div>
 </nav>
@@ -1660,60 +1710,8 @@
         <!-- LEFT PANEL -->
         <div class="rastreio-panel">
 
-          <!-- Mode toggle -->
-          <div>
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Modo de uso</div>
-            <div class="mode-toggle">
-              <div class="mode-btn active" id="btn-modo-motorista" onclick="setModo('motorista')">
-                <span class="mode-icon">🚗</span>Sou o Motorista<br><span style="font-size:9px;opacity:.7">Envio minha posição</span>
-              </div>
-              <div class="mode-btn" id="btn-modo-dono" onclick="setModo('dono')">
-                <span class="mode-icon">👁️</span>Sou o Dono<br><span style="font-size:9px;opacity:.7">Vejo todos os veículos</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Motorista panel -->
-          <div id="painel-motorista">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Selecionar veículo</div>
-            <div class="vehicle-selector" id="vehicle-selector-list">
-              <div class="no-data" style="padding:14px">Cadastre veículos na aba Frota</div>
-            </div>
-            <div style="margin-top:12px">
-              <button class="btn tracking-btn" id="btn-tracking" onclick="toggleTracking()">
-                <span>📍</span> Iniciar Rastreio
-              </button>
-            </div>
-            <div class="stats-row-rastreio" style="margin-top:12px">
-              <div class="mini-stat">
-                <div class="mini-stat-label">Velocidade</div>
-                <div class="mini-stat-value" id="stat-velocidade">-- km/h</div>
-              </div>
-              <div class="mini-stat">
-                <div class="mini-stat-label">Distância</div>
-                <div class="mini-stat-value" id="stat-distancia">0 km</div>
-              </div>
-              <div class="mini-stat">
-                <div class="mini-stat-label">Tempo Ativo</div>
-                <div class="mini-stat-value" id="stat-tempo-ativo">00:00</div>
-              </div>
-            </div>
-            <div id="gps-info" style="margin-top:8px;font-size:10px;color:var(--muted);text-align:center"></div>
-            
-            <!-- Configuracao de parada suspeita -->
-            <div style="margin-top:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px">
-              <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">⚙️ Alerta de Parada Suspeita</div>
-              <div style="display:flex;align-items:center;gap:10px">
-                <label style="font-size:11px;color:var(--muted);white-space:nowrap">Alertar após</label>
-                <input type="number" id="stop-threshold-input" value="15" min="5" max="120" style="width:64px;padding:6px 10px;font-size:12px" onchange="atualizarThresholdParada(this.value)">
-                <label style="font-size:11px;color:var(--muted)">minutos parado</label>
-              </div>
-              <div style="font-size:10px;color:var(--muted);margin-top:6px">Raio de tolerância: 150m • Historial: 5 dias</div>
-            </div>
-          </div>
-
-          <!-- Dono panel -->
-          <div id="painel-dono" style="display:none">
+          <!-- Dono panel (always visible) -->
+          <div id="painel-dono">
             <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px">Veículos online</div>
             <div id="dono-vehicle-list">
               <div class="no-data" style="padding:14px">Aguardando veículos...</div>
@@ -1721,6 +1719,17 @@
             <div style="margin-top:10px;font-size:10px;color:var(--muted);text-align:center">
               Atualização automática a cada 5s
             </div>
+          </div>
+
+          <!-- Motorista panel (hidden, kept for compatibility) -->
+          <div id="painel-motorista" style="display:none">
+            <div class="vehicle-selector" id="vehicle-selector-list"></div>
+            <button class="btn tracking-btn" id="btn-tracking" onclick="toggleTracking()" style="display:none"></button>
+            <div id="stat-velocidade" style="display:none"></div>
+            <div id="stat-distancia" style="display:none"></div>
+            <div id="stat-tempo-ativo" style="display:none"></div>
+            <div id="gps-info" style="display:none"></div>
+            <input type="number" id="stop-threshold-input" value="15" style="display:none">
           </div>
 
         </div>
@@ -3065,7 +3074,7 @@ function syncFrotaSelects() {
 // ==============================
 // RASTREIO EM TEMPO REAL
 // ==============================
-let modoRastreio = 'motorista';
+let modoRastreio = 'dono';
 let trackingAtivo = false;
 let watchId = null;
 let selectedVehicleId = null;
@@ -3775,7 +3784,7 @@ function showRastreioMain() {
   setTimeout(() => {
     initMap();
     renderVehicleSelector();
-    if (modoRastreio === 'dono') startDonoListener();
+    startDonoListener();
   }, 100);
 }
 
@@ -3790,8 +3799,10 @@ function initMap() {
 
 function setModo(modo) {
   modoRastreio = modo;
-  document.getElementById('btn-modo-motorista').classList.toggle('active', modo === 'motorista');
-  document.getElementById('btn-modo-dono').classList.toggle('active', modo === 'dono');
+  const btnMotorista = document.getElementById('btn-modo-motorista');
+  const btnDono = document.getElementById('btn-modo-dono');
+  if (btnMotorista) btnMotorista.classList.toggle('active', modo === 'motorista');
+  if (btnDono) btnDono.classList.toggle('active', modo === 'dono');
   document.getElementById('painel-motorista').style.display = modo === 'motorista' ? 'block' : 'none';
   document.getElementById('painel-dono').style.display = modo === 'dono' ? 'block' : 'none';
   if (modo === 'dono') startDonoListener();
