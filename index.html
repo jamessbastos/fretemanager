@@ -1714,6 +1714,7 @@
             <th>Veículo</th>
             <th>Frete</th>
             <th class="dono-only">Lucro</th>
+            <th>Km Percorrida</th>
             <th>Descarga</th>
             <th>Status</th>
             <th></th>
@@ -2452,6 +2453,7 @@ function renderAtivas() {
     dispContainer.style.display = 'none';
     ativaContainer.innerHTML = buildViagemAtiva(emAndamento);
     iniciarRelogioViagem(emAndamento);
+    reativarTripGpsSeNecessario(emAndamento);
   } else {
     ativaContainer.style.display = 'none';
     dispContainer.style.display = 'block';
@@ -2548,6 +2550,11 @@ function selecionarEntrega(id) {
         <input type="datetime-local" id="confirma-fim" class="form-input">
       </div>
 
+      <div class="form-group">
+        <div class="form-label">📏 Km percorrida <span style="color:var(--muted);font-weight:400">(opcional — preencha ao final)</span></div>
+        <input type="number" id="confirma-km-percorrido" class="form-input" placeholder="Ex: 342" min="0" step="0.1">
+      </div>
+
       <div style="display:flex;gap:10px;margin-top:6px">
         <button class="btn btn-secondary" style="flex:1" onclick="voltarDisponiveis()">Cancelar</button>
         <button class="btn btn-primary" style="flex:2" onclick="iniciarViagemConfirmada(${e.id})">🚀 Iniciar Viagem</button>
@@ -2572,10 +2579,13 @@ function iniciarViagemConfirmada(id) {
 
   if (!inicio) { alert('Informe o horário de início da viagem.'); return; }
 
+  const kmPercorridoConfirma = parseFloat(document.getElementById('confirma-km-percorrido')?.value) || null;
+
   e.horaSaida = inicio ? new Date(inicio).toISOString() : new Date().toISOString();
   e.horaChegada = inicioDescarga ? new Date(inicioDescarga).toISOString() : null;
   e.horaSaida2 = fimDescarga ? new Date(fimDescarga).toISOString() : null;
   e.horaFimViagem = fim ? new Date(fim).toISOString() : null;
+  if (kmPercorridoConfirma) e.kmPercorrido = kmPercorridoConfirma;
 
   if (e.horaChegada && e.horaSaida2) {
     e.tempoDescarga = Math.round((new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000);
@@ -2592,6 +2602,8 @@ function iniciarViagemConfirmada(id) {
   }
 
   e.status = 'em_rota';
+  // Se saiu agora (não tem hora de fim), inicia GPS da viagem
+  if (!e.horaFimViagem) tripGps.iniciar(e.id);
   save();
   renderAtivas();
   renderDashboard();
@@ -2646,7 +2658,68 @@ function buildViagemAtiva(e) {
           }
         </div>
       </div>
-      ${ /* ETAPAS 2, 3 e 4 continuam aqui... */ '' }
+
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa2feito, etapa2ativo)}">${etapa2feito ? '✓' : '📍'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa2feito, etapa2ativo)}">Início da descarga</div>
+          ${etapa2feito
+            ? `<div class="etapa-hora feito">${formatTime(iniDesc)}</div>`
+            : etapa2ativo
+              ? `<div class="etapa-input-row">
+                  <input type="datetime-local" class="etapa-datetime" id="dt-ini-desc" value="${now}">
+                  <button class="etapa-btn orange" onclick="registrarEtapa(${e.id},'ini_desc')">Registrar</button>
+                </div>`
+              : `<div class="etapa-sub">Aguardando etapa anterior</div>`
+          }
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa3feito, etapa3ativo)}">${etapa3feito ? '✓' : '✅'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa3feito, etapa3ativo)}">Fim da descarga</div>
+          ${etapa3feito
+            ? `<div class="etapa-hora feito">${formatTime(fimDesc)}</div><div class="etapa-sub">Descarga: ${e.tempoDescarga != null ? formatMinutes(e.tempoDescarga) : '--'}</div>`
+            : etapa3ativo
+              ? `<div class="etapa-input-row">
+                  <input type="datetime-local" class="etapa-datetime" id="dt-fim-desc" value="${now}">
+                  <button class="etapa-btn green" onclick="registrarEtapa(${e.id},'fim_desc')">Registrar</button>
+                </div>`
+              : `<div class="etapa-sub">Aguardando etapa anterior</div>`
+          }
+        </div>
+      </div>
+
+      <div class="etapa">
+        <div class="etapa-icon ${statusClass(etapa4feito, etapa4ativo)}">${etapa4feito ? '✓' : '🏁'}</div>
+        <div class="etapa-body">
+          <div class="etapa-titulo ${statusClass(etapa4feito, etapa4ativo)}">Fim da viagem</div>
+          ${etapa4feito
+            ? `<div class="etapa-hora feito">${formatTime(fimViagem)}</div>
+               ${e.kmPercorrido != null ? `<div class="etapa-sub">📏 ${e.kmPercorrido.toLocaleString('pt-BR')} km percorridos</div>` : ''}`
+            : etapa4ativo
+              ? `<div class="etapa-input-row">
+                  <input type="datetime-local" class="etapa-datetime" id="dt-fim" value="${now}">
+                  <button class="etapa-btn green" onclick="registrarEtapa(${e.id},'fim')">Registrar</button>
+                </div>
+                <div style="margin-top:8px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:12px;padding:10px 14px">
+                  <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">📏 Km percorrida</div>
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <div style="display:flex;align-items:center;gap:6px">
+                      <div id="trip-gps-dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;flex-shrink:0"></div>
+                      <span id="trip-gps-km" style="font-size:18px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent)">-- km</span>
+                      <span style="font-size:10px;color:var(--text2)">GPS</span>
+                    </div>
+                    <div style="font-size:10px;color:var(--muted)">ou insira manualmente:</div>
+                    <input type="number" class="etapa-datetime" id="dt-km-percorrido" placeholder="km manual" min="0" step="0.1" style="width:110px;font-size:13px">
+                  </div>
+                </div>`
+              : `<div class="etapa-sub">Aguardando etapa anterior</div>`
+          }
+        </div>
+      </div>
+
     </div>`;
 
     // --- BLOQUEIO DE CUSTOS PARA FUNCIONÁRIO ---
@@ -2675,6 +2748,16 @@ if (currentUser && currentUser.tipo !== 'funcionario') {
 }
 
 let relogioViagem = null;
+function reativarTripGpsSeNecessario(e) {
+  // Se viagem está em rota e GPS não está ativo para esta entrega, reativar
+  if (e.horaSaida && !e.horaFimViagem && navigator.geolocation) {
+    if (!tripGps.ativo || tripGps.entregaId !== e.id) {
+      tripGps.iniciar(e.id);
+      console.log('tripGps reativado para entrega em andamento', e.id);
+    }
+  }
+}
+
 function iniciarRelogioViagem(e) {
   if (relogioViagem) clearInterval(relogioViagem);
   function atualizar() {
@@ -2701,6 +2784,8 @@ function registrarEtapa(id, etapa) {
     if (!val) return;
     e.horaSaida = new Date(val).toISOString();
     e.status = 'em_rota';
+    // Inicia rastreio GPS da viagem
+    tripGps.iniciar(e.id);
   } else if (etapa === 'ini_desc') {
     const val = document.getElementById('dt-ini-desc')?.value;
     if (!val) return;
@@ -2715,13 +2800,21 @@ function registrarEtapa(id, etapa) {
   } else if (etapa === 'fim') {
     const val = document.getElementById('dt-fim')?.value;
     if (!val) return;
+    // Captura km do GPS (prioridade) ou do campo manual
+    const kmGps   = tripGps.ativo ? tripGps.parar() : null;
+    const kmInput = parseFloat(document.getElementById('dt-km-percorrido')?.value);
+    if (kmGps && kmGps > 0.1) {
+      e.kmPercorrido = kmGps;
+    } else if (!isNaN(kmInput) && kmInput > 0) {
+      e.kmPercorrido = kmInput;
+    }
     e.horaFimViagem = new Date(val).toISOString();
     e.status = 'concluido';
     if (relogioViagem) clearInterval(relogioViagem);
     save();
     renderAtivas();
     renderDashboard();
-    alert('✅ Viagem concluída com sucesso!');
+    alert('✅ Viagem concluída com sucesso!' + (e.kmPercorrido ? '\n📏 ' + e.kmPercorrido + ' km registrados.' : ''));
     return;
   }
 
@@ -2734,9 +2827,10 @@ function cancelarViagem(id) {
   if (!confirm('Cancelar esta viagem? O status voltará para Agendado.')) return;
   const e = entregas.find(x => x.id === id);
   if (!e) return;
+  if (tripGps.ativo && tripGps.entregaId === id) tripGps.parar();
   e.status = 'agendado';
   e.horaSaida = null; e.horaChegada = null; e.horaSaida2 = null;
-  e.horaFimViagem = null; e.tempoDescarga = null;
+  e.horaFimViagem = null; e.tempoDescarga = null; e.kmPercorrido = null;
   e.pedagioExtra = 0; e.custoExtra = 0; e.obsViagem = '';
   if (relogioViagem) clearInterval(relogioViagem);
   save();
@@ -2799,7 +2893,7 @@ function renderHistorico() {
 
   // --- TRAVA DE CABEÇALHO (Oculta as colunas Valor, Lucro e Ações) ---
   if (thead) {
-    const colunasFinanceiras = thead.querySelectorAll('th:nth-child(5), th:nth-child(6), th:nth-child(9)');
+    const colunasFinanceiras = thead.querySelectorAll('th:nth-child(5), th:nth-child(6), th:nth-child(10)');
     colunasFinanceiras.forEach(th => {
       th.style.display = currentUser?.tipo === 'funcionario' ? 'none' : '';
     });
@@ -2835,6 +2929,7 @@ function renderHistorico() {
         R$ ${lucro.toFixed(2).replace('.',',')}
       </td>
       
+      <td style="color:var(--accent);font-weight:600;font-family:'JetBrains Mono',monospace">${e.kmPercorrido != null ? e.kmPercorrido.toLocaleString('pt-BR') + ' km' : '<span style="color:var(--muted)">—</span>'}</td>
       <td style="color:var(--accent2)">${descStr}</td>
       <td><span class="badge ${statusLabel}">${statusText}</span></td>
       
@@ -3185,6 +3280,54 @@ function syncFrotaSelects() {
 let modoRastreio = 'dono';
 let trackingAtivo = false;
 let watchId = null;
+
+// ── TRIP GPS: rastreia km da entrega ativa ───────────────────────────────
+const tripGps = {
+  watchId:    null,
+  lastPos:    null,
+  kmTotal:    0,
+  entregaId:  null,
+  ativo:      false,
+
+  iniciar(entregaId) {
+    if (!navigator.geolocation) return;
+    if (this.ativo) this.parar();
+    this.entregaId = entregaId;
+    this.kmTotal   = 0;
+    this.lastPos   = null;
+    this.ativo     = true;
+    this.watchId   = navigator.geolocation.watchPosition(
+      pos => {
+        const { latitude: lat, longitude: lng } = pos.coords;
+        if (this.lastPos) {
+          const delta = calcDistance(this.lastPos.lat, this.lastPos.lng, lat, lng);
+          // Ignora saltos absurdos (>2km num tick = erro de sinal)
+          if (delta < 2) this.kmTotal += delta;
+        }
+        this.lastPos = { lat, lng };
+        this._atualizarUI();
+      },
+      err => console.warn('tripGps erro:', err.message),
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+    );
+    console.log('tripGps iniciado para entrega', entregaId);
+  },
+
+  parar() {
+    if (this.watchId != null) {
+      navigator.geolocation.clearWatch(this.watchId);
+      this.watchId = null;
+    }
+    this.ativo = false;
+    console.log('tripGps parado — km acumulados:', this.kmTotal.toFixed(2));
+    return parseFloat(this.kmTotal.toFixed(2));
+  },
+
+  _atualizarUI() {
+    const el = document.getElementById('trip-gps-km');
+    if (el) el.textContent = this.kmTotal.toFixed(1) + ' km';
+  }
+};
 let selectedVehicleId = null;
 let leafletMap = null;
 let leafletMarkers = {}; // vehicleId -> { marker, polyline, points, stopMarker }
