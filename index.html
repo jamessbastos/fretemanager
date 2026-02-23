@@ -1027,6 +1027,24 @@
   .plan-sub{font-size:11px;color:var(--text2);margin-top:2px}
   .plan-price{font-size:18px;font-weight:900;color:var(--accent);font-family:'JetBrains Mono',monospace;text-align:right}
   .plan-price-sub{font-size:9px;color:var(--text2);text-align:right}
+  .upgrade-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 13px 15px;
+    cursor: pointer;
+    transition: all .18s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .upgrade-card:hover { background: rgba(255,255,255,.07); transform: translateY(-1px); }
+  .upgrade-card:active { transform: scale(0.97); }
+  .upgrade-card.selected {
+    background: linear-gradient(135deg,rgba(0,212,255,.12),rgba(124,58,237,.08));
+    border-color: rgba(0,212,255,.5);
+  }
+  .upgrade-card-popular {
+    background: linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,58,237,.06));
+    border-color: rgba(0,212,255,.25);
+  }
 </style>
 </head>
 <body>
@@ -1357,15 +1375,105 @@
     <div class="page-title">Minha Equipe</div>
     <div class="page-subtitle">Gerencie acesso dos funcionários</div>
 
-    <div class="saas-plan-banner">
+    <div class="saas-plan-banner" id="plano-banner">
       <div class="plan-icon">⚡</div>
-      <div class="plan-info">
-        <div class="plan-name" id="plano-nome">Plano Básico</div>
-        <div class="plan-sub" id="plano-desc">0 funcionários</div>
+      <div class="plan-info" style="flex:1">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <div class="plan-name" id="plano-nome">Plano Básico</div>
+          <div class="plan-price" id="plano-preco" style="font-size:15px">R$ 97<span style="font-size:9px;color:var(--text2);font-weight:400">/mês</span></div>
+        </div>
+        <div class="plan-sub" id="plano-desc" style="margin-bottom:8px">0 / 3 motoristas</div>
+        <div style="background:rgba(255,255,255,0.08);border-radius:6px;height:6px;overflow:hidden">
+          <div id="plano-barra" style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent3));transition:width .4s;width:0%"></div>
+        </div>
+        <div id="plano-upgrade-hint" style="display:none;margin-top:8px">
+          <button onclick="abrirModalUpgrade()" style="width:100%;padding:8px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--accent2),#ff3d6b);color:#fff;font-weight:700;font-size:12px;cursor:pointer;letter-spacing:.3px">
+            🚀 Fazer upgrade do plano
+          </button>
+        </div>
       </div>
-      <div>
-        <div class="plan-price" id="plano-preco">R$ 97</div>
-        <div class="plan-price-sub">/mês</div>
+    </div>
+
+    <!-- Modal upgrade -->
+    <div id="modal-upgrade" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px">
+      <div style="background:#0d1220;border:1px solid var(--glass-border);border-radius:24px;padding:28px;max-width:380px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:fadeScaleIn .25s cubic-bezier(0.34,1.56,0.64,1)">
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="font-size:40px;margin-bottom:10px">🚀</div>
+          <div style="font-size:20px;font-weight:900;margin-bottom:6px">Limite atingido</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">Você atingiu o número máximo de motoristas do seu plano atual. Faça o upgrade para continuar crescendo.</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;max-height:55vh;overflow-y:auto;padding-right:2px" id="upgrade-cards-list">
+
+          <div id="upgrade-card-solo" class="upgrade-card" onclick="selecionarPlanoUpgrade('solo',this)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:13px;font-weight:800">🚗 Solo</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">1 motorista</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:17px;font-weight:900;color:var(--accent)">R$ 49</div>
+                <div style="font-size:9px;color:var(--text2)">/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="upgrade-card-basico" class="upgrade-card" onclick="selecionarPlanoUpgrade('basico',this)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:13px;font-weight:800">📦 Básico</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">Até 3 motoristas</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:17px;font-weight:900;color:var(--accent)">R$ 79</div>
+                <div style="font-size:9px;color:var(--text2)">/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="upgrade-card-pro" class="upgrade-card upgrade-card-popular" onclick="selecionarPlanoUpgrade('pro',this)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:13px;font-weight:800">⚡ Pro <span style="font-size:9px;font-weight:700;background:rgba(0,212,255,.2);color:var(--accent);padding:2px 7px;border-radius:20px;margin-left:5px">POPULAR</span></div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">Até 5 motoristas</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:17px;font-weight:900;color:var(--accent)">R$ 119</div>
+                <div style="font-size:9px;color:var(--text2)">/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="upgrade-card-empresa" class="upgrade-card" onclick="selecionarPlanoUpgrade('empresa',this)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:13px;font-weight:800">🏗️ Empresa</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">Até 10 motoristas</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:17px;font-weight:900;color:var(--accent)">R$ 179</div>
+                <div style="font-size:9px;color:var(--text2)">/mês</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="upgrade-card-business" class="upgrade-card" onclick="selecionarPlanoUpgrade('business',this)">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:13px;font-weight:800">🏢 Business</div>
+                <div style="font-size:11px;color:var(--text2);margin-top:2px">Até 15 motoristas</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:17px;font-weight:900;color:var(--accent)">R$ 249</div>
+                <div style="font-size:9px;color:var(--text2)">/mês</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div style="display:flex;gap:10px">
+          <button onclick="fecharModalUpgrade()" style="flex:1;padding:13px;border-radius:14px;border:1px solid var(--glass-border);background:transparent;color:var(--text2);cursor:pointer;font-size:14px">Agora não</button>
+          <button onclick="irParaUpgrade()" style="flex:1;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent3));color:#000;font-weight:800;font-size:14px;cursor:pointer">Ver planos</button>
+        </div>
       </div>
     </div>
 
@@ -1380,12 +1488,12 @@
       </div>
       <div class="equipe-stat">
         <div class="equipe-stat-val" style="color:var(--accent2)" id="eq-custo">R$97</div>
-        <div class="equipe-stat-label">Custo/mês</div>
+        <div class="equipe-stat-label">Plano/mês</div>
       </div>
     </div>
 
     <div style="margin-bottom:12px">
-      <button class="btn btn-primary" onclick="toggleAddFunc()" style="width:100%">＋ Adicionar funcionário</button>
+      <button class="btn btn-primary" onclick="handleAddFuncBtn()" id="btn-open-add-func" style="width:100%">＋ Adicionar motorista</button>
     </div>
 
     <div class="add-func-panel hidden" id="add-func-panel">
@@ -3144,9 +3252,22 @@ const FB_CONFIG = {
   appId: "1:977410315261:web:ebaf0794c7d887321abf94"
 };
 
-const SAAS_PRECO_BASE = 49;
-const SAAS_PRECO_FUNC = 19;
-const SAAS_MAX_FUNC_BASE = 3;
+// ── PLANOS FreteManager ──────────────────────────────
+const PLANOS = {
+  solo:     { nome: 'Solo',     preco: 49,  maxMotoristas: 1,  icone: '🚗', popular: false },
+  basico:   { nome: 'Básico',   preco: 79,  maxMotoristas: 3,  icone: '📦', popular: false },
+  pro:      { nome: 'Pro',      preco: 119, maxMotoristas: 5,  icone: '⚡', popular: true  },
+  empresa:  { nome: 'Empresa',  preco: 179, maxMotoristas: 10, icone: '🏗️', popular: false },
+  business: { nome: 'Business', preco: 249, maxMotoristas: 15, icone: '🏢', popular: false },
+};
+// Helper: detecta chave do plano pelo maxMotoristas salvo no Firebase
+function detectarPlano(maxMotoristas) {
+  return Object.keys(PLANOS).find(k => PLANOS[k].maxMotoristas === maxMotoristas) || 'solo';
+}
+// Legado — mantido para compatibilidade
+const SAAS_PRECO_BASE  = 49;
+const SAAS_PRECO_FUNC  = 0;
+const SAAS_MAX_FUNC_BASE = 1; // padrão = Solo
 
 function initFirebase() {
   if (fbApp) return;
@@ -3169,6 +3290,18 @@ fbAuth.onAuthStateChanged(async user => {
 
       if (profile) {
         console.log("Dados do perfil carregados com sucesso.");
+
+        // ── BLOQUEAR LOGIN SE FUNCIONÁRIO DESATIVADO ──
+        if (profile.tipo === 'funcionario' && profile.empresaId) {
+          const funcSnap = await fbDb.ref('empresas/' + profile.empresaId + '/funcionarios/' + user.uid + '/ativo').once('value');
+          if (funcSnap.val() === false) {
+            await fbAuth.signOut();
+            showAuthError('⛔ Seu acesso foi desativado. Entre em contato com o responsável da empresa.');
+            if (btnLogin) { btnLogin.disabled = false; btnLogin.innerHTML = '🔓 Entrar'; }
+            return;
+          }
+        }
+
         currentUser = { uid: user.uid, email: user.email, ...profile };
 
         // 2. TUDO OK: Agora escondemos a tela de login
@@ -3337,8 +3470,8 @@ async function fazerCadastro() {
       nome: empresa, 
       donoUid: uid, 
       criadoEm: Date.now(),
-      plano: 'basico', 
-      maxFuncionarios: typeof SAAS_MAX_FUNC_BASE !== 'undefined' ? SAAS_MAX_FUNC_BASE : 5
+      plano: 'solo',
+      maxFuncionarios: PLANOS.solo.maxMotoristas
     });
 
     // 2. SUCESSO: Limpa o botão e avisa o usuário
@@ -3646,7 +3779,7 @@ async function criarFuncionario() {
   const planoSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
   const maxFunc = planoSnap.val() || SAAS_MAX_FUNC_BASE;
   if (ativos >= maxFunc) {
-    showToast('⛔ Limite do plano atingido (' + maxFunc + ' funcionários)');
+    abrirModalUpgrade();
     return;
   }
 
@@ -3691,6 +3824,53 @@ async function removerFuncionario(uid, nome) {
   renderEquipe();
 }
 
+async function handleAddFuncBtn() {
+  const planoSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
+  const maxFunc = planoSnap.val() || SAAS_MAX_FUNC_BASE;
+  const ativos = funcionariosCache.filter(f => f.ativo !== false).length;
+  if (ativos >= maxFunc) {
+    abrirModalUpgrade();
+  } else {
+    toggleAddFunc();
+  }
+}
+
+function abrirModalUpgrade() {
+  const m = document.getElementById('modal-upgrade');
+  if (!m) return;
+  m.style.display = 'flex';
+  // Pré-seleciona o próximo plano acima do atual
+  const keys = Object.keys(PLANOS);
+  const planoAtualSnap = fbDb ? null : null; // lido depois
+  fbDb.ref('empresas/' + currentUser.empresaId + '/info').once('value').then(snap => {
+    const info = snap.val() || {};
+    const planoAtual = info.plano || 'solo';
+    const idx = keys.indexOf(planoAtual);
+    const proximoKey = idx >= 0 && idx < keys.length - 1 ? keys[idx + 1] : keys[keys.length - 1];
+    const el = document.getElementById('upgrade-card-' + proximoKey);
+    if (el) selecionarPlanoUpgrade(proximoKey, el);
+    else selecionarPlanoUpgrade('pro', document.getElementById('upgrade-card-pro'));
+  }).catch(() => {
+    selecionarPlanoUpgrade('pro', document.getElementById('upgrade-card-pro'));
+  });
+}
+function fecharModalUpgrade() {
+  const m = document.getElementById('modal-upgrade');
+  if (m) { m.style.display = 'none'; }
+}
+let _planoUpgradeSelecionado = 'pro';
+function selecionarPlanoUpgrade(plano, el) {
+  _planoUpgradeSelecionado = plano;
+  document.querySelectorAll('.upgrade-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function irParaUpgrade() {
+  const p = PLANOS[_planoUpgradeSelecionado];
+  fecharModalUpgrade();
+  // 👉 Substitua pela URL real da sua página de checkout
+  showToast('💬 Entre em contato para ativar o plano ' + p.nome + ' — R$ ' + p.preco + '/mês');
+}
+
 async function renderEquipe() {
   if (!currentUser || currentUser.tipo !== 'dono') return;
   const snap = await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios').once('value');
@@ -3704,7 +3884,7 @@ async function renderEquipe() {
 
   const ativos  = funcionariosCache.filter(f => f.ativo !== false).length;
   const online  = funcionariosCache.filter(f => f.online).length;
-  const custoMes = ativos * SAAS_PRECO_FUNC;
+  const custoMes = 0; // custo calculado depois pelo plano
 
   const eqTotal  = document.getElementById('eq-total');
   const eqOnline = document.getElementById('eq-online');
@@ -3714,10 +3894,46 @@ async function renderEquipe() {
   const plPreco  = document.getElementById('plano-preco');
   if (eqTotal)  eqTotal.textContent  = ativos;
   if (eqOnline) eqOnline.textContent = online;
-  if (eqCusto)  eqCusto.textContent  = 'R$' + (SAAS_PRECO_BASE + custoMes);
-  if (plNome)   plNome.textContent   = 'Plano Básico';
-  if (plDesc)   plDesc.textContent   = ativos + ' funcionário' + (ativos !== 1 ? 's' : '') + ' · R$ ' + SAAS_PRECO_FUNC + '/mês cada';
-  if (plPreco)  plPreco.textContent  = 'R$ ' + (SAAS_PRECO_BASE + custoMes);
+  if (eqCusto)  eqCusto.textContent  = '—'; // será atualizado logo abaixo
+
+  // Busca limite real do plano
+  const planoSnap2 = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
+  const maxFunc2 = planoSnap2.val() || SAAS_MAX_FUNC_BASE;
+  const pct = Math.min(100, Math.round((ativos / maxFunc2) * 100));
+  const noLimite = ativos >= maxFunc2;
+
+  // Descobre qual plano pelo limite salvo
+  const planoKey = detectarPlano(maxFunc2);
+  const planoInfo = PLANOS[planoKey];
+  if (eqCusto)  eqCusto.textContent  = 'R$ ' + planoInfo.preco;
+  if (plNome)   plNome.textContent   = planoInfo.icone + ' ' + planoInfo.nome;
+  if (plDesc)   plDesc.textContent   = ativos + ' / ' + maxFunc2 + ' motorista' + (maxFunc2 !== 1 ? 's' : '');
+  if (plPreco)  plPreco.innerHTML    = 'R$ ' + planoInfo.preco + '<span style="font-size:9px;color:var(--text2);font-weight:400">/mês</span>';
+
+  const barra = document.getElementById('plano-barra');
+  if (barra) {
+    barra.style.width = pct + '%';
+    barra.style.background = noLimite
+      ? 'linear-gradient(90deg,var(--accent2),var(--red))'
+      : pct >= 75
+        ? 'linear-gradient(90deg,var(--yellow),var(--accent2))'
+        : 'linear-gradient(90deg,var(--accent),var(--accent3))';
+  }
+  const hint = document.getElementById('plano-upgrade-hint');
+  if (hint) hint.style.display = noLimite ? 'block' : 'none';
+
+  const btnAdd = document.getElementById('btn-add-func');
+  if (btnAdd) {
+    if (noLimite) {
+      btnAdd.disabled = true;
+      btnAdd.style.opacity = '.45';
+      btnAdd.title = 'Limite de motoristas atingido';
+    } else {
+      btnAdd.disabled = false;
+      btnAdd.style.opacity = '1';
+      btnAdd.title = '';
+    }
+  }
 
   const lista = document.getElementById('equipe-lista');
   if (!lista) return;
