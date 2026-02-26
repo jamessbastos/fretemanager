@@ -11,7 +11,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <style>
-  /* Seus estilos existentes permanecem iguais - mantenha todo o CSS que você já tinha */
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
@@ -486,6 +485,7 @@
   select.form-input option { background: #0d1220; color: var(--text); }
   .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .form-grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
 
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -1016,6 +1016,9 @@
     border-color: rgba(0,212,255,.25);
   }
 
+  /* ============================================ */
+  /* ESTILOS DO CHECKLIST (NOVA FUNCIONALIDADE)  */
+  /* ============================================ */
   .checklist-item {
     display: flex;
     align-items: center;
@@ -1163,6 +1166,7 @@
     cursor: pointer;
   }
 
+  /* ESTILOS PARA NOTAS FISCAIS */
   .notas-container {
     display: flex;
     flex-direction: column;
@@ -1227,6 +1231,125 @@
     border-color: var(--accent);
     color: var(--accent);
     background: rgba(0,212,255,0.05);
+  }
+  
+  .horario-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .horario-input {
+    flex: 1;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    padding: 12px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all .2s;
+  }
+  .horario-input:focus {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.05);
+    box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+  }
+  .horario-separator {
+    color: var(--text2);
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  /* ESTILOS PARA HISTÓRICO DE CARGAS DO FUNCIONÁRIO */
+  .carga-history-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+  }
+  .carga-history-item:hover {
+    border-color: var(--accent);
+    background: rgba(0,212,255,0.03);
+  }
+  .carga-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .carga-history-route {
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .carga-history-value {
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--green);
+  }
+  .carga-history-details {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text2);
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .carga-history-detail {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .carga-history-notas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .carga-history-nota {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .carga-history-stats {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--glass-border);
+    font-size: 11px;
+  }
+  .carga-history-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .total-faturado-card {
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(124,58,237,0.05));
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 16px;
+    padding: 16px;
+    margin: 16px 0;
+    text-align: center;
+  }
+  .total-faturado-label {
+    font-size: 12px;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .total-faturado-value {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
   }
 </style>
 </head>
@@ -1414,6 +1537,7 @@
     </div>
     <div class="nav-label">Rankings</div>
   </div>
+  <!-- FROTA removida para funcionários - será mostrada apenas para dono -->
   <div class="nav-item" id="nav-frota" onclick="showPage('frota')">
     <div class="nav-icon">
       <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
@@ -1432,8 +1556,8 @@
     </div>
     <div class="nav-label">Equipe</div>
   </div>
-  <!-- NOVA ABA: CHECKLISTS -->
-  <div class="nav-item" id="nav-checklists" onclick="showPage('checklists')" style="display: none;">
+  <!-- NOVA ABA: CHECKLISTS - Disponível para todos -->
+  <div class="nav-item" id="nav-checklists" onclick="showPage('checklists')">
     <div class="nav-icon">
       <svg viewBox="0 0 24 24" width="22" height="22">
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -1487,96 +1611,107 @@
     </div>
   </div>
 
-  <!-- FUNCIONÁRIO DASHBOARD -->
-<div id="page-func" class="page">
-  <div class="page-title" id="func-greeting">Olá 👋</div>
-  <div class="page-subtitle" id="func-date"></div>
+  <!-- FUNCIONÁRIO DASHBOARD - NOVO COM HISTÓRICO DE CARGAS POR VEÍCULO -->
+  <div id="page-func" class="page">
+    <div class="page-title" id="func-greeting">Olá 👋</div>
+    <div class="page-subtitle" id="func-date"></div>
 
-  <div id="func-actions-container" style="margin: 20px 0;">
-    <button onclick="showPage('ativas')" class="btn-primary" style="
-      width: 100%; 
-      padding: 22px; 
-      border-radius: 18px; 
-      border: none; 
-      background: var(--accent); 
-      color: white; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 15px; 
-      font-weight: 800; 
-      font-size: 16px; 
-      cursor: pointer; 
-      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-      transition: transform 0.2s;
-    ">
-      <span style="font-size: 24px;">📦</span> 
-      SELECIONAR CARGAS DISPONÍVEIS
-    </button>
-  </div>
-
-  <div class="card" id="func-selecao-veiculo">
-    <div class="form-label" style="margin-bottom:10px; font-weight:700; color:var(--text2)">🚗 SEU VEÍCULO ATUAL</div>
-    <select id="func-veiculo-select" class="form-input" onchange="funcSelecionarVeiculo()">
-      <option value="">Selecione sua placa...</option>
-    </select>
-  </div>
-
-  <div id="func-veiculo-info" style="display:none">
-    <div class="func-vehicle-card">
-      <div class="func-vehicle-top">
-        <div class="func-vehicle-icon">🚛</div>
-        <div style="flex:1">
-          <div style="font-size:18px;font-weight:900" id="fv-nome">-</div>
-          <div style="font-size:12px;color:var(--text2);margin-top:2px" id="fv-ano">-</div>
-          <div style="display:inline-block;background:rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;margin-top:6px" id="fv-placa">-</div>
-        </div>
-        <button onclick="funcLimparVeiculo()" style="background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:8px; color:var(--text); padding:5px 10px; font-size:11px; cursor:pointer">Trocar</button>
-      </div>
-      
-      <div class="func-spec-grid">
-        <div class="func-spec">
-          <div class="func-spec-label">⛽ Consumo</div>
-          <div class="func-spec-val" id="fv-consumo">-</div>
-        </div>
-        <div class="func-spec">
-          <div class="func-spec-label">🔧 Próx. Revisão</div>
-          <div class="func-spec-val" id="fv-revisao">-</div>
-        </div>
-        <div class="func-spec">
-          <div class="func-spec-label">📦 Fretes realizados</div>
-          <div class="func-spec-val" id="fv-fretes">-</div>
-        </div>
-        <div class="func-spec">
-          <div class="func-spec-label">💸 Gastos extras</div>
-          <div class="func-spec-val" id="fv-gastos">-</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- BOTÃO DE CHECKLIST DO VEÍCULO -->
-    <div id="checklist-button-container" style="margin: 16px 0; display: none;">
-      <button class="btn btn-primary" onclick="abrirChecklistVeiculo()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent3), var(--accent));">
-        <span style="display: flex; align-items: center; justify-content: center; gap: 10px;">
-          <span style="font-size: 22px;">🔧</span>
-          <span style="font-weight: 800;">FAZER CHECKLIST DO VEÍCULO</span>
-        </span>
+    <div id="func-actions-container" style="margin: 20px 0;">
+      <button onclick="showPage('ativas')" class="btn-primary" style="
+        width: 100%; 
+        padding: 22px; 
+        border-radius: 18px; 
+        border: none; 
+        background: var(--accent); 
+        color: white; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        gap: 15px; 
+        font-weight: 800; 
+        font-size: 16px; 
+        cursor: pointer; 
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        transition: transform 0.2s;
+      ">
+        <span style="font-size: 24px;">📦</span> 
+        SELECIONAR CARGAS DISPONÍVEIS
       </button>
-      <div style="font-size: 11px; color: var(--text2); margin-top: 6px; text-align: center;">
-        Último checklist: <span id="ultimo-checklist-data">—</span>
-      </div>
     </div>
 
-    <div class="card">
-      <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">📦 Histórico Recente</div>
-      <div id="func-cargas-list">
-        <div class="no-data" style="padding:20px 0">Nenhuma carga realizada</div>
+    <div class="card" id="func-selecao-veiculo">
+      <div class="form-label" style="margin-bottom:10px; font-weight:700; color:var(--text2)">🚗 SEU VEÍCULO ATUAL</div>
+      <select id="func-veiculo-select" class="form-input" onchange="funcSelecionarVeiculo()">
+        <option value="">Selecione sua placa...</option>
+      </select>
+    </div>
+
+    <div id="func-veiculo-info" style="display:none">
+      <div class="func-vehicle-card">
+        <div class="func-vehicle-top">
+          <div class="func-vehicle-icon">🚛</div>
+          <div style="flex:1">
+            <div style="font-size:18px;font-weight:900" id="fv-nome">-</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px" id="fv-ano">-</div>
+            <div style="display:inline-block;background:rgba(255,255,255,.1);border-radius:6px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;margin-top:6px" id="fv-placa">-</div>
+          </div>
+          <button onclick="funcLimparVeiculo()" style="background:rgba(255,255,255,0.05); border:1px solid var(--glass-border); border-radius:8px; color:var(--text); padding:5px 10px; font-size:11px; cursor:pointer">Trocar</button>
+        </div>
+        
+        <div class="func-spec-grid">
+          <div class="func-spec">
+            <div class="func-spec-label">⛽ Consumo</div>
+            <div class="func-spec-val" id="fv-consumo">-</div>
+          </div>
+          <div class="func-spec">
+            <div class="func-spec-label">🔧 Próx. Revisão</div>
+            <div class="func-spec-val" id="fv-revisao">-</div>
+          </div>
+          <div class="func-spec">
+            <div class="func-spec-label">📦 Fretes realizados</div>
+            <div class="func-spec-val" id="fv-fretes">-</div>
+          </div>
+          <div class="func-spec">
+            <div class="func-spec-label">💸 Gastos extras</div>
+            <div class="func-spec-val" id="fv-gastos">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTÃO DE CHECKLIST DO VEÍCULO (AGORA VISÍVEL) -->
+      <div id="checklist-button-container" style="margin: 16px 0;">
+        <button class="btn btn-primary" onclick="abrirChecklistVeiculo()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent3), var(--accent));">
+          <span style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <span style="font-size: 22px;">🔧</span>
+            <span style="font-weight: 800;">FAZER CHECKLIST DO VEÍCULO</span>
+          </span>
+        </button>
+        <div style="font-size: 11px; color: var(--text2); margin-top: 6px; text-align: center;">
+          Último checklist: <span id="ultimo-checklist-data">—</span>
+        </div>
+      </div>
+
+      <!-- TOTAL FATURADO COM ESTE VEÍCULO -->
+      <div class="total-faturado-card" id="total-faturado-container" style="display:none">
+        <div class="total-faturado-label">💰 Total Faturado</div>
+        <div class="total-faturado-value" id="total-faturado-valor">R$ 0</div>
+        <div style="font-size: 11px; color: var(--text2); margin-top: 4px;" id="total-faturado-detalhe">em 0 entregas</div>
+      </div>
+
+      <!-- HISTÓRICO DE CARGAS DO VEÍCULO -->
+      <div class="card" style="margin-top: 16px;">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px">
+          <span>📋</span> Histórico de Cargas
+          <span style="font-size:10px;color:var(--muted);font-weight:400">(últimas 10)</span>
+        </div>
+        <div id="func-cargas-list-historico">
+          <div class="no-data" style="padding:20px 0">Selecione um veículo para ver o histórico</div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-  <!-- EQUIPE (DONO ONLY) - CORRIGIDO -->
+  <!-- EQUIPE (DONO ONLY) -->
   <div id="page-equipe" class="page">
     <div class="page-title">Minha Equipe</div>
     <div class="page-subtitle">Gerencie acesso dos funcionários</div>
@@ -1730,7 +1865,7 @@
     </div>
   </div>
 
-  <!-- NOVA ENTREGA - MODIFICADA -->
+  <!-- NOVA ENTREGA - MODIFICADA COM NOVA ORDEM E HORÁRIO RANGE -->
   <div id="page-nova" class="page">
     <div class="page-title">Nova Entrega</div>
     <div class="page-subtitle">Registre os dados do frete</div>
@@ -1763,21 +1898,6 @@
             <option value="em_rota">🚀 Saiu agora</option>
           </select>
         </div>
-      </div>
-
-      <!-- NOVO: Notas Fiscais (substitui veículo) -->
-      <div class="form-group">
-        <div class="form-label" style="display: flex; align-items: center; gap: 8px;">
-          <span>📄</span> Notas Fiscais
-          <span style="font-size: 10px; color: var(--muted); font-weight: 400;">(adicione uma ou mais notas)</span>
-        </div>
-        <div id="notas-fiscais-container" class="notas-container">
-          <!-- Campos de nota serão adicionados aqui via JS -->
-        </div>
-        <button type="button" class="btn-add-nota" onclick="adicionarCampoNota()">
-          <span style="font-size: 18px;">+</span> Adicionar nota fiscal
-        </button>
-        <input type="hidden" id="f-notas" value="[]">
       </div>
 
       <div class="form-grid-2">
@@ -1823,7 +1943,11 @@
         </div>
         <div class="form-group">
           <div class="form-label">🕐 Horário Receb.</div>
-          <input type="time" id="f-horario-recebimento" class="form-input">
+          <div class="horario-range">
+            <input type="time" id="f-horario-inicio" class="horario-input" placeholder="Início">
+            <span class="horario-separator">às</span>
+            <input type="time" id="f-horario-fim" class="horario-input" placeholder="Fim">
+          </div>
         </div>
       </div>
 
@@ -1836,6 +1960,21 @@
           <div class="form-label">Valor do Frete (R$)</div>
           <input type="number" id="f-valor" class="form-input" placeholder="0,00" step="0.01" oninput="recalcularCusto()">
         </div>
+      </div>
+
+      <!-- NOTAS FISCAIS (movido para depois da distância e valor) -->
+      <div class="form-group">
+        <div class="form-label" style="display: flex; align-items: center; gap: 8px;">
+          <span>📄</span> Notas Fiscais
+          <span style="font-size: 10px; color: var(--muted); font-weight: 400;">(adicione uma ou mais notas)</span>
+        </div>
+        <div id="notas-fiscais-container" class="notas-container">
+          <!-- Campos de nota serão adicionados aqui via JS -->
+        </div>
+        <button type="button" class="btn-add-nota" onclick="adicionarCampoNota()">
+          <span style="font-size: 18px;">+</span> Adicionar nota fiscal
+        </button>
+        <input type="hidden" id="f-notas" value="[]">
       </div>
 
       <div class="form-label" style="margin-bottom:8px">💰 Composição de Custo</div>
@@ -1953,6 +2092,7 @@
             <th>Cliente</th>
             <th>Nota Fiscal</th>
             <th>Peso/Embalagem</th>
+            <th>Horário</th>
             <th>Frete</th>
             <th class="dono-only">Lucro</th>
             <th>Km</th>
@@ -1990,7 +2130,7 @@
     </div>
   </div>
 
-  <!-- PÁGINA DE CHECKLISTS (HISTÓRICO) -->
+  <!-- PÁGINA DE CHECKLISTS (HISTÓRICO) - AGORA ACESSÍVEL POR TODOS -->
   <div id="page-checklists" class="page">
     <div class="page-title">📋 Checklists</div>
     <div class="page-subtitle">Histórico de inspeções realizadas</div>
@@ -2114,7 +2254,7 @@
     </div>
   </div>
 
-  <!-- FROTA - CORRIGIDA -->
+  <!-- FROTA - APENAS PARA DONO (REMOVIDA PARA FUNCIONÁRIOS) -->
   <div id="page-frota" class="page">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div class="page-title" style="margin:0">Minha Frota</div>
@@ -2277,6 +2417,7 @@ let veiculos = [];
 let funcionariosCache = [];
 let notasFiscais = [];
 let editVeiculoId = null;
+let checklists = [];
 
 // ============================================
 // INICIALIZAÇÃO DO FIREBASE
@@ -2509,17 +2650,23 @@ async function fazerLogout() {
 // FUNÇÕES DE RESTRIÇÕES
 // ============================================
 function applyFuncRestrictions() {
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe','nav-rastreio','nav-checklists'].forEach(id => {
+  // Esconder abas que funcionário não pode acessar
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe','nav-rastreio', 'nav-frota'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
 
+  // Mostrar aba do funcionário e checklist
   const fn = document.getElementById('nav-func');
   if (fn) fn.style.display = 'flex';
+  
+  const ch = document.getElementById('nav-checklists');
+  if (ch) ch.style.display = 'flex';
 }
 
 function removeFuncRestrictions() {
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe','nav-rastreio','nav-checklists'].forEach(id => {
+  // Mostrar todas as abas novamente
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe','nav-rastreio', 'nav-frota', 'nav-checklists'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'flex';
   });
@@ -2544,6 +2691,17 @@ function showPage(page) {
   }
   if (page === 'equipe') {
     carregarFuncionarios();
+  }
+  if (page === 'nova') {
+    setTimeout(() => {
+      if (document.getElementById('notas-fiscais-container') && notasFiscais.length === 0) {
+        adicionarCampoNota();
+      }
+    }, 100);
+  }
+  if (page === 'checklists') {
+    renderChecklistsHistorico();
+    atualizarFiltrosChecklist();
   }
   
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -2593,6 +2751,15 @@ function carregarDadosFirebase() {
     }
   });
   
+  // Carregar checklists
+  fbDb.ref(basePath + '/checklists').once('value', (snapshot) => {
+    const dados = snapshot.val();
+    if (dados) {
+      checklists = Object.values(dados);
+      console.log("Checklists carregados:", checklists.length);
+    }
+  });
+  
   // Escutar mudanças em tempo real
   fbDb.ref(basePath + '/veiculos').on('value', (snapshot) => {
     const dados = snapshot.val();
@@ -2600,6 +2767,13 @@ function carregarDadosFirebase() {
       veiculos = dados;
       renderFrota();
       syncFrotaSelects();
+    }
+  });
+  
+  fbDb.ref(basePath + '/checklists').on('value', (snapshot) => {
+    const dados = snapshot.val();
+    if (dados) {
+      checklists = Object.values(dados);
     }
   });
 }
@@ -2822,17 +2996,15 @@ function syncFrotaSelects() {
 }
 
 // ============================================
-// FUNÇÕES DE EQUIPE - CORRIGIDAS (SEM ERRO DE PERMISSÃO)
+// FUNÇÕES DE EQUIPE
 // ============================================
 async function carregarFuncionarios() {
   if (!fbDb || !currentUser) return;
   
   try {
-    // Buscar todos os usuários (vamos filtrar localmente)
     const snapshot = await fbDb.ref('usuariosGlobais').once('value');
     const todosUsuarios = snapshot.val() || {};
     
-    // Filtrar apenas funcionários da empresa atual
     funcionariosCache = Object.entries(todosUsuarios)
       .filter(([uid, perfil]) => perfil.empresaId === currentUser.empresaId && perfil.tipo === 'funcionario')
       .map(([uid, perfil]) => ({ uid, ...perfil }));
@@ -2886,7 +3058,6 @@ async function criarFuncionario() {
   btn.innerHTML = '<span class="auth-spinner"></span>Criando...';
   
   try {
-    // Criar usuário no Authentication
     const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
     const uid = cred.user.uid;
     
@@ -2900,27 +3071,21 @@ async function criarFuncionario() {
       criadoEm: Date.now()
     };
     
-    // Salvar em usuariosGlobais (único caminho com permissão)
     await fbDb.ref('usuariosGlobais/' + uid).set(profile);
     
-    // Limpar o formulário
     document.getElementById('nf-nome').value = '';
     document.getElementById('nf-email').value = '';
     document.getElementById('nf-senha').value = '';
     
-    // Fechar o painel
     toggleAddFunc();
     
-    // Mostrar mensagem de sucesso
     showToast('✅ ' + nome + ' adicionado com sucesso!');
     
-    // Recarregar lista
     await carregarFuncionarios();
     
   } catch (error) {
     console.error("Erro ao criar funcionário:", error);
     
-    // Mensagens de erro amigáveis
     if (error.code === 'auth/email-already-in-use') {
       showToast('❌ Este e-mail já está em uso');
     } else if (error.code === 'auth/invalid-email') {
@@ -2935,6 +3100,139 @@ async function criarFuncionario() {
     btn.disabled = false;
     btn.innerHTML = originalText;
   }
+}
+
+// ============================================
+// FUNÇÕES DO FUNCIONÁRIO - HISTÓRICO DE CARGAS POR VEÍCULO
+// ============================================
+function funcSelecionarVeiculo() {
+  const select = document.getElementById('func-veiculo-select');
+  const placa = select.value;
+  
+  if (!placa) {
+    funcLimparVeiculo();
+    return;
+  }
+  
+  // Salvar veículo selecionado
+  localStorage.setItem('fm_func_veiculo_' + currentUser.uid, placa);
+  
+  // Mostrar informações do veículo
+  funcMostrarVeiculo(placa);
+}
+
+function funcLimparVeiculo() {
+  localStorage.removeItem('fm_func_veiculo_' + currentUser.uid);
+  document.getElementById('func-veiculo-info').style.display = 'none';
+  
+  const select = document.getElementById('func-veiculo-select');
+  if (select) select.value = '';
+}
+
+function funcMostrarVeiculo(placa) {
+  const veiculo = veiculos.find(v => v.placa === placa);
+  if (!veiculo) return;
+  
+  document.getElementById('func-veiculo-info').style.display = 'block';
+  document.getElementById('fv-nome').textContent = veiculo.modelo || '-';
+  document.getElementById('fv-ano').textContent = veiculo.ano ? 'Ano ' + veiculo.ano : '-';
+  document.getElementById('fv-placa').textContent = veiculo.placa || '-';
+  document.getElementById('fv-consumo').textContent = veiculo.consumo ? veiculo.consumo + ' km/L' : '-';
+  document.getElementById('fv-revisao').textContent = veiculo.proximaRevisao ? formatDate(veiculo.proximaRevisao) : '-';
+  
+  // Buscar entregas deste veículo (concluídas)
+  const entregasVeiculo = entregas.filter(e => 
+    e.veiculo && e.veiculo.includes(placa) && e.status === 'concluido'
+  );
+  
+  document.getElementById('fv-fretes').textContent = entregasVeiculo.length;
+  
+  // Calcular gastos extras
+  const gastos = entregasVeiculo.reduce((s, e) => s + (e.pedagioExtra || 0) + (e.custoExtra || 0), 0);
+  document.getElementById('fv-gastos').textContent = 'R$ ' + gastos.toFixed(2).replace('.', ',');
+  
+  // Calcular total faturado
+  const totalFaturado = entregasVeiculo.reduce((s, e) => s + (e.valor || 0), 0);
+  
+  // Mostrar card de total faturado
+  const totalContainer = document.getElementById('total-faturado-container');
+  totalContainer.style.display = 'block';
+  document.getElementById('total-faturado-valor').textContent = 'R$ ' + totalFaturado.toFixed(2).replace('.', ',');
+  document.getElementById('total-faturado-detalhe').textContent = `em ${entregasVeiculo.length} ${entregasVeiculo.length === 1 ? 'entrega' : 'entregas'}`;
+  
+  // Mostrar histórico de cargas
+  renderHistoricoCargasVeiculo(entregasVeiculo);
+  
+  // Buscar último checklist deste veículo
+  const checklistsVeiculo = checklists
+    .filter(c => c.placa === placa)
+    .sort((a, b) => new Date(b.data) - new Date(a.data));
+  
+  if (checklistsVeiculo.length > 0) {
+    const ultimo = checklistsVeiculo[0];
+    const data = new Date(ultimo.data);
+    const dataStr = data.toLocaleDateString('pt-BR');
+    const dias = Math.floor((Date.now() - data) / (24 * 60 * 60 * 1000));
+    
+    let statusText = '';
+    if (dias === 0) statusText = 'Hoje';
+    else if (dias === 1) statusText = 'Ontem';
+    else statusText = `Há ${dias} dias`;
+    
+    document.getElementById('ultimo-checklist-data').innerHTML = 
+      `${statusText} • ${ultimo.resumo?.ok || 0} itens OK ${ultimo.resumo?.atencao > 0 ? '⚠️ ' + ultimo.resumo.atencao : ''}`;
+  } else {
+    document.getElementById('ultimo-checklist-data').innerHTML = 'Nenhum checklist ainda';
+  }
+}
+
+function renderHistoricoCargasVeiculo(entregasVeiculo) {
+  const container = document.getElementById('func-cargas-list-historico');
+  
+  if (!entregasVeiculo.length) {
+    container.innerHTML = '<div class="no-data" style="padding:20px 0">Nenhuma carga realizada com este veículo</div>';
+    return;
+  }
+  
+  // Pegar as 10 mais recentes
+  const recentes = [...entregasVeiculo]
+    .sort((a, b) => new Date(b.data) - new Date(a.data))
+    .slice(0, 10);
+  
+  container.innerHTML = recentes.map(e => {
+    const data = formatDate(e.data);
+    const notas = e.notasFiscais && e.notasFiscais.length > 0 
+      ? e.notasFiscais.slice(0, 3).map(n => `<span class="carga-history-nota">${n.slice(0, 8)}</span>`).join('') 
+      : '';
+    const maisNotas = e.notasFiscais && e.notasFiscais.length > 3 ? `<span class="carga-history-nota">+${e.notasFiscais.length - 3}</span>` : '';
+    
+    return `
+      <div class="carga-history-item">
+        <div class="carga-history-header">
+          <div class="carga-history-route">${e.origem} → ${e.destino}</div>
+          <div class="carga-history-value">R$ ${e.valor.toFixed(2).replace('.', ',')}</div>
+        </div>
+        <div class="carga-history-details">
+          <span class="carga-history-detail">📅 ${data}</span>
+          <span class="carga-history-detail">👤 ${e.cliente}</span>
+          ${e.peso ? `<span class="carga-history-detail">⚖️ ${e.peso} kg</span>` : ''}
+          ${e.km ? `<span class="carga-history-detail">📍 ${e.km} km</span>` : ''}
+        </div>
+        ${e.carga ? `<div style="font-size: 11px; color: var(--text2); margin-bottom: 6px;">📦 ${e.carga} • ${e.embalagem || '—'}</div>` : ''}
+        ${notas || maisNotas ? `
+          <div class="carga-history-notas">
+            ${notas}
+            ${maisNotas}
+          </div>
+        ` : ''}
+        <div class="carga-history-stats">
+          <span class="carga-history-stat">💰 Frete: R$ ${e.valor.toFixed(2).replace('.', ',')}</span>
+          ${e.pedagioExtra ? `<span class="carga-history-stat">🛣️ Pedágio: R$ ${e.pedagioExtra.toFixed(2).replace('.', ',')}</span>` : ''}
+          ${e.custoExtra ? `<span class="carga-history-stat">🔧 Extra: R$ ${e.custoExtra.toFixed(2).replace('.', ',')}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 // ============================================
@@ -3006,8 +3304,12 @@ function limparForm() {
   if (pesoEl) pesoEl.value = '';
   const embalagemEl = document.getElementById('f-embalagem');
   if (embalagemEl) embalagemEl.value = '';
-  const horarioEl = document.getElementById('f-horario-recebimento');
-  if (horarioEl) horarioEl.value = '';
+  
+  // Limpar horários
+  const horarioInicio = document.getElementById('f-horario-inicio');
+  const horarioFim = document.getElementById('f-horario-fim');
+  if (horarioInicio) horarioInicio.value = '';
+  if (horarioFim) horarioFim.value = '';
 }
 
 function salvarEntrega() {
@@ -3023,6 +3325,19 @@ function salvarEntrega() {
   
   const notasValidas = notasFiscais.filter(n => n && n.trim() !== '');
   
+  // Formatar horário de recebimento
+  const horarioInicio = document.getElementById('f-horario-inicio')?.value;
+  const horarioFim = document.getElementById('f-horario-fim')?.value;
+  let horarioRecebimento = '';
+  
+  if (horarioInicio && horarioFim) {
+    horarioRecebimento = `${horarioInicio} às ${horarioFim}`;
+  } else if (horarioInicio) {
+    horarioRecebimento = horarioInicio;
+  } else if (horarioFim) {
+    horarioRecebimento = horarioFim;
+  }
+  
   const entrega = {
     id: Date.now(),
     data,
@@ -3032,7 +3347,7 @@ function salvarEntrega() {
     notasFiscais: notasValidas,
     peso: parseFloat(document.getElementById('f-peso')?.value) || null,
     embalagem: document.getElementById('f-embalagem')?.value || '',
-    horarioRecebimento: document.getElementById('f-horario-recebimento')?.value || '',
+    horarioRecebimento: horarioRecebimento,
     carga: document.getElementById('f-carga')?.value || '',
     valor: parseFloat(document.getElementById('f-valor')?.value) || 0,
     km: parseFloat(document.getElementById('f-km')?.value) || 0,
@@ -3047,6 +3362,12 @@ function salvarEntrega() {
   }
   
   limparForm();
+  
+  // Adicionar um campo de nota vazio para o próximo cadastro
+  setTimeout(() => {
+    adicionarCampoNota();
+  }, 100);
+  
   alert('Entrega salva com sucesso!');
 }
 
@@ -3056,6 +3377,92 @@ function salvarEntrega() {
 function recalcularCusto() {}
 function toggleCusto(tipo) {}
 function salvarConfigCusto() {}
+
+// ============================================
+// FUNÇÕES DE CHECKLIST
+// ============================================
+function abrirChecklistVeiculo() {
+  const placa = document.getElementById('fv-placa')?.textContent;
+  if (!placa || placa === '-') {
+    showToast('⚠️ Selecione um veículo primeiro');
+    return;
+  }
+  
+  const veiculo = veiculos.find(v => v.placa === placa);
+  if (!veiculo) return;
+  
+  // Implementar abertura do modal de checklist
+  showToast('🔧 Funcionalidade de checklist em desenvolvimento');
+}
+
+function renderChecklistsHistorico() {
+  const container = document.getElementById('checklists-historico-container');
+  if (!container) return;
+  
+  if (!checklists.length) {
+    container.innerHTML = '<div class="no-data"><div class="no-data-icon">📋</div>Nenhum checklist realizado ainda.</div>';
+    return;
+  }
+  
+  // Ordenar por data (mais recente primeiro)
+  const sorted = [...checklists].sort((a, b) => new Date(b.data) - new Date(a.data));
+  
+  container.innerHTML = sorted.map(c => {
+    const data = new Date(c.data);
+    const dataStr = data.toLocaleDateString('pt-BR') + ' às ' + data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    
+    return `
+      <div class="checklist-card">
+        <div class="checklist-card-header">
+          <div class="checklist-avatar">🔧</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 700;">${c.veiculoNome || 'Veículo'} — ${c.placa}</div>
+            <div style="font-size: 11px; color: var(--text2);">${dataStr}</div>
+          </div>
+          <div style="text-align: right;">
+            <span class="badge" style="background: rgba(0,255,136,0.1); color: var(--green);">${c.resumo?.ok || 0} OK</span>
+            ${c.resumo?.atencao > 0 ? 
+              `<span class="badge" style="background: rgba(255,107,53,0.1); color: var(--accent2); margin-left: 5px;">${c.resumo.atencao} ⚠️</span>` 
+              : ''}
+          </div>
+        </div>
+        
+        <div style="margin-bottom: 10px;">
+          <div style="font-size: 12px; font-weight: 600; margin-bottom: 5px;">👤 Motorista: ${c.motoristaNome || '—'}</div>
+          <div class="checklist-items-summary">
+            ${c.itens ? c.itens.map(item => `
+              <span class="checklist-item-tag ${item.status}">
+                ${item.icone} ${item.nome} ${item.status === 'attention' ? '⚠️' : '✓'}
+              </span>
+            `).join('') : ''}
+          </div>
+        </div>
+
+        ${c.comentarios ? `
+          <div style="background: rgba(0,0,0,0.2); border-radius: 10px; padding: 10px; margin: 10px 0;">
+            <div style="font-size: 11px; color: var(--text2); margin-bottom: 3px;">📝 Comentários:</div>
+            <div style="font-size: 13px;">${c.comentarios}</div>
+          </div>
+        ` : ''}
+
+        ${c.fotos && c.fotos.length > 0 ? `
+          <div>
+            <div style="font-size: 11px; color: var(--text2); margin-bottom: 5px;">📸 Fotos (${c.fotos.length}):</div>
+            <div class="foto-grid">
+              ${c.fotos.map(foto => `
+                <img src="${foto}" onclick="window.open('${foto}')" style="cursor: pointer;">
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function atualizarFiltrosChecklist() {
+  // Implementar filtros se necessário
+}
 
 // ============================================
 // FUNÇÕES DE AVATAR
@@ -3127,6 +3534,12 @@ function renderAvatar() {
 // ============================================
 // FUNÇÕES DE UTILIDADE
 // ============================================
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const [year, month, day] = dateStr.split('-');
+  return `${day}/${month}/${year}`;
+}
+
 function contarEmpresa() {
   const v = document.getElementById('c-empresa')?.value || '';
   const el = document.getElementById('empresa-chars');
@@ -3161,13 +3574,6 @@ function closeModal(id) {
 function renderHistorico() {}
 function renderRankings() {}
 function renderAtivas() {}
-function renderChecklistsHistorico() {}
-function atualizarFiltrosChecklist() {}
-function abrirChecklistVeiculo() {
-  showToast('🔧 Checklist em desenvolvimento');
-}
-function funcSelecionarVeiculo() {}
-function funcLimparVeiculo() {}
 
 // ============================================
 // FUNÇÕES DE RASTREIO
