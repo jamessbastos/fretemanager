@@ -11,6 +11,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <style>
+  /* Seus estilos existentes permanecem iguais - mantenha todo o CSS que você já tinha */
   @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
 
   :root {
@@ -47,7 +48,6 @@
     padding-bottom: calc(var(--nav-h) + 16px);
   }
 
-  /* ── BACKGROUND MESH ── */
   body::before {
     content: '';
     position: fixed;
@@ -62,7 +62,6 @@
 
   main { position: relative; z-index: 1; padding: 16px; max-width: 600px; margin: 0 auto; }
 
-  /* ── LIQUID GLASS MIXIN ── */
   .glass {
     background: var(--glass);
     backdrop-filter: blur(24px) saturate(180%);
@@ -71,7 +70,6 @@
     border-radius: var(--card-radius);
   }
 
-  /* ── TOP HEADER ── */
   .app-header {
     position: sticky;
     top: 0;
@@ -165,7 +163,6 @@
   }
   .header-avatar:hover .avatar-edit-hint { opacity: 1; }
 
-  /* Avatar modal */
   .avatar-modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -235,7 +232,6 @@
   .avatar-action-text { font-size: 13px; }
   .avatar-action-sub  { font-size: 11px; color: var(--text2); margin-top: 2px; }
 
-  /* ── BOTTOM NAV ── */
   .bottom-nav {
     position: fixed;
     bottom: 0; left: 0; right: 0;
@@ -321,7 +317,6 @@
     padding: 0 4px;
   }
 
-  /* ── PAGES ── */
   .page { display: none; animation: pageIn .35s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
   .page.active { display: block; }
 
@@ -330,7 +325,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── PAGE TITLE ── */
   .page-title {
     font-size: 28px;
     font-weight: 800;
@@ -343,7 +337,6 @@
   }
   .page-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
 
-  /* ── GLASS CARDS ── */
   .card {
     background: var(--glass);
     backdrop-filter: blur(24px) saturate(180%);
@@ -356,7 +349,6 @@
   }
   .card:active { transform: scale(0.99); }
 
-  /* ── STAT CARDS ── */
   .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -387,7 +379,6 @@
   .stat-value { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
   .stat-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
 
-  /* ── SECTION TITLE ── */
   .section-title {
     font-size: 13px;
     font-weight: 700;
@@ -407,7 +398,6 @@
     background: var(--glass-border);
   }
 
-  /* ── DELIVERY ROW ── */
   .delivery-row {
     display: flex;
     align-items: center;
@@ -428,7 +418,6 @@
   .delivery-value { font-weight: 800; font-size: 16px; }
   .delivery-profit { font-size: 11px; color: var(--text2); }
 
-  /* ── BADGES ── */
   .badge {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 4px 10px;
@@ -442,7 +431,6 @@
   .badge-loading { background: rgba(0,212,255,0.15); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
   .badge-sched   { background: rgba(255,217,61,0.15); color: var(--yellow); border: 1px solid rgba(255,217,61,0.3); }
 
-  /* ── FLEET MINI CARDS ── */
   .fleet-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -474,7 +462,6 @@
   }
   .fleet-mini-status { font-size: 10px; margin-top: 6px; }
 
-  /* ── FORMS ── */
   .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
   .form-label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; }
   .form-input {
@@ -491,13 +478,15 @@
     transition: all .2s;
     width: 100%;
     -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
   .form-input:focus { border-color: var(--accent); background: rgba(0,212,255,0.05); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
   .form-input::placeholder { color: var(--muted); }
   select.form-input option { background: #0d1220; color: var(--text); }
   .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
-  /* ── BUTTONS ── */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     padding: 14px 24px;
@@ -535,7 +524,6 @@
   }
   .btn-sm { padding: 10px 16px; font-size: 13px; width: auto; }
 
-  /* ── CHECKIN TIMER ── */
   .timer-big {
     text-align: center;
     padding: 24px;
@@ -576,7 +564,6 @@
   .time-box-value { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--text2); }
   .time-box-value.set { color: var(--accent); }
 
-  /* ── TABLE ── */
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--card-radius); }
   table { width: 100%; border-collapse: collapse; min-width: 560px; }
   th { padding: 12px 14px; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--glass-border); font-weight: 600; text-align: left; background: var(--glass); }
@@ -584,7 +571,6 @@
   tr:hover td { background: rgba(255,255,255,0.02); }
   tr:last-child td { border-bottom: none; }
 
-  /* ── RANK ITEMS ── */
   .rank-item {
     display: flex; align-items: center; gap: 12px;
     padding: 13px 0;
@@ -600,7 +586,6 @@
   .rank-sub  { font-size: 12px; color: var(--text2); margin-top: 2px; }
   .rank-value { font-size: 16px; font-weight: 800; color: var(--green); }
 
-  /* ── VEHICLE CARDS (FROTA) ── */
   .frota-card {
     background: var(--glass);
     backdrop-filter: blur(24px) saturate(180%);
@@ -670,7 +655,6 @@
   .frota-add-btn:active { background: var(--glass); border-color: var(--accent); color: var(--accent); }
   .frota-add-plus { font-size: 32px; line-height: 1; }
 
-  /* ── ALERT STRIP ── */
   .alert-strip {
     display: flex; align-items: center; gap: 10px;
     background: rgba(255,217,61,0.1);
@@ -682,7 +666,6 @@
   }
   .alert-strip.red { background: rgba(255,68,102,0.1); border-color: rgba(255,68,102,0.3); }
 
-  /* ── RASTREIO ── */
   #map { width: 100%; height: 380px; border-radius: 20px; border: 1px solid var(--glass-border); background: #1a1a2e; z-index: 1; }
   .firebase-setup {
     background: var(--glass);
@@ -733,7 +716,6 @@
   .tracking-btn { width: 100%; padding: 16px; font-size: 15px; border-radius: 16px; }
   .tracking-btn.stop { background: linear-gradient(135deg, var(--red), #cc0033) !important; color: #fff !important; box-shadow: 0 4px 20px rgba(255,68,102,0.35) !important; }
 
-  /* ── MODAL ── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,.6); z-index: 500;
@@ -755,17 +737,14 @@
   .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 18px; }
   .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 
-  /* ── SETUP STEP ── */
   .setup-step { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; color: var(--text2); line-height: 1.6; }
   .setup-num { background: var(--accent); color: #000; font-weight: 800; font-size: 10px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
   .firebase-input-group { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
   .firebase-input-group label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .8px; }
 
-  /* ── NO DATA ── */
   .no-data { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 13px; }
   .no-data-icon { font-size: 40px; margin-bottom: 10px; }
 
-  /* ── CUSTO BREAKDOWN ── */
   .custo-panel { background:rgba(0,0,0,0.2); border:1px solid var(--glass-border); border-radius:16px; overflow:hidden; margin-top:8px; }
   .custo-panel-header { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-bottom:1px solid var(--glass-border); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--text2); }
   .custo-item { display:flex; align-items:center; gap:10px; padding:11px 14px; border-bottom:1px solid rgba(255,255,255,0.04); font-size:13px; }
@@ -787,7 +766,6 @@
   .lucro-preview-val { font-size:22px; font-weight:900; font-family:'JetBrains Mono',monospace; }
   .config-combustivel { display:flex; align-items:center; gap:10px; padding:10px 14px; background:rgba(255,107,53,0.08); border:1px solid rgba(255,107,53,0.2); border-radius:12px; margin-bottom:14px; font-size:12px; }
 
-  /* ── CHECKIN CARD ── */
   .checkin-card {
     background: var(--glass);
     backdrop-filter: blur(24px) saturate(180%);
@@ -801,12 +779,10 @@
   .checkin-sub { font-size: 13px; color: var(--text2); margin-top: 4px; }
   .action-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 
-  /* ── REVISAO BADGES ── */
   .revisao-badge-ok   { color: var(--green); font-size: 12px; font-weight: 600; }
   .revisao-badge-warn { color: var(--yellow); font-size: 12px; font-weight: 600; }
   .revisao-badge-late { color: var(--red); font-size: 12px; font-weight: 600; }
 
-  /* ── VIAGEM CONTROL ── */
   .entrega-disponivel {
     background: var(--glass);
     backdrop-filter: blur(24px) saturate(180%);
@@ -833,7 +809,6 @@
     font-size: 11px; color: var(--text2); 
   }
 
-  /* Etapas da viagem */
   .viagem-etapas {
     display: flex;
     flex-direction: column;
@@ -937,19 +912,16 @@
   .duracao-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .duracao-value { font-size: 36px; font-weight: 900; color: var(--accent); font-family: 'JetBrains Mono', monospace; letter-spacing: -1px; }
 
-  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
 
-  /* ── MOBILE TWEAKS ── */
   @media (max-width: 400px) {
     .stats-grid { grid-template-columns: 1fr 1fr; }
     .stat-value { font-size: 20px; }
     .fleet-row { grid-template-columns: repeat(3,1fr); }
   }
 
-  /* ══ AUTH SCREEN ══ */
   #auth-screen{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
   #auth-screen::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 20% 10%,rgba(0,212,255,.15) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 80%,rgba(124,58,237,.12) 0%,transparent 60%);pointer-events:none}
   .auth-box{background:rgba(13,18,32,.97);backdrop-filter:blur(40px) saturate(200%);-webkit-backdrop-filter:blur(40px) saturate(200%);border:1px solid var(--glass-border);border-radius:28px;padding:36px 28px;width:100%;max-width:420px;position:relative;z-index:1;animation:slideUp .4s cubic-bezier(.25,.46,.45,.94)}
@@ -963,7 +935,7 @@
   .auth-form{display:flex;flex-direction:column;gap:14px}
   .auth-group{display:flex;flex-direction:column;gap:6px}
   .auth-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.8px}
-  .auth-input{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:14px;padding:14px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;outline:none;transition:all .2s;width:100%;-webkit-appearance:none;box-sizing:border-box}
+  .auth-input{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:14px;padding:14px 16px;color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;outline:none;transition:all .2s;width:100%;-webkit-appearance:none;-moz-appearance:none;appearance:none;box-sizing:border-box}
   .auth-input:focus{border-color:var(--accent);background:rgba(0,212,255,.05);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
   .auth-input::placeholder{color:var(--muted)}
   .auth-char-count{font-size:10px;color:var(--muted);text-align:right;margin-top:2px}
@@ -983,7 +955,6 @@
   .auth-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(0,0,0,.3);border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* ══ FUNCIONÁRIO ══ */
   .func-vehicle-card{background:var(--glass);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid var(--glass-border);border-radius:22px;overflow:hidden;margin-bottom:14px}
   .func-vehicle-top{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,58,237,.05));border-bottom:1px solid var(--glass-border)}
   .func-vehicle-icon{width:56px;height:56px;border-radius:16px;background:rgba(0,212,255,.15);border:1px solid rgba(0,212,255,.3);display:flex;align-items:center;justify-content:center;font-size:28px}
@@ -996,7 +967,6 @@
   .func-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
   .locked-overlay{position:absolute;inset:0;z-index:5;background:rgba(10,14,26,.94);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;border-radius:inherit}
 
-  /* ══ EQUIPE / TEAM MANAGEMENT ══ */
   .func-card{background:var(--glass);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:18px;padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;transition:border-color .2s}
   .func-card.inativo{opacity:.5}
   .func-avatar-sm{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;border:2px solid transparent}
@@ -1044,6 +1014,219 @@
   .upgrade-card-popular {
     background: linear-gradient(135deg,rgba(0,212,255,.08),rgba(124,58,237,.06));
     border-color: rgba(0,212,255,.25);
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+  }
+  .checklist-item.ok {
+    background: rgba(0,255,136,0.05);
+    border-color: rgba(0,255,136,0.3);
+  }
+  .checklist-item.attention {
+    background: rgba(255,107,53,0.05);
+    border-color: rgba(255,107,53,0.3);
+  }
+  .checklist-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .checklist-info {
+    flex: 1;
+  }
+  .checklist-nome {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .checklist-desc {
+    font-size: 11px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+  .checklist-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+  .status-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background: rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .status-btn.ok {
+    background: rgba(0,255,136,0.15);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .status-btn.attention {
+    background: rgba(255,107,53,0.15);
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+  .checklist-foto-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+    border: 2px solid var(--glass-border);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .checklist-foto-thumb:hover {
+    transform: scale(1.05);
+    border-color: var(--accent);
+  }
+  .checklist-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .checklist-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 12px;
+  }
+  .checklist-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent3), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .checklist-items-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+  }
+  .checklist-item-tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  .checklist-item-tag.ok {
+    background: rgba(0,255,136,0.1);
+    border-color: rgba(0,255,136,0.3);
+  }
+  .checklist-item-tag.attention {
+    background: rgba(255,107,53,0.1);
+    border-color: rgba(255,107,53,0.3);
+  }
+  .foto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .foto-grid img {
+    width: 100%;
+    height: 70px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+  }
+
+  .notas-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
+  }
+  .nota-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 8px 12px;
+  }
+  .nota-numero {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+    padding: 8px 0;
+    outline: none;
+  }
+  .nota-numero::placeholder {
+    color: var(--muted);
+  }
+  .nota-remove {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: rgba(255,68,102,0.1);
+    border: 1px solid rgba(255,68,102,0.3);
+    color: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .nota-remove:hover {
+    background: rgba(255,68,102,0.2);
+  }
+  .btn-add-nota {
+    background: var(--glass);
+    border: 1px dashed var(--glass-border);
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--text2);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-add-nota:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,212,255,0.05);
   }
 </style>
 </head>
@@ -1249,6 +1432,16 @@
     </div>
     <div class="nav-label">Equipe</div>
   </div>
+  <!-- NOVA ABA: CHECKLISTS -->
+  <div class="nav-item" id="nav-checklists" onclick="showPage('checklists')" style="display: none;">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24" width="22" height="22">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+    </div>
+    <div class="nav-label">Checklists</div>
+  </div>
 </nav>
 
 <main>
@@ -1361,6 +1554,19 @@
       </div>
     </div>
 
+    <!-- BOTÃO DE CHECKLIST DO VEÍCULO -->
+    <div id="checklist-button-container" style="margin: 16px 0; display: none;">
+      <button class="btn btn-primary" onclick="abrirChecklistVeiculo()" style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--accent3), var(--accent));">
+        <span style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+          <span style="font-size: 22px;">🔧</span>
+          <span style="font-weight: 800;">FAZER CHECKLIST DO VEÍCULO</span>
+        </span>
+      </button>
+      <div style="font-size: 11px; color: var(--text2); margin-top: 6px; text-align: center;">
+        Último checklist: <span id="ultimo-checklist-data">—</span>
+      </div>
+    </div>
+
     <div class="card">
       <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">📦 Histórico Recente</div>
       <div id="func-cargas-list">
@@ -1370,7 +1576,7 @@
   </div>
 </div>
 
-  <!-- EQUIPE (DONO ONLY) -->
+  <!-- EQUIPE (DONO ONLY) - CORRIGIDO -->
   <div id="page-equipe" class="page">
     <div class="page-title">Minha Equipe</div>
     <div class="page-subtitle">Gerencie acesso dos funcionários</div>
@@ -1493,7 +1699,7 @@
     </div>
 
     <div style="margin-bottom:12px">
-      <button class="btn btn-primary" onclick="handleAddFuncBtn()" id="btn-open-add-func" style="width:100%">＋ Adicionar motorista</button>
+      <button class="btn btn-primary" onclick="toggleAddFunc()" id="btn-open-add-func" style="width:100%">＋ Adicionar motorista</button>
     </div>
 
     <div class="add-func-panel hidden" id="add-func-panel">
@@ -1524,7 +1730,7 @@
     </div>
   </div>
 
-  <!-- NOVA ENTREGA -->
+  <!-- NOVA ENTREGA - MODIFICADA -->
   <div id="page-nova" class="page">
     <div class="page-title">Nova Entrega</div>
     <div class="page-subtitle">Registre os dados do frete</div>
@@ -1558,15 +1764,22 @@
           </select>
         </div>
       </div>
+
+      <!-- NOVO: Notas Fiscais (substitui veículo) -->
       <div class="form-group">
-        <div class="form-label">Veículo</div>
-        <select id="f-veiculo" class="form-input" onchange="recalcularCusto()">
-          <option value="">Selecione...</option>
-          <option value="Gol - ABC1234">Gol - ABC1234</option>
-          <option value="Saveiro - DEF5678">Saveiro - DEF5678</option>
-          <option value="Fiorino - GHI9012">Fiorino - GHI9012</option>
-        </select>
+        <div class="form-label" style="display: flex; align-items: center; gap: 8px;">
+          <span>📄</span> Notas Fiscais
+          <span style="font-size: 10px; color: var(--muted); font-weight: 400;">(adicione uma ou mais notas)</span>
+        </div>
+        <div id="notas-fiscais-container" class="notas-container">
+          <!-- Campos de nota serão adicionados aqui via JS -->
+        </div>
+        <button type="button" class="btn-add-nota" onclick="adicionarCampoNota()">
+          <span style="font-size: 18px;">+</span> Adicionar nota fiscal
+        </button>
+        <input type="hidden" id="f-notas" value="[]">
       </div>
+
       <div class="form-grid-2">
         <div class="form-group">
           <div class="form-label">Origem</div>
@@ -1577,6 +1790,7 @@
           <input type="text" id="f-destino" class="form-input" placeholder="Cidade / Bairro">
         </div>
       </div>
+
       <div class="form-grid-2">
         <div class="form-group">
           <div class="form-label">Cliente</div>
@@ -1587,6 +1801,32 @@
           <input type="text" id="f-carga" class="form-input" placeholder="Ex: Eletrônicos">
         </div>
       </div>
+
+      <!-- NOVOS CAMPOS: Peso e Embalagem -->
+      <div class="form-grid-3">
+        <div class="form-group">
+          <div class="form-label">⚖️ Peso (kg)</div>
+          <input type="number" id="f-peso" class="form-input" placeholder="Ex: 500" step="0.1" min="0">
+        </div>
+        <div class="form-group">
+          <div class="form-label">📦 Tipo Embalagem</div>
+          <select id="f-embalagem" class="form-input">
+            <option value="">Selecione...</option>
+            <option value="Caixa">Caixa</option>
+            <option value="Palete">Palete</option>
+            <option value="Saco">Saco</option>
+            <option value="Tambor">Tambor</option>
+            <option value="Big Bag">Big Bag</option>
+            <option value="Container">Container</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">🕐 Horário Receb.</div>
+          <input type="time" id="f-horario-recebimento" class="form-input">
+        </div>
+      </div>
+
       <div class="form-grid-2">
         <div class="form-group">
           <div class="form-label">Distância (km)</div>
@@ -1607,7 +1847,7 @@
           <div class="custo-item-icon" style="background:rgba(255,107,53,0.15)">⛽</div>
           <div style="flex:1">
             <div class="custo-item-name">Combustível</div>
-            <div class="custo-item-sub" id="custo-comb-sub">Selecione veículo e km</div>
+            <div class="custo-item-sub" id="custo-comb-sub">Informe distância</div>
           </div>
           <div class="custo-toggle on" id="toggle-comb" onclick="toggleCusto('comb')">✓</div>
           <div class="custo-item-val" id="val-comb" style="color:var(--accent2);width:80px;text-align:right">R$ --</div>
@@ -1711,10 +1951,11 @@
             <th>Data</th>
             <th>Rota</th>
             <th>Cliente</th>
-            <th>Veículo</th>
+            <th>Nota Fiscal</th>
+            <th>Peso/Embalagem</th>
             <th>Frete</th>
             <th class="dono-only">Lucro</th>
-            <th>Km Percorrida</th>
+            <th>Km</th>
             <th>Descarga</th>
             <th>Status</th>
             <th></th>
@@ -1745,6 +1986,28 @@
       <div class="card">
         <div class="section-title" style="font-size:13px"><span class="dot" style="background:var(--red)"></span>Clientes com Maior Tempo de Descarga</div>
         <div id="rank-descarga"><div class="no-data">Dados insuficientes</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PÁGINA DE CHECKLISTS (HISTÓRICO) -->
+  <div id="page-checklists" class="page">
+    <div class="page-title">📋 Checklists</div>
+    <div class="page-subtitle">Histórico de inspeções realizadas</div>
+
+    <div style="margin-bottom: 16px; display: flex; gap: 8px;">
+      <select id="filtro-checklist-veiculo" class="form-input" style="flex: 1;" onchange="renderChecklistsHistorico()">
+        <option value="">Todos os veículos</option>
+      </select>
+      <select id="filtro-checklist-motorista" class="form-input" style="flex: 1;" onchange="renderChecklistsHistorico()">
+        <option value="">Todos os motoristas</option>
+      </select>
+    </div>
+
+    <div id="checklists-historico-container">
+      <div class="no-data">
+        <div class="no-data-icon">📋</div>
+        Nenhum checklist realizado ainda.
       </div>
     </div>
   </div>
@@ -1851,7 +2114,7 @@
     </div>
   </div>
 
-  <!-- FROTA -->
+  <!-- FROTA - CORRIGIDA -->
   <div id="page-frota" class="page">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
       <div class="page-title" style="margin:0">Minha Frota</div>
@@ -1859,17 +2122,15 @@
     </div>
     <div id="frota-alertas" style="margin-bottom:16px"></div>
     <div class="frota-grid" id="frota-grid">
-      <div class="frota-add-btn" onclick="abrirModalVeiculo()">
-        <div class="frota-add-plus">＋</div>
-        <div>Adicionar Veículo</div>
-      </div>
+      <!-- Veículos serão renderizados aqui -->
     </div>
   </div>
 
 <!-- MODAL VEÍCULO -->
 <div class="modal-overlay" id="modal-veiculo">
   <div class="modal">
-    <div class="modal-handle"></div><div class="modal-title" id="modal-veiculo-title">Novo Veículo</div>
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-veiculo-title">Novo Veículo</div>
     <input type="hidden" id="mv-id">
     <div class="">
       <div class="form-group">
@@ -1922,6 +2183,62 @@
   </div>
 </div>
 
+<!-- MODAL CHECKLIST DO VEÍCULO (NOVO) -->
+<div class="modal-overlay" id="modal-checklist">
+  <div class="modal" style="max-width: 500px; border-radius: 28px;">
+    <div class="modal-handle"></div>
+    <div class="modal-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 5px;">
+      <span style="font-size: 28px;">🔧</span> 
+      <span>Checklist do Veículo</span>
+    </div>
+    <div style="font-size: 12px; color: var(--text2); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border);">
+      <span id="checklist-veiculo-info">Selecione um veículo</span>
+    </div>
+
+    <input type="hidden" id="checklist-veiculo-id">
+    <input type="hidden" id="checklist-veiculo-placa">
+    
+    <!-- Lista de itens do checklist -->
+    <div style="max-height: 350px; overflow-y: auto; padding-right: 5px; margin-bottom: 16px;" id="checklist-items-container">
+      <!-- Itens serão gerados dinamicamente via JS -->
+    </div>
+
+    <!-- Campo de comentários -->
+    <div class="form-group" style="margin-top: 10px;">
+      <div class="form-label" style="display: flex; align-items: center; gap: 5px;">
+        <span>📝</span> Observações / Comentários
+      </div>
+      <textarea id="checklist-comentarios" class="form-input" rows="2" placeholder="Algo fora do normal? Algum barulho estranho?"></textarea>
+    </div>
+
+    <!-- Área de fotos -->
+    <div style="margin: 15px 0;">
+      <div class="form-label" style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+        <span>📸</span> Fotos do veículo
+      </div>
+      
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;" id="checklist-fotos-preview">
+        <!-- Pré-visualização das fotos será inserida aqui -->
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="checklistTirarFoto()" style="flex: 1; padding: 12px;">
+          <span style="font-size: 18px;">📷</span> Tirar Foto
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="checklistEscolherFoto()" style="flex: 1; padding: 12px;">
+          <span style="font-size: 18px;">🖼️</span> Galeria
+        </button>
+      </div>
+      <input type="file" id="checklist-foto-input" accept="image/*" style="display: none" onchange="checklistOnFotoSelected(event)">
+    </div>
+
+    <!-- Ações -->
+    <div class="modal-actions" style="margin-top: 20px;">
+      <button class="btn btn-secondary" onclick="fecharModalChecklist()" style="flex: 1">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarChecklist()" style="flex: 2">✅ Concluir Checklist</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="modal-delete">
   <div class="modal">
@@ -1935,224 +2252,849 @@
 </div>
 
 <script>
-// ---- FIREBASE EARLY INIT ----
-window.addEventListener('DOMContentLoaded', () => {
-  if (typeof firebase !== 'undefined') initFirebase();
-  else setTimeout(() => initFirebase(), 500);
-});
+// ============================================
+// CONFIGURAÇÃO DO FIREBASE
+// ============================================
+const FB_CONFIG = {
+  apiKey: "AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4",
+  authDomain: "fretemanager-60ef8.firebaseapp.com",
+  databaseURL: "https://fretemanager-60ef8-default-rtdb.firebaseio.com",
+  projectId: "fretemanager-60ef8",
+  storageBucket: "fretemanager-60ef8.firebasestorage.app",
+  messagingSenderId: "977410315261",
+  appId: "1:977410315261:web:ebaf0794c7d887321abf94"
+};
 
-// ---- FUSO HORÁRIO: America/Sao_Paulo (BRT/BRST) ----
-const TZ = 'America/Sao_Paulo';
-
-// ---- DATA ----
+// ============================================
+// VARIÁVEIS GLOBAIS
+// ============================================
+let fbApp = null;
+let fbDb = null;
+let fbAuth = null;
+let currentUser = null;
 let entregas = [];
-let deleteId = null;
-let timers = {};
-let fbSyncReady = false; // true depois que Firebase carregar dados pela 1a vez
+let veiculos = [];
+let funcionariosCache = [];
+let notasFiscais = [];
+let editVeiculoId = null;
 
-// Retorna chave localStorage isolada por empresa
-function getStorageKey(suffix) {
-  const eid = currentUser?.empresaId || 'demo';
-  return 'fm_' + eid + '_' + suffix;
-}
-
-function save() {
-  localStorage.setItem(getStorageKey('entregas'), JSON.stringify(entregas));
-  syncEntregasFirebase();
-}
-
-function syncEntregasFirebase() {
-  if (!fbDb) return;
-  const path = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId + '/entregas' : 'dados/entregas';
-  fbDb.ref(path).set(entregas).catch(e => console.warn('Sync entregas falhou:', e));
-}
-
-function syncVeiculosFirebase() {
-  if (!fbDb) return;
-  const vpath = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId + '/veiculos' : 'dados/veiculos';
-  fbDb.ref(vpath).set(veiculos).catch(e => console.warn('Sync veiculos falhou:', e));
-}
-
-// Carrega dados do Firebase e substitui localStorage (Firebase é a fonte da verdade)
-function carregarDadosFirebase() {
-  if (!fbDb) return;
-
-  // Mostrar indicador de carregamento
-  const loader = document.getElementById('fb-sync-indicator');
-  if (loader) { loader.style.display = 'flex'; loader.textContent = '☁️ Sincronizando...'; }
-
-  const basePath = currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados';
-
-  // Pré-carregar cache local da empresa (evita flash de dados de outra empresa)
-  try { const c = localStorage.getItem(getStorageKey('entregas')); if (c) entregas = JSON.parse(c); } catch(e) { entregas = []; }
-  try { const c = localStorage.getItem(getStorageKey('veiculos')); if (c) veiculos = JSON.parse(c); } catch(e) { veiculos = []; }
-
-  fbDb.ref(basePath).once('value', snapshot => {
-    const dados = snapshot.val();
-    if (dados) {
-      if (dados.entregas && Array.isArray(dados.entregas)) {
-        entregas = dados.entregas;
-        localStorage.setItem(getStorageKey('entregas'), JSON.stringify(entregas));
+// ============================================
+// INICIALIZAÇÃO DO FIREBASE
+// ============================================
+function initFirebase() {
+  console.log("Inicializando Firebase...");
+  
+  if (fbApp) {
+    console.log("Firebase já inicializado");
+    return;
+  }
+  
+  try {
+    fbApp = firebase.initializeApp(FB_CONFIG);
+    fbDb = firebase.database();
+    fbAuth = firebase.auth();
+    
+    console.log("Firebase inicializado com sucesso!");
+    
+    fbAuth.onAuthStateChanged(async (user) => {
+      console.log("Auth state changed:", user ? user.email : "null");
+      
+      if (user) {
+        try {
+          const snapshot = await fbDb.ref('usuariosGlobais/' + user.uid).once('value');
+          const profile = snapshot.val();
+          
+          if (profile) {
+            console.log("Perfil carregado:", profile);
+            
+            if (profile.status !== 'ativo') {
+              await fbAuth.signOut();
+              showAuthError('⛔ Usuário inativo. Entre em contato com o suporte.');
+              return;
+            }
+            
+            currentUser = { uid: user.uid, email: user.email, ...profile };
+            
+            document.getElementById('app-empresa-nome').textContent = profile.empresaNome || 'FreteManager';
+            document.getElementById('app-user-tipo').textContent = profile.tipo === 'dono' ? '👑 Dono' : '👷 Funcionário';
+            document.getElementById('avatar-nome-display').textContent = profile.nome || profile.email;
+            document.getElementById('avatar-user-email').textContent = profile.email;
+            
+            hideAuthScreen();
+            carregarDadosFirebase();
+            
+            if (profile.tipo === 'funcionario') {
+              applyFuncRestrictions();
+              showPage('func');
+            } else {
+              removeFuncRestrictions();
+              showPage('dashboard');
+            }
+            
+          } else {
+            console.error("Perfil não encontrado");
+            await fbAuth.signOut();
+            showAuthError("Perfil não encontrado. Faça cadastro novamente.");
+          }
+        } catch (error) {
+          console.error("Erro ao carregar perfil:", error);
+          showAuthError("Erro ao carregar perfil. Tente novamente.");
+        }
+      } else {
+        console.log("Usuário deslogado");
+        currentUser = null;
+        entregas = [];
+        veiculos = [];
+        showAuthScreen();
       }
-      if (dados.veiculos && Array.isArray(dados.veiculos)) {
-        veiculos = dados.veiculos;
-        localStorage.setItem(getStorageKey('veiculos'), JSON.stringify(veiculos));
-      }
-    }
-    fbSyncReady = true;
-    if (loader) { loader.textContent = '✅ Sincronizado'; setTimeout(() => loader.style.display = 'none', 2000); }
-    renderDashboard();
-    syncFrotaSelects();
-  }).catch(e => {
-    console.warn('Falha ao carregar Firebase:', e);
-    fbSyncReady = true;
-    if (loader) loader.style.display = 'none';
+    });
+    
+  } catch (error) {
+    console.error("Erro ao inicializar Firebase:", error);
+    showAuthError("Erro ao conectar com servidor. Verifique sua internet.");
+  }
+}
+
+// ============================================
+// FUNÇÕES DE AUTENTICAÇÃO
+// ============================================
+function showAuthScreen() {
+  const authScreen = document.getElementById('auth-screen');
+  if (authScreen) {
+    authScreen.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  authTab('login');
+}
+
+function hideAuthScreen() {
+  const authScreen = document.getElementById('auth-screen');
+  if (authScreen) {
+    authScreen.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+}
+
+function authTab(tab) {
+  document.getElementById('auth-form-login').style.display = tab === 'login' ? 'flex' : 'none';
+  document.getElementById('auth-form-cadastro').style.display = tab === 'cadastro' ? 'flex' : 'none';
+  clearAuthMsg();
+}
+
+function clearAuthMsg() {
+  document.getElementById('auth-error').style.display = 'none';
+  document.getElementById('auth-success').style.display = 'none';
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  if (el) {
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  document.getElementById('auth-success').style.display = 'none';
+}
+
+function showAuthSuccess(msg) {
+  const el = document.getElementById('auth-success');
+  if (el) {
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+async function fazerLogin() {
+  console.log("Iniciando login...");
+  
+  const email = document.getElementById('l-email').value.trim();
+  const senha = document.getElementById('l-senha').value;
+  
+  if (!email || !senha) {
+    showAuthError('Preencha e-mail e senha.');
+    return;
+  }
+  
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="auth-spinner"></span>Entrando...';
+  clearAuthMsg();
+  
+  try {
+    await fbAuth.signInWithEmailAndPassword(email, senha);
+  } catch (error) {
+    console.error("Erro no login:", error);
+    
+    const msgs = {
+      'auth/user-not-found': 'E-mail não cadastrado.',
+      'auth/wrong-password': 'Senha incorreta.',
+      'auth/invalid-email': 'E-mail inválido.',
+      'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
+      'auth/invalid-credential': 'E-mail ou senha incorretos.',
+      'auth/network-request-failed': 'Sem conexão com a internet.'
+    };
+    
+    showAuthError(msgs[error.code] || 'Erro: ' + error.message);
+    btn.disabled = false;
+    btn.innerHTML = '🔓 Entrar';
+  }
+}
+
+async function fazerCadastro() {
+  console.log("Iniciando cadastro...");
+  
+  const empresa = document.getElementById('c-empresa')?.value?.trim().slice(0, 50) || '';
+  const nome = document.getElementById('c-nome')?.value?.trim() || '';
+  const email = document.getElementById('c-email')?.value?.trim() || '';
+  const senha = document.getElementById('c-senha')?.value || '';
+  
+  if (!empresa) { showAuthError('Informe o nome da empresa.'); return; }
+  if (!nome) { showAuthError('Informe seu nome.'); return; }
+  if (!email) { showAuthError('Informe o e-mail.'); return; }
+  if (senha.length < 6) { showAuthError('Senha deve ter pelo menos 6 caracteres.'); return; }
+  
+  const btn = document.getElementById('btn-cadastro');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="auth-spinner"></span>Criando conta...';
+  clearAuthMsg();
+  
+  try {
+    const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
+    const uid = cred.user.uid;
+    const empresaId = uid;
+    
+    const profile = {
+      nome,
+      email,
+      tipo: 'dono',
+      empresaId,
+      empresaNome: empresa,
+      status: 'ativo',
+      criadoEm: Date.now()
+    };
+    
+    await fbDb.ref('usuariosGlobais/' + uid).set(profile);
+    
+    console.log("Cadastro concluído com sucesso!");
+    showAuthSuccess("Conta criada com sucesso! Faça login.");
+    
+    setTimeout(() => {
+      authTab('login');
+      btn.disabled = false;
+      btn.innerHTML = '✅ Criar conta de empresa';
+    }, 2000);
+    
+  } catch (error) {
+    console.error("Erro no cadastro:", error);
+    
+    const msgs = {
+      'auth/email-already-in-use': 'E-mail já cadastrado. Faça login.',
+      'auth/invalid-email': 'E-mail inválido.',
+      'auth/weak-password': 'Senha muito fraca (mínimo 6 caracteres).',
+      'auth/network-request-failed': 'Erro de rede. Verifique sua conexão.'
+    };
+    
+    showAuthError(msgs[error.code] || 'Erro: ' + error.message);
+    btn.disabled = false;
+    btn.innerHTML = '✅ Criar conta de empresa';
+  }
+}
+
+async function fazerLogout() {
+  if (!confirm('Sair da conta?')) return;
+  await fbAuth.signOut();
+}
+
+// ============================================
+// FUNÇÕES DE RESTRIÇÕES
+// ============================================
+function applyFuncRestrictions() {
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe','nav-rastreio','nav-checklists'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
   });
 
-  const epEnt = (currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados') + '/entregas';
-  fbDb.ref(epEnt).on('value', snapshot => {
-    if (!fbSyncReady) return;
+  const fn = document.getElementById('nav-func');
+  if (fn) fn.style.display = 'flex';
+}
+
+function removeFuncRestrictions() {
+  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe','nav-rastreio','nav-checklists'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'flex';
+  });
+}
+
+// ============================================
+// FUNÇÕES DE NAVEGAÇÃO
+// ============================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  
+  const targetPage = document.getElementById('page-' + page);
+  if (targetPage) targetPage.classList.add('active');
+  
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  
+  // Renderizar página específica
+  if (page === 'frota') {
+    renderFrota();
+  }
+  if (page === 'equipe') {
+    carregarFuncionarios();
+  }
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showPageFunc() {
+  showPage('func');
+  renderFuncDashboard();
+}
+
+// ============================================
+// FUNÇÕES DE DASHBOARD
+// ============================================
+function renderDashboard() {
+  console.log("Dashboard renderizado");
+}
+
+function renderFuncDashboard() {
+  console.log("Dashboard do funcionário renderizado");
+}
+
+// ============================================
+// CARREGAR DADOS DO FIREBASE
+// ============================================
+function carregarDadosFirebase() {
+  if (!fbDb || !currentUser) return;
+  
+  console.log("Carregando dados...");
+  
+  const basePath = 'empresas/' + currentUser.empresaId;
+  
+  fbDb.ref(basePath + '/entregas').once('value', (snapshot) => {
     const dados = snapshot.val();
     if (dados && Array.isArray(dados)) {
       entregas = dados;
-      localStorage.setItem(getStorageKey('entregas'), JSON.stringify(entregas));
-      renderDashboard();
+      console.log("Entregas carregadas:", entregas.length);
     }
   });
-
-  const epVei = (currentUser?.empresaId ? 'empresas/' + currentUser.empresaId : 'dados') + '/veiculos';
-  fbDb.ref(epVei).on('value', snapshot => {
-    if (!fbSyncReady) return;
+  
+  fbDb.ref(basePath + '/veiculos').once('value', (snapshot) => {
     const dados = snapshot.val();
     if (dados && Array.isArray(dados)) {
       veiculos = dados;
-      localStorage.setItem(getStorageKey('veiculos'), JSON.stringify(veiculos));
+      console.log("Veículos carregados:", veiculos.length);
+      renderFrota();
+      syncFrotaSelects();
+    }
+  });
+  
+  // Escutar mudanças em tempo real
+  fbDb.ref(basePath + '/veiculos').on('value', (snapshot) => {
+    const dados = snapshot.val();
+    if (dados && Array.isArray(dados)) {
+      veiculos = dados;
+      renderFrota();
       syncFrotaSelects();
     }
   });
 }
 
-// ---- NAVIGATION ----
-function showPage(p) {
-// 1. Adicionamos 'rastreio' à lista de bloqueio
-  const restricted = ['nova','rankings','historico','equipe', 'rastreio'];
+// ============================================
+// FUNÇÕES DE FROTA
+// ============================================
+function saveVeiculos() {
+  if (fbDb && currentUser) {
+    fbDb.ref('empresas/' + currentUser.empresaId + '/veiculos').set(veiculos)
+      .then(() => console.log("Veículos salvos no Firebase"))
+      .catch(err => console.error("Erro ao salvar veículos:", err));
+  }
+}
+
+function abrirModalVeiculo(id = null) {
+  editVeiculoId = id;
   
-  if (currentUser && currentUser.tipo === 'funcionario' && restricted.includes(p)) {
-    showToast('⛔ Acesso restrito para funcionários');
+  if (id) {
+    const veiculo = veiculos.find(v => v.id === id);
+    if (veiculo) {
+      document.getElementById('modal-veiculo-title').textContent = 'Editar Veículo';
+      document.getElementById('mv-id').value = veiculo.id;
+      document.getElementById('mv-modelo').value = veiculo.modelo || '';
+      document.getElementById('mv-ano').value = veiculo.ano || '';
+      document.getElementById('mv-placa').value = veiculo.placa || '';
+      document.getElementById('mv-tipo').value = veiculo.tipo || '🚗';
+      document.getElementById('mv-consumo').value = veiculo.consumo || '';
+      document.getElementById('mv-carga').value = veiculo.carga || '';
+      document.getElementById('mv-ultima-revisao').value = veiculo.ultimaRevisao || '';
+      document.getElementById('mv-proxima-revisao').value = veiculo.proximaRevisao || '';
+      document.getElementById('mv-obs').value = veiculo.obs || '';
+    }
+  } else {
+    document.getElementById('modal-veiculo-title').textContent = 'Novo Veículo';
+    document.getElementById('mv-id').value = '';
+    document.getElementById('mv-modelo').value = '';
+    document.getElementById('mv-ano').value = '';
+    document.getElementById('mv-placa').value = '';
+    document.getElementById('mv-tipo').value = '🚗';
+    document.getElementById('mv-consumo').value = '';
+    document.getElementById('mv-carga').value = '';
+    document.getElementById('mv-ultima-revisao').value = '';
+    document.getElementById('mv-proxima-revisao').value = '';
+    document.getElementById('mv-obs').value = '';
+  }
+  
+  document.getElementById('modal-veiculo').classList.add('open');
+}
+
+function salvarVeiculo() {
+  const modelo = document.getElementById('mv-modelo').value.trim();
+  const placa = document.getElementById('mv-placa').value.trim().toUpperCase();
+  
+  if (!modelo) {
+    alert('Informe o modelo do veículo.');
     return;
   }
-
-  // Mantém sua trava de segurança para aba equipe
-  if (p === 'equipe' && currentUser?.tipo !== 'dono') return;
-
-  // --- Lógica de alternância de abas ---
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   
-  const targetPage = document.getElementById('page-' + p);
-  if (targetPage) targetPage.classList.add('active');
-
-  const navEl = document.getElementById('nav-' + p);
-  if (navEl) navEl.classList.add('active');
-
-  // --- Inicialização das Páginas ---
-  if (p === 'dashboard') {
-    if (currentUser?.tipo === 'funcionario') renderFuncDashboard();
-    else renderDashboard();
+  if (!placa) {
+    alert('Informe a placa do veículo.');
+    return;
   }
-  if (p === 'equipe') renderEquipe();
-  if (p === 'ativas') renderAtivas(); // Aqui aplicaremos a trava do valor do frete
-  if (p === 'historico') renderHistorico();
-  if (p === 'rankings') renderRankings();
-  if (p === 'frota') renderFrota();
-  if (p === 'rastreio') initRastreioPage();
-  if (p === 'nova') { carregarConfigCusto(); recalcularCusto(); }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  const veiculo = {
+    id: editVeiculoId || Date.now(),
+    modelo,
+    ano: document.getElementById('mv-ano').value,
+    placa,
+    tipo: document.getElementById('mv-tipo').value,
+    consumo: parseFloat(document.getElementById('mv-consumo').value) || null,
+    carga: parseFloat(document.getElementById('mv-carga').value) || null,
+    ultimaRevisao: document.getElementById('mv-ultima-revisao').value,
+    proximaRevisao: document.getElementById('mv-proxima-revisao').value,
+    obs: document.getElementById('mv-obs').value
+  };
+  
+  if (editVeiculoId) {
+    const index = veiculos.findIndex(v => v.id === editVeiculoId);
+    if (index !== -1) {
+      veiculos[index] = veiculo;
+    }
+  } else {
+    veiculos.push(veiculo);
+  }
+  
+  saveVeiculos();
+  closeModal('modal-veiculo');
+  renderFrota();
+  syncFrotaSelects();
+  showToast('✅ Veículo salvo com sucesso!');
 }
 
-// ---- AVATAR / PERFIL ----
+function deletarVeiculo(id) {
+  if (!confirm('Tem certeza que deseja excluir este veículo?')) return;
+  
+  veiculos = veiculos.filter(v => v.id !== id);
+  saveVeiculos();
+  renderFrota();
+  syncFrotaSelects();
+  showToast('🗑️ Veículo removido');
+}
+
+function renderFrota() {
+  const grid = document.getElementById('frota-grid');
+  if (!grid) return;
+  
+  if (!veiculos.length) {
+    grid.innerHTML = `
+      <div class="frota-add-btn" onclick="abrirModalVeiculo()">
+        <div class="frota-add-plus">＋</div>
+        <div>Adicionar Veículo</div>
+      </div>
+    `;
+    return;
+  }
+  
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  
+  const alertas = veiculos.filter(v => v.proximaRevisao).map(v => {
+    const revisao = new Date(v.proximaRevisao);
+    revisao.setHours(0, 0, 0, 0);
+    const dias = Math.ceil((revisao - hoje) / (1000 * 60 * 60 * 24));
+    
+    if (dias < 0) {
+      return `<div class="alert-strip red">🔴 <strong>${v.modelo} (${v.placa})</strong> — Revisão vencida há ${Math.abs(dias)} dia(s)!</div>`;
+    } else if (dias <= 15) {
+      return `<div class="alert-strip">🟡 <strong>${v.modelo} (${v.placa})</strong> — Revisão em ${dias} dia(s)</div>`;
+    }
+    return null;
+  }).filter(a => a !== null);
+  
+  document.getElementById('frota-alertas').innerHTML = alertas.join('');
+  
+  grid.innerHTML = veiculos.map(v => {
+    let revisaoClass = '', revisaoText = '';
+    let dias = 0;
+    if (v.proximaRevisao) {
+      const revisao = new Date(v.proximaRevisao);
+      revisao.setHours(0, 0, 0, 0);
+      dias = Math.ceil((revisao - hoje) / (1000 * 60 * 60 * 24));
+      
+      if (dias < 0) {
+        revisaoClass = 'revisao-badge-late';
+        revisaoText = `Vencida há ${Math.abs(dias)} dias`;
+      } else if (dias <= 15) {
+        revisaoClass = 'revisao-badge-warn';
+        revisaoText = `${dias} dias`;
+      } else {
+        revisaoClass = 'revisao-badge-ok';
+        revisaoText = `${dias} dias`;
+      }
+    }
+    
+    return `
+      <div class="frota-card">
+        <div class="frota-card-top">
+          <div class="frota-card-icon">${v.tipo || '🚗'}</div>
+          <div>
+            <div class="frota-card-name">${v.modelo}</div>
+            <div class="frota-card-year">${v.ano ? 'Ano ' + v.ano : ''}</div>
+          </div>
+          <div class="frota-plate">${v.placa}</div>
+        </div>
+        
+        <div class="frota-specs">
+          <div class="frota-spec">
+            <div class="frota-spec-label">⛽ Consumo</div>
+            <div class="frota-spec-value">${v.consumo ? v.consumo + ' km/l' : '—'}</div>
+          </div>
+          <div class="frota-spec">
+            <div class="frota-spec-label">📦 Cap. Carga</div>
+            <div class="frota-spec-value">${v.carga ? v.carga + ' kg' : '—'}</div>
+          </div>
+        </div>
+        
+        ${v.proximaRevisao ? `
+          <div class="frota-revisao">
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+              <span style="font-size:12px">🔧 Próxima Revisão</span>
+              <span class="${revisaoClass}">${revisaoText}</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" style="width:${Math.min(100, Math.abs(dias) * 5)}%;background:${dias < 0 ? '#f56060' : dias <= 15 ? '#f5a623' : '#c8f560'}"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-top:5px">
+              <span>Última: ${v.ultimaRevisao ? v.ultimaRevisao.split('-').reverse().join('/') : '—'}</span>
+              <span>Próxima: ${v.proximaRevisao.split('-').reverse().join('/')}</span>
+            </div>
+          </div>
+        ` : ''}
+        
+        ${v.obs ? `
+          <div style="margin:0 18px 14px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:12px;font-size:12px;color:var(--text2)">
+            📝 ${v.obs}
+          </div>
+        ` : ''}
+        
+        <div class="frota-footer">
+          <button class="btn btn-secondary btn-sm" style="flex:1" onclick="abrirModalVeiculo(${v.id})">✏️ Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="deletarVeiculo(${v.id})">🗑️</button>
+        </div>
+      </div>
+    `;
+  }).join('') + `
+    <div class="frota-add-btn" onclick="abrirModalVeiculo()">
+      <div class="frota-add-plus">＋</div>
+      <div>Adicionar Veículo</div>
+    </div>
+  `;
+}
+
+function syncFrotaSelects() {
+  const select = document.getElementById('func-veiculo-select');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="">Selecione sua placa...</option>' +
+    veiculos.map(v => `<option value="${v.placa}">${v.modelo} — ${v.placa}</option>`).join('');
+}
+
+// ============================================
+// FUNÇÕES DE EQUIPE - CORRIGIDAS (SEM ERRO DE PERMISSÃO)
+// ============================================
+async function carregarFuncionarios() {
+  if (!fbDb || !currentUser) return;
+  
+  try {
+    // Buscar todos os usuários (vamos filtrar localmente)
+    const snapshot = await fbDb.ref('usuariosGlobais').once('value');
+    const todosUsuarios = snapshot.val() || {};
+    
+    // Filtrar apenas funcionários da empresa atual
+    funcionariosCache = Object.entries(todosUsuarios)
+      .filter(([uid, perfil]) => perfil.empresaId === currentUser.empresaId && perfil.tipo === 'funcionario')
+      .map(([uid, perfil]) => ({ uid, ...perfil }));
+    
+    renderEquipe();
+    
+  } catch (error) {
+    console.error("Erro ao carregar funcionários:", error);
+    showToast('❌ Erro ao carregar lista de funcionários');
+  }
+}
+
+function renderEquipe() {
+  const lista = document.getElementById('equipe-lista');
+  if (!lista) return;
+  
+  if (!funcionariosCache.length) {
+    lista.innerHTML = '<div class="no-data"><div class="no-data-icon">👥</div>Nenhum funcionário cadastrado ainda.</div>';
+    return;
+  }
+  
+  lista.innerHTML = funcionariosCache.map(f => `
+    <div class="func-card">
+      <div class="func-avatar-sm" style="background:rgba(0,212,255,.1)">👷</div>
+      <div class="func-info">
+        <div class="func-nome">${f.nome}</div>
+        <div class="func-email">${f.email}</div>
+        <div class="func-veiculo-tag">Status: <span class="badge ${f.status === 'ativo' ? 'badge-success' : 'badge-danger'}">${f.status === 'ativo' ? 'Ativo' : 'Inativo'}</span></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleAddFunc() {
+  const panel = document.getElementById('add-func-panel');
+  if (panel) panel.classList.toggle('hidden');
+}
+
+async function criarFuncionario() {
+  const nome = document.getElementById('nf-nome')?.value?.trim();
+  const email = document.getElementById('nf-email')?.value?.trim();
+  const senha = document.getElementById('nf-senha')?.value;
+  
+  if (!nome) { showToast('⚠️ Informe o nome'); return; }
+  if (!email) { showToast('⚠️ Informe o e-mail'); return; }
+  if (!senha || senha.length < 6) { showToast('⚠️ Senha com mínimo 6 caracteres'); return; }
+  
+  const btn = document.getElementById('btn-add-func');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="auth-spinner"></span>Criando...';
+  
+  try {
+    // Criar usuário no Authentication
+    const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
+    const uid = cred.user.uid;
+    
+    const profile = {
+      nome,
+      email,
+      tipo: 'funcionario',
+      empresaId: currentUser.empresaId,
+      empresaNome: currentUser.empresaNome,
+      status: 'ativo',
+      criadoEm: Date.now()
+    };
+    
+    // Salvar em usuariosGlobais (único caminho com permissão)
+    await fbDb.ref('usuariosGlobais/' + uid).set(profile);
+    
+    // Limpar o formulário
+    document.getElementById('nf-nome').value = '';
+    document.getElementById('nf-email').value = '';
+    document.getElementById('nf-senha').value = '';
+    
+    // Fechar o painel
+    toggleAddFunc();
+    
+    // Mostrar mensagem de sucesso
+    showToast('✅ ' + nome + ' adicionado com sucesso!');
+    
+    // Recarregar lista
+    await carregarFuncionarios();
+    
+  } catch (error) {
+    console.error("Erro ao criar funcionário:", error);
+    
+    // Mensagens de erro amigáveis
+    if (error.code === 'auth/email-already-in-use') {
+      showToast('❌ Este e-mail já está em uso');
+    } else if (error.code === 'auth/invalid-email') {
+      showToast('❌ E-mail inválido');
+    } else if (error.code === 'auth/weak-password') {
+      showToast('❌ Senha muito fraca');
+    } else {
+      showToast('❌ Erro ao criar funcionário: ' + (error.message || 'Tente novamente'));
+    }
+    
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+}
+
+// ============================================
+// FUNÇÕES PARA NOTAS FISCAIS
+// ============================================
+function adicionarCampoNota(valor = '') {
+  const container = document.getElementById('notas-fiscais-container');
+  if (!container) return;
+  
+  const index = notasFiscais.length;
+  
+  const notaDiv = document.createElement('div');
+  notaDiv.className = 'nota-item';
+  notaDiv.innerHTML = `
+    <input type="text" class="nota-numero" placeholder="Número da nota fiscal" value="${valor}" oninput="atualizarNotasFiscais(${index}, this.value)">
+    <div class="nota-remove" onclick="removerNotaFiscal(${index})">✕</div>
+  `;
+  
+  container.appendChild(notaDiv);
+  notasFiscais.push(valor);
+  atualizarHiddenNotas();
+}
+
+function removerNotaFiscal(index) {
+  const container = document.getElementById('notas-fiscais-container');
+  if (!container) return;
+  
+  container.innerHTML = '';
+  notasFiscais.splice(index, 1);
+  
+  notasFiscais.forEach((valor, i) => {
+    adicionarCampoNota(valor);
+  });
+  
+  atualizarHiddenNotas();
+}
+
+function atualizarNotasFiscais(index, valor) {
+  notasFiscais[index] = valor;
+  atualizarHiddenNotas();
+}
+
+function atualizarHiddenNotas() {
+  const notasValidas = notasFiscais.filter(n => n && n.trim() !== '');
+  const input = document.getElementById('f-notas');
+  if (input) input.value = JSON.stringify(notasValidas);
+}
+
+// ============================================
+// FUNÇÕES DE FORMULÁRIO
+// ============================================
+function limparForm() {
+  ['f-data','f-origem','f-destino','f-cliente','f-carga','f-valor','f-km','f-obs'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  
+  const hoje = new Date().toISOString().split('T')[0];
+  const dataEl = document.getElementById('f-data');
+  if (dataEl) dataEl.value = hoje;
+  
+  notasFiscais = [];
+  const container = document.getElementById('notas-fiscais-container');
+  if (container) container.innerHTML = '';
+  const notasInput = document.getElementById('f-notas');
+  if (notasInput) notasInput.value = '[]';
+  
+  const pesoEl = document.getElementById('f-peso');
+  if (pesoEl) pesoEl.value = '';
+  const embalagemEl = document.getElementById('f-embalagem');
+  if (embalagemEl) embalagemEl.value = '';
+  const horarioEl = document.getElementById('f-horario-recebimento');
+  if (horarioEl) horarioEl.value = '';
+}
+
+function salvarEntrega() {
+  const data = document.getElementById('f-data')?.value;
+  const origem = document.getElementById('f-origem')?.value?.trim();
+  const destino = document.getElementById('f-destino')?.value?.trim();
+  const cliente = document.getElementById('f-cliente')?.value?.trim();
+  
+  if (!data || !origem || !destino || !cliente) {
+    alert('Preencha os campos obrigatórios.');
+    return;
+  }
+  
+  const notasValidas = notasFiscais.filter(n => n && n.trim() !== '');
+  
+  const entrega = {
+    id: Date.now(),
+    data,
+    origem,
+    destino,
+    cliente,
+    notasFiscais: notasValidas,
+    peso: parseFloat(document.getElementById('f-peso')?.value) || null,
+    embalagem: document.getElementById('f-embalagem')?.value || '',
+    horarioRecebimento: document.getElementById('f-horario-recebimento')?.value || '',
+    carga: document.getElementById('f-carga')?.value || '',
+    valor: parseFloat(document.getElementById('f-valor')?.value) || 0,
+    km: parseFloat(document.getElementById('f-km')?.value) || 0,
+    obs: document.getElementById('f-obs')?.value || '',
+    status: document.getElementById('f-status')?.value || 'agendado'
+  };
+  
+  entregas.unshift(entrega);
+  
+  if (fbDb && currentUser) {
+    fbDb.ref('empresas/' + currentUser.empresaId + '/entregas').set(entregas);
+  }
+  
+  limparForm();
+  alert('Entrega salva com sucesso!');
+}
+
+// ============================================
+// FUNÇÕES DE CUSTO
+// ============================================
+function recalcularCusto() {}
+function toggleCusto(tipo) {}
+function salvarConfigCusto() {}
+
+// ============================================
+// FUNÇÕES DE AVATAR
+// ============================================
 function toggleAvatarMenu() {
   const modal = document.getElementById('avatar-modal');
-  if (modal.classList.contains('open')) {
-    fecharAvatarMenu();
-  } else {
-    abrirAvatarMenu();
-  }
-}
-
-function abrirAvatarMenu() {
-  const modal = document.getElementById('avatar-modal');
-  modal.classList.add('open');
-  // Sync preview with current avatar
-  const saved = localStorage.getItem('fm_avatar');
-  const previewBig = document.getElementById('avatar-preview-big');
-  const previewEmoji = document.getElementById('avatar-preview-emoji');
-  if (saved) {
-    previewEmoji.style.display = 'none';
-    // Remove old img if any
-    const oldImg = previewBig.querySelector('img');
-    if (oldImg) oldImg.remove();
-    const img = document.createElement('img');
-    img.src = saved;
-    previewBig.appendChild(img);
-    document.getElementById('avatar-remove-btn').style.display = 'flex';
-  } else {
-    previewEmoji.style.display = 'block';
-    const oldImg = previewBig.querySelector('img');
-    if (oldImg) oldImg.remove();
-    document.getElementById('avatar-remove-btn').style.display = 'none';
-  }
+  if (modal) modal.classList.toggle('open');
 }
 
 function fecharAvatarMenu() {
-  document.getElementById('avatar-modal').classList.remove('open');
+  const modal = document.getElementById('avatar-modal');
+  if (modal) modal.classList.remove('open');
 }
 
 function escolherFoto() {
   const input = document.getElementById('avatar-file-input');
-  input.removeAttribute('capture');
-  input.click();
+  if (input) input.click();
   fecharAvatarMenu();
 }
 
 function tirarFoto() {
   const input = document.getElementById('avatar-file-input');
-  input.setAttribute('capture', 'user');
-  input.click();
+  if (input) {
+    input.setAttribute('capture', 'user');
+    input.click();
+  }
   fecharAvatarMenu();
 }
 
 function onAvatarFileSelected(event) {
   const file = event.target.files[0];
   if (!file) return;
+  
   const reader = new FileReader();
   reader.onload = function(e) {
-    // Comprimir/redimensionar imagem antes de salvar
-    const img = new Image();
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const MAX = 200;
-      let w = img.width, h = img.height;
-      if (w > h) { if (w > MAX) { h = h * MAX / w; w = MAX; } }
-      else        { if (h > MAX) { w = w * MAX / h; h = MAX; } }
-      canvas.width = w; canvas.height = h;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
-      aplicarAvatar(dataUrl);
-    };
-    img.src = e.target.result;
+    localStorage.setItem('fm_avatar', e.target.result);
+    renderAvatar();
   };
   reader.readAsDataURL(file);
-  // Reset input so same file can be selected again
-  event.target.value = '';
-}
-
-function aplicarAvatar(dataUrl) {
-  localStorage.setItem('fm_avatar', dataUrl);
-  renderAvatar();
-carregarConfigCusto();
 }
 
 function removerFoto() {
@@ -2164,12 +3106,13 @@ function removerFoto() {
 function renderAvatar() {
   const saved = localStorage.getItem('fm_avatar');
   const avatarEl = document.getElementById('header-avatar');
-  const emojiEl  = document.getElementById('avatar-emoji');
-
-  // Remove old img from header avatar
+  const emojiEl = document.getElementById('avatar-emoji');
+  
+  if (!avatarEl || !emojiEl) return;
+  
   const oldImg = avatarEl.querySelector('img');
   if (oldImg) oldImg.remove();
-
+  
   if (saved) {
     emojiEl.style.display = 'none';
     const img = document.createElement('img');
@@ -2181,1928 +3124,16 @@ function renderAvatar() {
   }
 }
 
-// ---- FORM ----
-function salvarEntrega() {
-  const data = document.getElementById('f-data').value;
-  const veiculo = document.getElementById('f-veiculo').value;
-  const origem = document.getElementById('f-origem').value.trim();
-  const destino = document.getElementById('f-destino').value.trim();
-  const cliente = document.getElementById('f-cliente').value.trim();
-
-  if (!data || !veiculo || !origem || !destino || !cliente) {
-    alert('Preencha os campos obrigatórios: data, veículo, origem, destino e cliente.');
-    return;
-  }
-
-  const entrega = {
-    id: Date.now(),
-    data,
-    veiculo,
-    origem,
-    destino,
-    cliente,
-    carga: document.getElementById('f-carga').value,
-    valor: parseFloat(document.getElementById('f-valor').value) || 0,
-    custo: parseFloat(document.getElementById('f-custo').value) || 0,
-    km: parseFloat(document.getElementById('f-km').value) || 0,
-    obs: document.getElementById('f-obs').value,
-    status: document.getElementById('f-status').value || 'agendado',
-    horaSaida: document.getElementById('f-status').value === 'em_rota' ? new Date().toISOString() : null, // stored as UTC, displayed in BRT
-    horaChegada: null,
-    horaSaida2: null,
-    tempoDescarga: null
-  };
-
-  entregas.unshift(entrega);
-  save();
-  limparForm();
-  alert('Entrega salva com sucesso!');
-}
-
-function limparForm() {
-  ['f-data','f-veiculo','f-origem','f-destino','f-cliente','f-carga','f-valor','f-km','f-obs'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-  document.getElementById('f-data').value = new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
-  const pedagio = document.getElementById('val-pedagio');
-  const diaria  = document.getElementById('val-diaria');
-  const manut   = document.getElementById('val-manut');
-  if (pedagio) pedagio.value = '';
-  if (diaria)  diaria.value  = '';
-  if (manut)   manut.value   = '';
-  recalcularCusto();
-}
-
-// ---- CUSTO DINÂMICO ----
-const custoAtivos = { comb: true, pedagio: true, diaria: false, manut: false };
-
-function salvarConfigCusto() {
-  const preco = document.getElementById('cfg-preco-combustivel')?.value;
-  if (preco) localStorage.setItem('fm_preco_combustivel', preco);
-}
-
-function carregarConfigCusto() {
-  const saved = localStorage.getItem('fm_preco_combustivel');
-  const input = document.getElementById('cfg-preco-combustivel');
-  if (input) input.value = saved || '6.00';
-}
-
-function toggleCusto(tipo) {
-  custoAtivos[tipo] = !custoAtivos[tipo];
-  const btn = document.getElementById('toggle-' + tipo);
-  if (btn) { btn.textContent = custoAtivos[tipo] ? '✓' : '+'; btn.classList.toggle('on', custoAtivos[tipo]); }
-  if (tipo === 'diaria' || tipo === 'manut') {
-    const inp = document.getElementById('val-' + tipo);
-    if (inp) inp.disabled = !custoAtivos[tipo];
-  }
-  recalcularCusto();
-}
-
-function recalcularCusto() {
-  const km    = parseFloat(document.getElementById('f-km')?.value) || 0;
-  const valor = parseFloat(document.getElementById('f-valor')?.value) || 0;
-  const preco = parseFloat(document.getElementById('cfg-preco-combustivel')?.value) || 6.00;
-
-  const veiculoKey = document.getElementById('f-veiculo')?.value || '';
-  let consumo = 10;
-  if (veiculoKey) {
-    const vObj = veiculos.find(v => (v.modelo + ' - ' + v.placa) === veiculoKey);
-    if (vObj && vObj.consumo) consumo = parseFloat(vObj.consumo);
-  }
-
-  const litros    = km > 0 ? km / consumo : 0;
-  const custoComb = litros * preco;
-  const custoPedagio = parseFloat(document.getElementById('val-pedagio')?.value) || 0;
-  const custoDiaria  = parseFloat(document.getElementById('val-diaria')?.value)  || 0;
-  const custoManut   = parseFloat(document.getElementById('val-manut')?.value)   || 0;
-
-  const valComb = document.getElementById('val-comb');
-  const subComb = document.getElementById('custo-comb-sub');
-  if (valComb) valComb.textContent = custoComb > 0 ? 'R$ ' + custoComb.toFixed(2).replace('.',',') : 'R$ --';
-  if (subComb) subComb.textContent = km > 0 ? litros.toFixed(1) + 'L × R$ ' + preco.toFixed(2) + ' (consumo: ' + consumo + ' km/L)' : 'Preencha km';
-
-  let total = 0;
-  if (custoAtivos.comb)    total += custoComb;
-  if (custoAtivos.pedagio) total += custoPedagio;
-  if (custoAtivos.diaria)  total += custoDiaria;
-  if (custoAtivos.manut)   total += custoManut;
-
-  const totalEl = document.getElementById('custo-total-display');
-  if (totalEl) totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.',',');
-
-  const custoInput = document.getElementById('f-custo');
-  if (custoInput) custoInput.value = total.toFixed(2);
-
-  const lucroEl  = document.getElementById('lucro-preview');
-  const lucroVal = document.getElementById('lucro-preview-val');
-  if (lucroEl && lucroVal) {
-    if (valor > 0 || total > 0) {
-      const lucro = valor - total;
-      lucroEl.style.display = 'flex';
-      lucroEl.classList.toggle('negativo', lucro < 0);
-      lucroVal.textContent = (lucro < 0 ? '-' : '+') + 'R$ ' + Math.abs(lucro).toFixed(2).replace('.',',');
-      lucroVal.style.color = lucro >= 0 ? 'var(--green)' : 'var(--red)';
-    } else {
-      lucroEl.style.display = 'none';
-    }
-  }
-}
-
-// ---- CUSTOS EXTRAS NA VIAGEM ----
-function atualizarCustoViagem(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-  e.pedagioExtra = parseFloat(document.getElementById('viagem-pedagio-' + id)?.value) || 0;
-  e.custoExtra   = parseFloat(document.getElementById('viagem-extra-'   + id)?.value) || 0;
-  const total = (e.custo || 0) + e.pedagioExtra + e.custoExtra;
-  const totalEl = document.getElementById('viagem-custo-total-' + id);
-  if (totalEl) totalEl.textContent = 'R$ ' + total.toFixed(2).replace('.',',');
-  save();
-}
-
-function atualizarObsViagem(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-  e.obsViagem = document.getElementById('viagem-obs-' + id)?.value || '';
-  save();
-}
-
-// ---- DASHBOARD ----
-function renderDashboard() {
-  const isFunc = currentUser?.tipo === 'funcionario';
-  
-  // 1. Saudação (Igual para ambos)
-  const nowG = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
-  const hG = nowG.getHours();
-  const greetG = hG < 12 ? 'Bom dia' : hG < 18 ? 'Boa tarde' : 'Boa noite';
-  const nomeG = currentUser?.nome?.split(' ')[0] || '';
-  const greetEl = document.getElementById('dash-greeting');
-  if (greetEl) greetEl.textContent = greetG + (nomeG ? ', ' + nomeG : '') + ' 👋';
-
-  const now = new Date();
-  const nowLocal = new Date(now.toLocaleString('en-US', { timeZone: TZ }));
-  const mes = nowLocal.getMonth();
-  const ano = nowLocal.getFullYear();
-
-  const doMes = entregas.filter(e => {
-    const d = new Date(e.data);
-    return d.getMonth() === mes && d.getFullYear() === ano;
-  });
-
-  // 2. Cálculos Condicionais
-  // Calculamos faturamento e lucro apenas para o DONO
-  const fat = doMes.reduce((s, e) => s + (e.valor || 0), 0);
-  const lucro = doMes.reduce((s, e) => s + ((e.valor || 0) - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0))), 0);
-  
-  // Calculamos GASTOS EXTRAS totais (pedágio + extras) para o FUNCIONÁRIO ver
-  const gastosExtrasTotal = doMes.reduce((s, e) => s + ((e.pedagioExtra||0)+(e.custoExtra||0)), 0);
-  
-  const ativas = entregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga').length;
-
-  // 3. Atualização dos Cards de Status
-  const fatEl = document.getElementById('stat-faturamento');
-  const lucroEl = document.getElementById('stat-lucro');
-
-  if (isFunc) {
-    // VISÃO FUNCIONÁRIO: Troca títulos e valores
-    if (fatEl) {
-      fatEl.textContent = 'R$ ' + gastosExtrasTotal.toFixed(2).replace('.',',');
-      const labelFat = fatEl.parentElement.querySelector('.stat-label');
-      if (labelFat) labelFat.textContent = 'Gastos Extras';
-    }
-    // O card de lucro a gente esconde ou troca por "Minhas Viagens"
-    if (lucroEl) {
-      const cardLucro = lucroEl.parentElement;
-      cardLucro.style.display = 'none'; // Esconde o card de lucro para o funcionário
-    }
-  } else {
-    // VISÃO DONO: Mantém original
-    if (fatEl) fatEl.textContent = 'R$ ' + fat.toFixed(2).replace('.',',');
-    if (lucroEl) lucroEl.textContent = 'R$ ' + lucro.toFixed(2).replace('.',',');
-  }
-
-  document.getElementById('stat-fat-sub').textContent = doMes.length + ' entregas no mês';
-  document.getElementById('stat-ativas').textContent = ativas;
-
-  // 4. Frota (Fleet Cards)
-  const fc = document.getElementById('fleet-cards');
-  const fleetSource = veiculos.length ? veiculos.map(v => ({ name: v.modelo, plate: v.placa, icon: v.tipo })) : [];
-  
-  fc.innerHTML = fleetSource.map(v => {
-    const vKey = v.name + ' - ' + v.plate;
-    const vEntregas = entregas.filter(e => e.veiculo === vKey);
-    // Para o funcionário, calculamos o custo extra do veículo específico
-    const vGastos = vEntregas.reduce((s, e) => s + ((e.pedagioExtra||0)+(e.custoExtra||0)), 0);
-    const emRota = vEntregas.filter(e => e.status === 'em_rota' || e.status === 'em_descarga').length;
-    
-    return `<div class="fleet-mini" onclick="showPage('frota')">
-      <div class="fleet-mini-icon">${v.icon || '🚚'}</div>
-      <div class="fleet-mini-name">${v.name}</div>
-      <div class="fleet-mini-plate">${v.plate}</div>
-      <div style="font-size:10px; margin-top:4px; color:var(--text3)">
-        ${isFunc ? 'Gastos: R$ ' + vGastos.toFixed(0) : ''}
-      </div>
-      <div class="fleet-mini-status" style="color:${emRota > 0 ? 'var(--accent2)' : 'var(--green)'}">
-        ${emRota > 0 ? '🟠 Em rota' : '🟢 Livre'}
-      </div>
-    </div>`;
-  }).join('');
-
-  // 5. Últimas Entregas (Recent List) - OCULTA VALORES PARA FUNCIONÁRIO
-  const recent = entregas.slice(0, 5);
-  const rl = document.getElementById('recent-list');
-  if (!recent.length) { rl.innerHTML = '<div class="no-data">Nenhuma entrega ainda</div>'; return; }
-  
-  rl.innerHTML = recent.map(e => {
-    const dotColor = e.status === 'concluido' ? 'var(--green)' : e.status === 'em_rota' ? 'var(--accent2)' : 'var(--accent)';
-    
-    return `<div class="delivery-row">
-      <div class="delivery-dot" style="background:${dotColor}"></div>
-      <div class="delivery-info">
-        <div class="delivery-route">${e.origem} → ${e.destino}</div>
-        <div class="delivery-client">${e.cliente}</div>
-      </div>
-      <div class="delivery-right">
-        ${!isFunc ? `
-          <div class="delivery-value" style="color:var(--green)">R$ ${e.valor.toFixed(0)}</div>
-          <div class="delivery-profit">lucro R$ ${(e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0))).toFixed(0)}</div>
-        ` : `
-          <div class="delivery-status-simple" style="font-size:11px; color:var(--text3)">${e.status}</div>
-        `}
-      </div>
-    </div>`;
-  }).join('');
-}
-// ---- CONTROLE DE VIAGEM ----
-
-function renderAtivas() {
-  const emAndamento = entregas.find(e => ['em_rota','em_descarga','aguardando_descarga'].includes(e.status));
-  const disponiveis = entregas.filter(e => e.status === 'agendado');
-
-  const ativaContainer = document.getElementById('viagem-ativa-container');
-  const dispContainer  = document.getElementById('disponiveis-container');
-  const confirmaContainer = document.getElementById('viagem-confirma-container');
-
-  // Resetar confirma
-  confirmaContainer.style.display = 'none';
-  confirmaContainer.innerHTML = '';
-
-  if (emAndamento) {
-    ativaContainer.style.display = 'block';
-    dispContainer.style.display = 'none';
-    ativaContainer.innerHTML = buildViagemAtiva(emAndamento);
-    iniciarRelogioViagem(emAndamento);
-    reativarTripGpsSeNecessario(emAndamento);
-  } else {
-    ativaContainer.style.display = 'none';
-    dispContainer.style.display = 'block';
-    renderDisponiveis();
-  }
-}
-
-function renderDisponiveis() {
-  const disponiveis = entregas.filter(e => e.status === 'agendado');
-  const el = document.getElementById('disponiveis-list');
-  
-  if (!disponiveis.length) {
-    el.innerHTML = `<div class="no-data">
-      <div class="no-data-icon">📦</div>
-      Nenhuma entrega agendada.<br>
-      <span style="color:var(--accent);cursor:pointer;font-weight:600" onclick="showPage('nova')">+ Cadastrar entrega</span>
-    </div>`;
-    return;
-  }
-
-  el.innerHTML = disponiveis.map(e => `
-    <div class="entrega-disponivel" onclick="selecionarEntrega(${e.id})">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-        <div class="entrega-rota">${e.origem} → ${e.destino}</div>
-        <span class="badge badge-sched">Disponível</span>
-      </div>
-      <div style="font-size:13px;color:var(--text2);margin-top:4px">👤 ${e.cliente}</div>
-      <div class="entrega-tags">
-        <div class="entrega-tag">🚗 ${e.veiculo.split(' - ')[0]}</div>
-        <div class="entrega-tag">📅 ${formatDate(e.data)}</div>
-        ${e.km ? `<div class="entrega-tag">📍 ${e.km} km</div>` : ''}
-        
-        ${currentUser && currentUser.tipo !== 'funcionario' 
-          ? `<div class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3);background:rgba(0,255,136,0.08)">R$ ${e.valor.toFixed(0)}</div>` 
-          : '' 
-        }
-      </div>
-    </div>`).join('');
-}
-
-function selecionarEntrega(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-
-  const dispContainer  = document.getElementById('disponiveis-container');
-  const confirmaContainer = document.getElementById('viagem-confirma-container');
-
-  dispContainer.style.display = 'none';
-  confirmaContainer.style.display = 'block';
-
-  const agoraISO = nowBrasilia();
-
-  confirmaContainer.innerHTML = `
-    <button onclick="voltarDisponiveis()" style="background:none;border:none;color:var(--text2);font-size:14px;cursor:pointer;padding:0;margin-bottom:16px;display:flex;align-items:center;gap:6px;font-family:'Outfit',sans-serif">
-      ← Voltar
-    </button>
-
-    <div class="card" style="margin-bottom:14px">
-      <div style="font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">Entrega selecionada</div>
-      <div style="font-size:20px;font-weight:900;letter-spacing:-0.5px">${e.origem} → ${e.destino}</div>
-      <div style="font-size:13px;color:var(--text2);margin-top:6px">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]}</div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        ${e.km ? `<span class="entrega-tag">📍 ${e.km} km</span>` : ''}
-        
-        ${currentUser && currentUser.tipo !== 'funcionario' 
-          ? `<span class="entrega-tag" style="color:var(--green);border-color:rgba(0,255,136,0.3)">R$ ${e.valor.toFixed(0)}</span>` 
-          : ''
-        }
-        
-        ${e.carga ? `<span class="entrega-tag">📦 ${e.carga}</span>` : ''}
-      </div>
-    </div>
-
-    <div class="card">
-      <div style="font-size:15px;font-weight:800;margin-bottom:16px">⏱ Registrar horários da viagem</div>
-
-      <div class="form-group">
-        <div class="form-label">🚀 Início da viagem</div>
-        <input type="datetime-local" id="confirma-inicio" class="form-input" value="${agoraISO}">
-      </div>
-
-      <div class="form-group">
-        <div class="form-label">📍 Início da descarga <span style="color:var(--muted);font-weight:400">(opcional agora)</span></div>
-        <input type="datetime-local" id="confirma-inicio-descarga" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <div class="form-label">✅ Fim da descarga <span style="color:var(--muted);font-weight:400">(opcional agora)</span></div>
-        <input type="datetime-local" id="confirma-fim-descarga" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <div class="form-label">🏁 Fim da viagem <span style="color:var(--muted);font-weight:400">(opcional agora)</span></div>
-        <input type="datetime-local" id="confirma-fim" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <div class="form-label">📏 Km percorrida <span style="color:var(--muted);font-weight:400">(opcional — preencha ao final)</span></div>
-        <input type="number" id="confirma-km-percorrido" class="form-input" placeholder="Ex: 342" min="0" step="0.1">
-      </div>
-
-      <div style="display:flex;gap:10px;margin-top:6px">
-        <button class="btn btn-secondary" style="flex:1" onclick="voltarDisponiveis()">Cancelar</button>
-        <button class="btn btn-primary" style="flex:2" onclick="iniciarViagemConfirmada(${e.id})">🚀 Iniciar Viagem</button>
-      </div>
-    </div>`;
-}
-
-function voltarDisponiveis() {
-  document.getElementById('disponiveis-container').style.display = 'block';
-  document.getElementById('viagem-confirma-container').style.display = 'none';
-  document.getElementById('viagem-confirma-container').innerHTML = '';
-}
-
-function iniciarViagemConfirmada(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-
-  const inicio = document.getElementById('confirma-inicio').value;
-  const inicioDescarga = document.getElementById('confirma-inicio-descarga').value;
-  const fimDescarga = document.getElementById('confirma-fim-descarga').value;
-  const fim = document.getElementById('confirma-fim').value;
-
-  if (!inicio) { alert('Informe o horário de início da viagem.'); return; }
-
-  const kmPercorridoConfirma = parseFloat(document.getElementById('confirma-km-percorrido')?.value) || null;
-
-  e.horaSaida = inicio ? new Date(inicio).toISOString() : new Date().toISOString();
-  e.horaChegada = inicioDescarga ? new Date(inicioDescarga).toISOString() : null;
-  e.horaSaida2 = fimDescarga ? new Date(fimDescarga).toISOString() : null;
-  e.horaFimViagem = fim ? new Date(fim).toISOString() : null;
-  if (kmPercorridoConfirma) e.kmPercorrido = kmPercorridoConfirma;
-
-  if (e.horaChegada && e.horaSaida2) {
-    e.tempoDescarga = Math.round((new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000);
-  }
-
-  // Se todos preenchidos, já concluir
-  if (e.horaFimViagem && e.horaSaida2) {
-    e.status = 'concluido';
-    save();
-    renderAtivas();
-    renderDashboard();
-    alert('✅ Viagem registrada e concluída!');
-    return;
-  }
-
-  e.status = 'em_rota';
-  // Se saiu agora (não tem hora de fim), inicia GPS da viagem
-  if (!e.horaFimViagem) tripGps.iniciar(e.id);
-  save();
-  renderAtivas();
-  renderDashboard();
-}
-
-function buildViagemAtiva(e) {
-  const inicio     = e.horaSaida ? new Date(e.horaSaida) : null;
-  const iniDesc    = e.horaChegada ? new Date(e.horaChegada) : null;
-  const fimDesc    = e.horaSaida2 ? new Date(e.horaSaida2) : null;
-  const fimViagem  = e.horaFimViagem ? new Date(e.horaFimViagem) : null;
-
-  const etapa1feito = !!inicio;
-  const etapa2feito = !!iniDesc;
-  const etapa3feito = !!fimDesc;
-  const etapa4feito = !!fimViagem;
-
-  const etapa1ativo = !etapa1feito;
-  const etapa2ativo = etapa1feito && !etapa2feito;
-  const etapa3ativo = etapa2feito && !etapa3feito;
-  const etapa4ativo = etapa3feito && !etapa4feito;
-
-  function statusClass(feito, ativo) { return feito ? 'feito' : ativo ? 'ativo' : 'pendente'; }
-
-  const now = nowBrasilia();
-
-  // --- INÍCIO DO HTML ---
-  let html = `<div class="viagem-active-card">
-    <div class="viagem-header">
-      <div>
-        <div class="viagem-rota">${e.origem} → ${e.destino}</div>
-        <div class="viagem-cliente">👤 ${e.cliente} • 🚗 ${e.veiculo.split(' - ')[0]}</div>
-      </div>
-      <span class="badge ${e.status === 'em_descarga' ? 'badge-loading' : 'badge-transit'}">${e.status === 'em_descarga' ? '📦 Descarga' : '🚚 Em rota'}</span>
-    </div>
-
-    <div id="duracao-box" class="duracao-total">
-      <div class="duracao-label">Tempo em viagem</div>
-      <div class="duracao-value" id="duracao-live">--:--</div>
-    </div>
-
-    <div class="viagem-etapas">
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa1feito, etapa1ativo)}">${etapa1feito ? '✓' : '🚀'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa1feito, etapa1ativo)}">Início da viagem</div>
-          ${etapa1feito
-            ? `<div class="etapa-hora feito">${formatTime(inicio)}</div><div class="etapa-sub">${formatDate(e.horaSaida.slice(0,10))}</div>`
-            : `<div class="etapa-input-row">
-                <input type="datetime-local" class="etapa-datetime" id="dt-inicio" value="${now}">
-                <button class="etapa-btn" onclick="registrarEtapa(${e.id},'inicio')">Registrar</button>
-              </div>`
-          }
-        </div>
-      </div>
-
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa2feito, etapa2ativo)}">${etapa2feito ? '✓' : '📍'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa2feito, etapa2ativo)}">Início da descarga</div>
-          ${etapa2feito
-            ? `<div class="etapa-hora feito">${formatTime(iniDesc)}</div>`
-            : etapa2ativo
-              ? `<div class="etapa-input-row">
-                  <input type="datetime-local" class="etapa-datetime" id="dt-ini-desc" value="${now}">
-                  <button class="etapa-btn orange" onclick="registrarEtapa(${e.id},'ini_desc')">Registrar</button>
-                </div>`
-              : `<div class="etapa-sub">Aguardando etapa anterior</div>`
-          }
-        </div>
-      </div>
-
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa3feito, etapa3ativo)}">${etapa3feito ? '✓' : '✅'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa3feito, etapa3ativo)}">Fim da descarga</div>
-          ${etapa3feito
-            ? `<div class="etapa-hora feito">${formatTime(fimDesc)}</div><div class="etapa-sub">Descarga: ${e.tempoDescarga != null ? formatMinutes(e.tempoDescarga) : '--'}</div>`
-            : etapa3ativo
-              ? `<div class="etapa-input-row">
-                  <input type="datetime-local" class="etapa-datetime" id="dt-fim-desc" value="${now}">
-                  <button class="etapa-btn green" onclick="registrarEtapa(${e.id},'fim_desc')">Registrar</button>
-                </div>`
-              : `<div class="etapa-sub">Aguardando etapa anterior</div>`
-          }
-        </div>
-      </div>
-
-      <div class="etapa">
-        <div class="etapa-icon ${statusClass(etapa4feito, etapa4ativo)}">${etapa4feito ? '✓' : '🏁'}</div>
-        <div class="etapa-body">
-          <div class="etapa-titulo ${statusClass(etapa4feito, etapa4ativo)}">Fim da viagem</div>
-          ${etapa4feito
-            ? `<div class="etapa-hora feito">${formatTime(fimViagem)}</div>
-               ${e.kmPercorrido != null ? `<div class="etapa-sub">📏 ${e.kmPercorrido.toLocaleString('pt-BR')} km percorridos</div>` : ''}`
-            : etapa4ativo
-              ? `<div class="etapa-input-row">
-                  <input type="datetime-local" class="etapa-datetime" id="dt-fim" value="${now}">
-                  <button class="etapa-btn green" onclick="registrarEtapa(${e.id},'fim')">Registrar</button>
-                </div>
-                <div style="margin-top:8px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:12px;padding:10px 14px">
-                  <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">📏 Km percorrida</div>
-                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                    <div style="display:flex;align-items:center;gap:6px">
-                      <div id="trip-gps-dot" style="width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;flex-shrink:0"></div>
-                      <span id="trip-gps-km" style="font-size:18px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent)">-- km</span>
-                      <span style="font-size:10px;color:var(--text2)">GPS</span>
-                    </div>
-                    <div style="font-size:10px;color:var(--muted)">ou insira manualmente:</div>
-                    <input type="number" class="etapa-datetime" id="dt-km-percorrido" placeholder="km manual" min="0" step="0.1" style="width:110px;font-size:13px">
-                  </div>
-                </div>`
-              : `<div class="etapa-sub">Aguardando etapa anterior</div>`
-          }
-        </div>
-      </div>
-
-    </div>`;
-
-    // --- BLOQUEIO DE CUSTOS PARA FUNCIONÁRIO ---
-if (currentUser && currentUser.tipo !== 'funcionario') {
-      html += `
-      <div style="margin-top:6px;background:rgba(0,0,0,0.2);border:1px solid var(--glass-border);border-radius:18px;overflow:hidden">
-        <div style="padding:14px 16px;border-bottom:1px solid var(--glass-border);display:flex;align-items:center;justify-content:space-between">
-          <div style="font-size:13px;font-weight:700">💸 Custos da Viagem</div>
-          <div style="font-size:11px;color:var(--text2)">Base: <strong style="color:var(--accent2)">R$ ${e.custo ? e.custo.toFixed(2).replace('.',',') : '0,00'}</strong></div>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px">
-          <div><div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.8px">Custo total</div></div>
-          <div id="viagem-custo-total-${e.id}" style="font-size:22px;font-weight:900;color:var(--accent2);font-family:'JetBrains Mono',monospace">R$ ${((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)).toFixed(2).replace('.',',')}</div>
-        </div>
-      </div>`;
-    }
-
-    // --- BOTÕES FINAIS ---
-    html += `
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-      <button class="btn btn-danger btn-sm" onclick="cancelarViagem(${e.id})">✕ Cancelar viagem</button>
-    </div>
-  </div>`;
-
-  return html;
-}
-
-let relogioViagem = null;
-function reativarTripGpsSeNecessario(e) {
-  // Se viagem está em rota e GPS não está ativo para esta entrega, reativar
-  if (e.horaSaida && !e.horaFimViagem && navigator.geolocation) {
-    if (!tripGps.ativo || tripGps.entregaId !== e.id) {
-      tripGps.iniciar(e.id);
-      console.log('tripGps reativado para entrega em andamento', e.id);
-    }
-  }
-}
-
-function iniciarRelogioViagem(e) {
-  if (relogioViagem) clearInterval(relogioViagem);
-  function atualizar() {
-    const el = document.getElementById('duracao-live');
-    if (!el) { clearInterval(relogioViagem); return; }
-    if (!e.horaSaida) { el.textContent = '--:--'; return; }
-    const diff = Math.floor((Date.now() - new Date(e.horaSaida)) / 1000);
-    const h = Math.floor(diff / 3600);
-    const m = Math.floor((diff % 3600) / 60);
-    const s = diff % 60;
-    el.textContent = (h > 0 ? String(h).padStart(2,'0') + ':' : '') +
-                     String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-  }
-  atualizar();
-  relogioViagem = setInterval(atualizar, 1000);
-}
-
-function registrarEtapa(id, etapa) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-
-  if (etapa === 'inicio') {
-    const val = document.getElementById('dt-inicio')?.value;
-    if (!val) return;
-    e.horaSaida = new Date(val).toISOString();
-    e.status = 'em_rota';
-    // Inicia rastreio GPS da viagem
-    tripGps.iniciar(e.id);
-  } else if (etapa === 'ini_desc') {
-    const val = document.getElementById('dt-ini-desc')?.value;
-    if (!val) return;
-    e.horaChegada = new Date(val).toISOString();
-    e.status = 'em_descarga';
-  } else if (etapa === 'fim_desc') {
-    const val = document.getElementById('dt-fim-desc')?.value;
-    if (!val) return;
-    e.horaSaida2 = new Date(val).toISOString();
-    e.tempoDescarga = Math.round((new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000);
-    e.status = 'em_rota';
-  } else if (etapa === 'fim') {
-    const val = document.getElementById('dt-fim')?.value;
-    if (!val) return;
-    // Captura km do GPS (prioridade) ou do campo manual
-    const kmGps   = tripGps.ativo ? tripGps.parar() : null;
-    const kmInput = parseFloat(document.getElementById('dt-km-percorrido')?.value);
-    if (kmGps && kmGps > 0.1) {
-      e.kmPercorrido = kmGps;
-    } else if (!isNaN(kmInput) && kmInput > 0) {
-      e.kmPercorrido = kmInput;
-    }
-    e.horaFimViagem = new Date(val).toISOString();
-    e.status = 'concluido';
-    if (relogioViagem) clearInterval(relogioViagem);
-    save();
-    renderAtivas();
-    renderDashboard();
-    alert('✅ Viagem concluída com sucesso!' + (e.kmPercorrido ? '\n📏 ' + e.kmPercorrido + ' km registrados.' : ''));
-    return;
-  }
-
-  save();
-  renderAtivas();
-  renderDashboard();
-}
-
-function cancelarViagem(id) {
-  if (!confirm('Cancelar esta viagem? O status voltará para Agendado.')) return;
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-  if (tripGps.ativo && tripGps.entregaId === id) tripGps.parar();
-  e.status = 'agendado';
-  e.horaSaida = null; e.horaChegada = null; e.horaSaida2 = null;
-  e.horaFimViagem = null; e.tempoDescarga = null; e.kmPercorrido = null;
-  e.pedagioExtra = 0; e.custoExtra = 0; e.obsViagem = '';
-  if (relogioViagem) clearInterval(relogioViagem);
-  save();
-  renderAtivas();
-  renderDashboard();
-}
-
-function registrarChegada(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-  e.horaChegada = new Date().toISOString();
-  e.status = 'em_descarga';
-  save();
-  renderAtivas();
-}
-
-function registrarSaida(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-  e.horaSaida2 = new Date().toISOString();
-  const diff = (new Date(e.horaSaida2) - new Date(e.horaChegada)) / 60000;
-  e.tempoDescarga = Math.round(diff);
-  save();
-  if (timers[id]) { clearInterval(timers[id]); delete timers[id]; }
-  renderAtivas();
-}
-
-function concluirEntrega(id) {
-  const e = entregas.find(x => x.id === id);
-  if (!e) return;
-  e.status = 'concluido';
-  save();
-  renderAtivas();
-  renderDashboard();
-}
-
-function startLiveTimer(id) {
-  if (timers[id]) clearInterval(timers[id]);
-  timers[id] = setInterval(() => {
-    const e = entregas.find(x => x.id === id);
-    if (!e || !e.horaChegada) return;
-    const elapsed = (Date.now() - new Date(e.horaChegada)) / 1000;
-    const el = document.getElementById('live-' + id);
-    if (el) el.textContent = formatSeconds(elapsed);
-  }, 1000);
-}
-
-// ---- HISTÓRICO ----
-function renderHistorico() {
-  const fv = document.getElementById('filtro-veiculo').value;
-  const fs = document.getElementById('filtro-status').value;
-
-  let filtered = entregas;
-  if (fv) filtered = filtered.filter(e => e.veiculo === fv);
-  if (fs) filtered = filtered.filter(e => e.status === fs);
-
-  const tbody = document.getElementById('historico-tbody');
-  const empty = document.getElementById('historico-empty');
-  const thead = document.querySelector('#page-historico table thead tr');
-
-  // --- TRAVA DE CABEÇALHO (Oculta as colunas Valor, Lucro e Ações) ---
-  if (thead) {
-    const colunasFinanceiras = thead.querySelectorAll('th:nth-child(5), th:nth-child(6), th:nth-child(10)');
-    colunasFinanceiras.forEach(th => {
-      th.style.display = currentUser?.tipo === 'funcionario' ? 'none' : '';
-    });
-  }
-
-  if (!filtered.length) {
-    tbody.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
-  empty.style.display = 'none';
-
-  tbody.innerHTML = filtered.map(e => {
-    const custoTotal = (e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0);
-    const lucro = e.valor - custoTotal;
-    const descStr = e.tempoDescarga !== null ? formatMinutes(e.tempoDescarga) : (e.horaChegada && !e.horaSaida2 ? '⏳ em curso' : '--');
-    const statusLabel = e.status === 'concluido' ? 'badge-done' : e.status === 'em_rota' || e.status === 'em_descarga' ? 'badge-transit' : e.status === 'agendado' ? 'badge-sched' : 'badge-loading';
-    const statusText = e.status === 'concluido' ? 'Concluído' : e.status === 'em_rota' ? 'Em Rota' : e.status === 'em_descarga' ? 'Descarga' : 'Disponível';
-    
-    const isFunc = currentUser?.tipo === 'funcionario';
-
-    return `<tr>
-      <td>${formatDate(e.data)}</td>
-      <td>${e.origem} → ${e.destino}</td>
-      <td>${e.cliente}</td>
-      <td style="font-size:11px">${e.veiculo.split(' - ')[0]}</td>
-      
-      <td style="display:${isFunc ? 'none' : ''}; color:var(--accent); font-weight:500">
-        R$ ${e.valor.toFixed(2).replace('.',',')}
-      </td>
-      
-      <td style="display:${isFunc ? 'none' : ''}; color:${lucro >= 0 ? 'var(--accent)' : 'var(--red)'}">
-        R$ ${lucro.toFixed(2).replace('.',',')}
-      </td>
-      
-      <td style="color:var(--accent);font-weight:600;font-family:'JetBrains Mono',monospace">${e.kmPercorrido != null ? e.kmPercorrido.toLocaleString('pt-BR') + ' km' : '<span style="color:var(--muted)">—</span>'}</td>
-      <td style="color:var(--accent2)">${descStr}</td>
-      <td><span class="badge ${statusLabel}">${statusText}</span></td>
-      
-      <td style="display:${isFunc ? 'none' : ''}">
-        <button class="btn btn-danger" style="padding:4px 10px;font-size:10px" onclick="deletarEntrega(${e.id})">✕</button>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-// ---- RANKINGS ----
-function renderRankings() {
-  const concluidas = entregas.filter(e => e.status === 'concluido');
-
-  // Rotas por lucro/km
-  const rotaMap = {};
-  concluidas.filter(e => e.km > 0).forEach(e => {
-    const k = e.origem + ' → ' + e.destino;
-    if (!rotaMap[k]) rotaMap[k] = { total: 0, km: 0, count: 0 };
-    rotaMap[k].total += (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)));
-    rotaMap[k].km += e.km;
-    rotaMap[k].count++;
-  });
-  const rotas = Object.entries(rotaMap).map(([k, v]) => ({ name: k, score: v.total / v.km, fat: v.total, count: v.count }))
-    .sort((a, b) => b.score - a.score).slice(0, 5);
-
-  const rankRotas = document.getElementById('rank-rotas');
-  rankRotas.innerHTML = rotas.length ? rotas.map((r, i) => `
-    <div class="rank-item">
-      <div class="rank-num">${i + 1}</div>
-      <div class="rank-info">
-        <div class="rank-name">${r.name}</div>
-        <div class="rank-sub">${r.count} entrega(s) • R$/km: ${r.score.toFixed(2).replace('.',',')}</div>
-      </div>
-      <div class="rank-value">R$ ${r.fat.toFixed(0)}</div>
-    </div>`).join('') : '<div class="no-data">Dados insuficientes</div>';
-
-  // Clientes
-  const clienteMap = {};
-  concluidas.forEach(e => {
-    if (!clienteMap[e.cliente]) clienteMap[e.cliente] = { total: 0, count: 0 };
-    clienteMap[e.cliente].total += (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)));
-    clienteMap[e.cliente].count++;
-  });
-  const clientes = Object.entries(clienteMap).map(([k, v]) => ({ name: k, ...v }))
-    .sort((a, b) => b.total - a.total).slice(0, 5);
-
-  document.getElementById('rank-clientes').innerHTML = clientes.length ? clientes.map((c, i) => `
-    <div class="rank-item">
-      <div class="rank-num">${i + 1}</div>
-      <div class="rank-info">
-        <div class="rank-name">${c.name}</div>
-        <div class="rank-sub">${c.count} entrega(s)</div>
-      </div>
-      <div class="rank-value">R$ ${c.total.toFixed(0)}</div>
-    </div>`).join('') : '<div class="no-data">Dados insuficientes</div>';
-
-  // Veículos
-  const vMap = {};
-  concluidas.forEach(e => {
-    if (!vMap[e.veiculo]) vMap[e.veiculo] = { fat: 0, lucro: 0, count: 0 };
-    vMap[e.veiculo].fat += e.valor;
-    vMap[e.veiculo].lucro += (e.valor - ((e.custo||0)+(e.pedagioExtra||0)+(e.custoExtra||0)));
-    vMap[e.veiculo].count++;
-  });
-  const veiculos = Object.entries(vMap).map(([k, v]) => ({ name: k.split(' - ')[0], ...v }))
-    .sort((a, b) => b.lucro - a.lucro);
-
-  document.getElementById('rank-veiculos').innerHTML = veiculos.length ? veiculos.map((v, i) => `
-    <div class="rank-item">
-      <div class="rank-num">${i + 1}</div>
-      <div class="rank-info">
-        <div class="rank-name">${v.name}</div>
-        <div class="rank-sub">${v.count} entrega(s) • Faturou R$ ${v.fat.toFixed(0)}</div>
-      </div>
-      <div class="rank-value">R$ ${v.lucro.toFixed(0)}</div>
-    </div>`).join('') : '<div class="no-data">Dados insuficientes</div>';
-
-  // Descarga
-  const descMap = {};
-  entregas.filter(e => e.tempoDescarga !== null).forEach(e => {
-    if (!descMap[e.cliente]) descMap[e.cliente] = { total: 0, count: 0 };
-    descMap[e.cliente].total += e.tempoDescarga;
-    descMap[e.cliente].count++;
-  });
-  const descargas = Object.entries(descMap).map(([k, v]) => ({ name: k, avg: v.total / v.count, count: v.count }))
-    .sort((a, b) => b.avg - a.avg).slice(0, 5);
-
-  document.getElementById('rank-descarga').innerHTML = descargas.length ? descargas.map((d, i) => `
-    <div class="rank-item">
-      <div class="rank-num">${i + 1}</div>
-      <div class="rank-info">
-        <div class="rank-name">${d.name}</div>
-        <div class="rank-sub">${d.count} descarga(s)</div>
-      </div>
-      <div class="rank-value" style="color:var(--red)">${formatMinutes(d.avg)}</div>
-    </div>`).join('') : '<div class="no-data">Sem dados de descarga ainda</div>';
-}
-
-// ---- DELETE ----
-function deletarEntrega(id) {
-  deleteId = id;
-  document.getElementById('modal-delete').classList.add('open');
-}
-function confirmarDelete() {
-  entregas = entregas.filter(e => e.id !== deleteId);
-  save();
-  closeModal('modal-delete');
-  renderHistorico();
-  renderDashboard();
-}
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// ---- UTILS ----
-function formatTime(d) { return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }); }
-function formatDate(str) {
-  const [y, m, d] = str.split('-');
-  return d + '/' + m + '/' + y;
-}
-function formatMinutes(min) {
-  if (min < 60) return Math.round(min) + ' min';
-  const h = Math.floor(min / 60);
-  const m = Math.round(min % 60);
-  return h + 'h' + (m > 0 ? m + 'min' : '');
-}
-
-// TZ moved to top of script
-
-function nowBrasilia() {
-  // Returns "YYYY-MM-DDTHH:MM" in BRT for datetime-local inputs
-  const now = new Date();
-  const str = now.toLocaleString('sv-SE', { timeZone: TZ }); // sv-SE gives ISO-like format
-  return str.slice(0, 16).replace(' ', 'T');
-}
-
-function formatDateTimeBrasilia(isoStr) {
-  // Formats a stored ISO string for display in BRT
-  const d = new Date(isoStr);
-  return d.toLocaleString('pt-BR', {
-    timeZone: TZ,
-    day: '2-digit', month: '2-digit', year: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  });
-}
-
-function formatSeconds(sec) {
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-}
-
-// ---- FROTA ----
-let veiculos = [];
-let editVeiculoId = null;
-
-function saveVeiculos() {
-  localStorage.setItem(getStorageKey('veiculos'), JSON.stringify(veiculos));
-  syncVeiculosFirebase();
-}
-
-function abrirModalVeiculo(id) {
-  editVeiculoId = id || null;
-  if (id) {
-    const v = veiculos.find(x => x.id === id);
-    if (!v) return;
-    document.getElementById('modal-veiculo-title').textContent = 'Editar Veículo';
-    document.getElementById('mv-id').value = v.id;
-    document.getElementById('mv-modelo').value = v.modelo;
-    document.getElementById('mv-ano').value = v.ano;
-    document.getElementById('mv-placa').value = v.placa;
-    document.getElementById('mv-tipo').value = v.tipo;
-    document.getElementById('mv-consumo').value = v.consumo;
-    document.getElementById('mv-carga').value = v.carga;
-    document.getElementById('mv-ultima-revisao').value = v.ultimaRevisao || '';
-    document.getElementById('mv-proxima-revisao').value = v.proximaRevisao || '';
-    document.getElementById('mv-obs').value = v.obs || '';
-  } else {
-    document.getElementById('modal-veiculo-title').textContent = 'Novo Veículo';
-    ['mv-modelo','mv-ano','mv-placa','mv-consumo','mv-carga','mv-ultima-revisao','mv-proxima-revisao','mv-obs'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('mv-tipo').value = '🚗';
-  }
-  document.getElementById('modal-veiculo').classList.add('open');
-}
-
-function salvarVeiculo() {
-  const modelo = document.getElementById('mv-modelo').value.trim();
-  const placa = document.getElementById('mv-placa').value.trim().toUpperCase();
-  if (!modelo || !placa) { alert('Preencha Modelo e Placa.'); return; }
-
-  const veiculo = {
-    id: editVeiculoId || Date.now(),
-    modelo,
-    ano: document.getElementById('mv-ano').value,
-    placa,
-    tipo: document.getElementById('mv-tipo').value,
-    consumo: parseFloat(document.getElementById('mv-consumo').value) || 0,
-    carga: parseFloat(document.getElementById('mv-carga').value) || 0,
-    ultimaRevisao: document.getElementById('mv-ultima-revisao').value,
-    proximaRevisao: document.getElementById('mv-proxima-revisao').value,
-    obs: document.getElementById('mv-obs').value
-  };
-
-  if (editVeiculoId) {
-    const idx = veiculos.findIndex(x => x.id === editVeiculoId);
-    veiculos[idx] = veiculo;
-  } else {
-    veiculos.push(veiculo);
-  }
-  saveVeiculos();
-  closeModal('modal-veiculo');
-  renderFrota();
-  syncFrotaSelects();
-}
-
-function deletarVeiculo(id) {
-  if (!confirm('Excluir este veículo da frota?')) return;
-  veiculos = veiculos.filter(v => v.id !== id);
-  saveVeiculos();
-  renderFrota();
-  syncFrotaSelects();
-}
-
-function renderFrota() {
-  // Alertas
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const alertasEl = document.getElementById('frota-alertas');
-  const alertas = [];
-  veiculos.forEach(v => {
-    if (!v.proximaRevisao) return;
-    const pr = new Date(v.proximaRevisao);
-    pr.setHours(0,0,0,0);
-    const diff = Math.ceil((pr - today) / 86400000);
-    if (diff < 0) {
-      alertas.push(`<div class="alert-strip red">🔴 <strong>${v.modelo} (${v.placa})</strong> — Revisão vencida há ${Math.abs(diff)} dia(s)! Agendar imediatamente.</div>`);
-    } else if (diff <= 15) {
-      alertas.push(`<div class="alert-strip">🟡 <strong>${v.modelo} (${v.placa})</strong> — Revisão em <strong>${diff} dia(s)</strong> (${formatDate(v.proximaRevisao)}). Agende com antecedência.</div>`);
-    }
-  });
-  alertasEl.innerHTML = alertas.join('');
-
-  // Cards
-  const grid = document.getElementById('frota-grid');
-  const addBtn = `<div class="frota-add-btn" onclick="abrirModalVeiculo()"><div class="frota-add-plus">＋</div><div>Adicionar Veículo</div></div>`;
-
-  if (!veiculos.length) { grid.innerHTML = addBtn; return; }
-
-  grid.innerHTML = veiculos.map(v => {
-    // Revisão progress
-    let revisaoHTML = '';
-    if (v.ultimaRevisao && v.proximaRevisao) {
-      const inicio = new Date(v.ultimaRevisao); inicio.setHours(0,0,0,0);
-      const fim = new Date(v.proximaRevisao); fim.setHours(0,0,0,0);
-      const total = fim - inicio;
-      const decorrido = today - inicio;
-      const pct = Math.min(100, Math.max(0, Math.round((decorrido / total) * 100)));
-      const diff = Math.ceil((fim - today) / 86400000);
-      let cor, badgeClass, badgeText;
-      if (diff < 0) { cor = '#f56060'; badgeClass = 'revisao-badge-late'; badgeText = 'VENCIDA'; }
-      else if (diff <= 15) { cor = '#f5a623'; badgeClass = 'revisao-badge-warn'; badgeText = diff + ' dias'; }
-      else { cor = '#c8f560'; badgeClass = 'revisao-badge-ok'; badgeText = diff + ' dias'; }
-      revisaoHTML = `
-        <div class="revisao-bar">
-          <div class="revisao-bar-header">
-            <span class="revisao-bar-label">🔧 Próxima Revisão</span>
-            <span class="${badgeClass}">${badgeText}</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" style="width:${pct}%;background:${cor}"></div>
-          </div>
-          <div class="revisao-dates">
-            <span>Última: ${formatDate(v.ultimaRevisao)}</span>
-            <span>Próxima: ${formatDate(v.proximaRevisao)}</span>
-          </div>
-        </div>`;
-    } else if (v.proximaRevisao) {
-      const fim = new Date(v.proximaRevisao); fim.setHours(0,0,0,0);
-      const diff = Math.ceil((fim - today) / 86400000);
-      let badgeClass = diff < 0 ? 'revisao-badge-late' : diff <= 15 ? 'revisao-badge-warn' : 'revisao-badge-ok';
-      let badgeText = diff < 0 ? 'VENCIDA' : diff + ' dias';
-      revisaoHTML = `<div class="revisao-bar"><div class="revisao-bar-header"><span class="revisao-bar-label">🔧 Próxima Revisão</span><span class="${badgeClass}">${badgeText}</span></div><div class="revisao-dates"><span></span><span>${formatDate(v.proximaRevisao)}</span></div></div>`;
-    }
-
-    // Entregas stats
-    const vKey = v.modelo + ' - ' + v.placa;
-    const vEntregas = entregas.filter(e => e.veiculo === vKey);
-    const vFat = vEntregas.filter(e => e.status === 'concluido').reduce((s, e) => s + e.valor, 0);
-
-    return `<div class="frota-card">
-      <div class="frota-card-top">
-        <div class="frota-card-icon">${v.tipo}</div>
-        <div>
-          <div class="frota-card-name">${v.modelo}</div>
-          <div class="frota-card-year">${v.ano ? 'Ano ' + v.ano : ''}</div>
-        </div>
-        <div class="frota-plate">${v.placa}</div>
-      </div>
-      <div class="frota-specs">
-        <div class="frota-spec">
-          <div class="frota-spec-label">⛽ Consumo</div>
-          <div class="frota-spec-value" style="color:var(--accent)">${v.consumo ? v.consumo + ' km/l' : '--'}</div>
-        </div>
-        <div class="frota-spec">
-          <div class="frota-spec-label">📦 Cap. Carga</div>
-          <div class="frota-spec-value" style="color:var(--accent2)">${v.carga ? v.carga + ' kg' : '--'}</div>
-        </div>
-        <div class="frota-spec">
-          <div class="frota-spec-label">🚚 Entregas</div>
-          <div class="frota-spec-value" style="color:var(--text)">${vEntregas.length}</div>
-        </div>
-        <div class="frota-spec">
-          <div class="frota-spec-label">💰 Faturado</div>
-          <div class="frota-spec-value" style="color:var(--green)">R$ ${vFat.toFixed(0)}</div>
-        </div>
-      </div>
-      ${revisaoHTML ? '<div style="padding:0 18px 4px">' + revisaoHTML + '</div>' : ''}
-      ${v.obs ? `<div style="margin:0 18px 14px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:12px;font-size:12px;color:var(--text2)">${v.obs}</div>` : ''}
-      <div class="frota-footer">
-        <button class="btn btn-secondary btn-sm" style="flex:1" onclick="abrirModalVeiculo(${v.id})">✏️ Editar</button>
-        <button class="btn btn-danger btn-sm" onclick="deletarVeiculo(${v.id})">✕</button>
-      </div>
-    </div>`;
-  }).join('') + addBtn;
-}
-
-function syncFrotaSelects() {
-  // Sync the vehicle select on the new delivery form
-  const sel = document.getElementById('f-veiculo');
-  const current = sel.value;
-  const opts = veiculos.map(v => `<option value="${v.modelo} - ${v.placa}">${v.tipo} ${v.modelo} — ${v.placa}</option>`).join('');
-  // keep legacy defaults if no custom vehicles
-  if (veiculos.length) {
-    sel.innerHTML = '<option value="">Selecione...</option>' + opts;
-  }
-  sel.value = current;
-
-  // Sync history filter
-  const fv = document.getElementById('filtro-veiculo');
-  if (veiculos.length) {
-    const fopts = veiculos.map(v => `<option value="${v.modelo} - ${v.placa}">${v.modelo} (${v.placa})</option>`).join('');
-    fv.innerHTML = '<option value="">Todos os veículos</option>' + fopts;
-  }
-}
-
-// ==============================
-// RASTREIO EM TEMPO REAL
-// ==============================
-let modoRastreio = 'dono';
-let trackingAtivo = false;
-let watchId = null;
-
-// ── TRIP GPS: rastreia km da entrega ativa ───────────────────────────────
-const tripGps = {
-  watchId:    null,
-  lastPos:    null,
-  kmTotal:    0,
-  entregaId:  null,
-  ativo:      false,
-
-  iniciar(entregaId) {
-    if (!navigator.geolocation) return;
-    if (this.ativo) this.parar();
-    this.entregaId = entregaId;
-    this.kmTotal   = 0;
-    this.lastPos   = null;
-    this.ativo     = true;
-    this.watchId   = navigator.geolocation.watchPosition(
-      pos => {
-        const { latitude: lat, longitude: lng } = pos.coords;
-        if (this.lastPos) {
-          const delta = calcDistance(this.lastPos.lat, this.lastPos.lng, lat, lng);
-          // Ignora saltos absurdos (>2km num tick = erro de sinal)
-          if (delta < 2) this.kmTotal += delta;
-        }
-        this.lastPos = { lat, lng };
-        this._atualizarUI();
-      },
-      err => console.warn('tripGps erro:', err.message),
-      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
-    );
-    console.log('tripGps iniciado para entrega', entregaId);
-  },
-
-  parar() {
-    if (this.watchId != null) {
-      navigator.geolocation.clearWatch(this.watchId);
-      this.watchId = null;
-    }
-    this.ativo = false;
-    console.log('tripGps parado — km acumulados:', this.kmTotal.toFixed(2));
-    return parseFloat(this.kmTotal.toFixed(2));
-  },
-
-  _atualizarUI() {
-    const el = document.getElementById('trip-gps-km');
-    if (el) el.textContent = this.kmTotal.toFixed(1) + ' km';
-  }
-};
-let selectedVehicleId = null;
-let leafletMap = null;
-let leafletMarkers = {}; // vehicleId -> { marker, polyline, points, stopMarker }
-let myTrailPoints = [];
-let myMarker = null;
-let myPolyline = null;
-let trackingStart = null;
-let trackingTimer = null;
-let lastPos = null;
-let totalDistancia = 0;
-let demoMode = false;
-
-// Historico a cada 20min e deteccao de parada
-const HISTORY_INTERVAL_MS = 20 * 60 * 1000;
-const HISTORY_DAYS = 5;
-const STOP_THRESHOLD_MIN = 15;
-const STOP_RADIUS_M = 150;
-let lastHistorySave = 0;
-let stopStartTime = null;
-let stopPosition = null;
-let stopAlertFired = {};
-let activeAlertas = {};
-
-const VEHICLE_COLORS = ['#c8f560','#f5a623','#60c8f5','#f56060','#c060f5'];
-
-function initRastreioPage() {
-  if (fbDb || demoMode) {
-    showRastreioMain();
-  } else {
-    document.getElementById('rastreio-setup').style.display = 'block';
-    document.getElementById('rastreio-main').style.display = 'none';
-  }
-}
-
-function usarModoDemo() {
-  demoMode = true;
-  document.getElementById('fb-status-text').textContent = 'Modo Demo (GPS local)';
-  showRastreioMain();
-}
-
-function conectarFirebase() {
-  // Firebase is pre-configured. Just show rastreio main.
-  if (fbDb) {
-    document.getElementById('fb-status-text').textContent = 'Firebase conectado ✓';
-    showRastreioMain();
-  } else {
-    document.getElementById('fb-error').textContent = 'Aguarde login para conectar.';
-    document.getElementById('fb-error').style.display = 'block';
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-// AUTH & USER SESSION  (SaaS — Dono cria funcionários)
-// ═══════════════════════════════════════════════════════
-let fbApp = null, fbDb = null, fbAuth = null;
-let currentUser = null;
-
-const FB_CONFIG = {
-  apiKey: "AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4",
-  authDomain: "fretemanager-60ef8.firebaseapp.com",
-  databaseURL: "https://fretemanager-60ef8-default-rtdb.firebaseio.com",
-  projectId: "fretemanager-60ef8",
-  storageBucket: "fretemanager-60ef8.firebasestorage.app",
-  messagingSenderId: "977410315261",
-  appId: "1:977410315261:web:ebaf0794c7d887321abf94"
-};
-
-// ── PLANOS FreteManager ──────────────────────────────
-const PLANOS = {
-  solo:     { nome: 'Solo',     preco: 49,  maxMotoristas: 1,  icone: '🚗', popular: false },
-  basico:   { nome: 'Básico',   preco: 79,  maxMotoristas: 3,  icone: '📦', popular: false },
-  pro:      { nome: 'Pro',      preco: 119, maxMotoristas: 5,  icone: '⚡', popular: true  },
-  empresa:  { nome: 'Empresa',  preco: 179, maxMotoristas: 10, icone: '🏗️', popular: false },
-  business: { nome: 'Business', preco: 249, maxMotoristas: 15, icone: '🏢', popular: false },
-};
-// Helper: detecta chave do plano pelo maxMotoristas salvo no Firebase
-function detectarPlano(maxMotoristas) {
-  return Object.keys(PLANOS).find(k => PLANOS[k].maxMotoristas === maxMotoristas) || 'solo';
-}
-// Legado — mantido para compatibilidade
-const SAAS_PRECO_BASE  = 49;
-const SAAS_PRECO_FUNC  = 0;
-const SAAS_MAX_FUNC_BASE = 1; // padrão = Solo
-
-function initFirebase() {
-  if (fbApp) return;
-  try {
-    fbApp  = firebase.initializeApp(FB_CONFIG);
-    fbDb   = firebase.database();
-    fbAuth = firebase.auth();
-
-fbAuth.onAuthStateChanged(async user => {
-  const btnLogin = document.getElementById('btn-login');
-  console.log("--- Monitor de Acesso ---");
-
-  if (user) {
-    console.log("Autenticado como:", user.email);
-    
-    try {
-      // 1. Tenta buscar o perfil
-      const snap = await fbDb.ref('usuarios/' + user.uid).once('value');
-      const profile = snap.val();
-
-      if (profile) {
-        console.log("Dados do perfil carregados com sucesso.");
-
-        // ── BLOQUEAR LOGIN SE FUNCIONÁRIO DESATIVADO ──
-        if (profile.tipo === 'funcionario' && profile.empresaId) {
-          const funcSnap = await fbDb.ref('empresas/' + profile.empresaId + '/funcionarios/' + user.uid + '/ativo').once('value');
-          if (funcSnap.val() === false) {
-            await fbAuth.signOut();
-            showAuthError('⛔ Seu acesso foi desativado. Entre em contato com o responsável da empresa.');
-            if (btnLogin) { btnLogin.disabled = false; btnLogin.innerHTML = '🔓 Entrar'; }
-            return;
-          }
-        }
-
-        currentUser = { uid: user.uid, email: user.email, ...profile };
-
-        // 2. TUDO OK: Agora escondemos a tela de login
-        hideAuthScreen(); 
-        
-        // 3. Atualiza o status e a sessão
-        fbDb.ref('usuarios/' + user.uid + '/online').set(true);
-        if (typeof applyUserSession === 'function') applyUserSession();
-
-      } else {
-        // PERFIL NÃO EXISTE NO BANCO (O erro do James)
-        console.error("UID não encontrado no Database:", user.uid);
-        
-        // Se o botão estava "Entrando...", significa que o usuário tentou logar agora
-        if (btnLogin && btnLogin.disabled) {
-           alert("Seu login foi aceito, mas não encontramos seus dados de perfil. Por favor, faça o cadastro novamente.");
-           await fbAuth.signOut();
-           // Destravamos o botão para ele tentar outro e-mail ou cadastrar
-           btnLogin.disabled = false;
-           btnLogin.innerHTML = '🔓 Entrar';
-        }
-      }
-    } catch (error) {
-      console.error("Erro ao ler banco de dados:", error);
-      // Se deu erro de permissão, mostramos para o usuário
-      showAuthError("Erro de conexão com o banco. Verifique sua internet.");
-      
-      if (btnLogin) {
-        btnLogin.disabled = false;
-        btnLogin.innerHTML = '🔓 Entrar';
-      }
-    }
-  } else {
-    // Caso o usuário deslogue
-    console.log("Usuário deslogado.");
-    entregas = [];
-    veiculos = [];
-    fbSyncReady = false;
-    currentUser = null;
-    showAuthScreen(); // Garante que a div #auth-screen volte a aparecer
-    
-    if (btnLogin) {
-      btnLogin.disabled = false;
-      btnLogin.innerHTML = '🔓 Entrar';
-    }
-  }
-});
-
-  } catch(e) {
-    console.error('Firebase init error:', e);
-    showAuthError('Erro ao conectar: ' + e.message);
-  }
-}
-
-// ── AUTH FORMS ────────────────────────────────────────
-function authTab(tab) {
-  document.getElementById('auth-form-login').style.display    = tab === 'login'    ? 'flex' : 'none';
-  document.getElementById('auth-form-cadastro').style.display = tab === 'cadastro' ? 'flex' : 'none';
-  clearAuthMsg();
-}
-
-function clearAuthMsg() {
-  document.getElementById('auth-error').style.display   = 'none';
-  document.getElementById('auth-success').style.display = 'none';
-}
-
-function showAuthError(msg) {
-  const el = document.getElementById('auth-error');
-  if (!el) return;
-  el.textContent = msg; el.style.display = 'block';
-  document.getElementById('auth-success').style.display = 'none';
-}
-
-function showAuthSuccess(msg) {
-  const el = document.getElementById('auth-success');
-  if (!el) return;
-  el.textContent = msg; el.style.display = 'block';
-  document.getElementById('auth-error').style.display = 'none';
-}
-
+// ============================================
+// FUNÇÕES DE UTILIDADE
+// ============================================
 function contarEmpresa() {
   const v = document.getElementById('c-empresa')?.value || '';
   const el = document.getElementById('empresa-chars');
-  if (el) { el.textContent = v.length + ' / 50'; el.classList.toggle('warn', v.length > 40); }
-}
-
-function selTipo(tipo) {} // mantido por compatibilidade
-
-async function fazerLogin() {
-  // 1. Verificação de segurança para a variável de autenticação
-  if (typeof fbAuth === 'undefined' || !fbAuth) { 
-    if (typeof initFirebase === 'function') initFirebase(); 
-    showAuthError('Conectando ao servidor... tente novamente.'); 
-    return; 
+  if (el) {
+    el.textContent = v.length + ' / 50';
+    el.classList.toggle('warn', v.length > 40);
   }
-
-  const email = document.getElementById('l-email').value.trim();
-  const senha = document.getElementById('l-senha').value;
-  
-  if (!email || !senha) { 
-    showAuthError('Preencha e-mail e senha.'); 
-    return; 
-  }
-
-  const btn = document.getElementById('btn-login');
-  // Salva o estado atual para restaurar se falhar
-  const originalContent = '🔓 Entrar';
-  
-  btn.disabled = true; 
-  btn.innerHTML = '<span class="auth-spinner"></span>Entrando...';
-  clearAuthMsg();
-
-  try {
-    await fbAuth.signInWithEmailAndPassword(email, senha);
-    // Nota: Se o login for bem-sucedido, o onAuthStateChanged cuidará do redirecionamento.
-  } catch(e) {
-    console.error("Erro detalhado do Firebase:", e.code, e.message);
-    
-    const msgs = {
-      'auth/user-not-found': 'E-mail não cadastrado.',
-      'auth/wrong-password': 'Senha incorreta.',
-      'auth/invalid-email': 'E-mail inválido.',
-      'auth/too-many-requests': 'Muitas tentativas. Aguarde alguns minutos.',
-      'auth/invalid-credential': 'E-mail ou senha incorretos.',
-      'auth/network-request-failed': 'Sem conexão com a internet.'
-    };
-
-    showAuthError(msgs[e.code] || 'Erro: ' + e.message);
-    
-    // REATIVAÇÃO GARANTIDA DO BOTÃO
-    btn.disabled = false; 
-    btn.innerHTML = originalContent;
-  }
-}
-
-async function fazerCadastro() {
-  if (!fbAuth) { initFirebase(); showAuthError('Conectando... tente novamente em 2 segundos.'); return; }
-  
-  const empresa = (document.getElementById('c-empresa')?.value || '').trim().slice(0, 50);
-  const nome    = (document.getElementById('c-nome')?.value || '').trim();
-  const email   = (document.getElementById('c-email')?.value || '').trim();
-  const senha   = document.getElementById('c-senha')?.value || '';
-
-  if (!empresa) { showAuthError('Informe o nome da empresa.'); return; }
-  if (!nome)    { showAuthError('Informe seu nome.'); return; }
-  if (!email)   { showAuthError('Informe o e-mail.'); return; }
-  if (senha.length < 6) { showAuthError('Senha deve ter pelo menos 6 caracteres.'); return; }
-
-  const btn = document.getElementById('btn-cadastro');
-  const originalText = '✅ Criar conta de empresa';
-  
-  btn.disabled = true; 
-  btn.innerHTML = '<span class="auth-spinner"></span>Criando conta...';
-  clearAuthMsg();
-
-  try {
-    const cred = await fbAuth.createUserWithEmailAndPassword(email, senha);
-    const uid = cred.user.uid;
-    const empresaId = uid;
-    
-    const profile = { nome, email, tipo: 'dono', empresaId, empresaNome: empresa };
-    
-    // 1. Salva no Banco de Dados
-    await fbDb.ref('usuarios/' + uid).set(profile);
-    await fbDb.ref('empresas/' + empresaId + '/info').set({
-      nome: empresa, 
-      donoUid: uid, 
-      criadoEm: Date.now(),
-      plano: 'solo',
-      maxFuncionarios: PLANOS.solo.maxMotoristas
-    });
-
-    // 2. SUCESSO: Limpa o botão e avisa o usuário
-    alert("Conta de empresa criada com sucesso! Agora você pode entrar.");
-    
-    // 3. Voltar para a aba de login automaticamente
-    if(typeof authTab === 'function') {
-        authTab('login'); 
-    }
-    
-    // 4. Resetar o botão de cadastro para o estado original
-    btn.disabled = false;
-    btn.innerHTML = originalText;
-
-  } catch(e) {
-    console.error("Erro no cadastro:", e);
-    const msgs = {
-      'auth/email-already-in-use': 'E-mail já cadastrado. Faça login.',
-      'auth/invalid-email': 'E-mail inválido.',
-      'auth/weak-password': 'Senha muito fraca (mínimo 6 caracteres).',
-    };
-    showAuthError(msgs[e.code] || 'Erro: ' + e.message);
-    
-    // REATIVA O BOTÃO EM CASO DE ERRO
-    btn.disabled = false; 
-    btn.innerHTML = originalText;
-  }
-}
-
-async function fazerLogout() {
-  if (!confirm('Sair da conta?')) return;
-  fecharAvatarMenu();
-  if (currentUser && fbDb) {
-    fbDb.ref('usuarios/' + currentUser.uid + '/online').set(false);
-  }
-  await fbAuth.signOut();
-}
-
-function showAuthScreen() {
-  const el = document.getElementById('auth-screen');
-  if (el) el.style.display = 'flex';
-  const btn = document.getElementById('btn-login');
-  if (btn) { btn.disabled = false; btn.innerHTML = '🔓 Entrar'; }
-  authTab('login');
-}
-
-function hideAuthScreen() {
-  const authScreen = document.getElementById('auth-screen');
-  const btnLogin = document.getElementById('btn-login');
-
-  if (authScreen) {
-    // 1. Força o desaparecimento
-    authScreen.style.setProperty('display', 'none', 'important');
-    
-    // 2. Garante que o corpo da página possa rolar (caso tenha travado)
-    document.body.style.overflow = 'auto';
-    
-    // 3. Reseta o botão para a próxima vez que deslogar
-    if (btnLogin) {
-      btnLogin.disabled = false;
-      btnLogin.innerHTML = '🔓 Entrar';
-    }
-    
-    console.log("✅ Sistema: Tela de autenticação removida.");
-  } else {
-    console.error("❌ Erro Crítico: Elemento #auth-screen não existe no HTML.");
-  }
-}
-
-// ── SESSION & PERMISSIONS ────────────────────────────
-function applyUserSession() {
-  if (!currentUser) return;
-  const u = currentUser;
-  const empNome = u.empresaNome || 'FreteManager';
-  const appNome = document.getElementById('app-empresa-nome');
-  const authNome = document.getElementById('auth-empresa-nome');
-  if (appNome)  appNome.textContent  = empNome;
-  if (authNome) authNome.textContent = empNome;
-  const tipoEl = document.getElementById('app-user-tipo');
-  if (tipoEl) tipoEl.textContent = u.tipo === 'dono' ? '👑 Dono' : '👷 Funcionário';
-  const nomeEl = document.getElementById('avatar-nome-display');
-  if (nomeEl) nomeEl.textContent = u.nome || u.email;
-  const emailEl = document.getElementById('avatar-user-email');
-  if (emailEl) emailEl.textContent = u.email;
-  carregarDadosFirebase();
-  if (u.tipo === 'funcionario') {
-    applyFuncRestrictions();
-    showPageFunc();
-  } else {
-    removeFuncRestrictions();
-    renderDashboard();
-  }
-}
-
-function applyFuncRestrictions() {
-  // 1. Esconde os botões do menu lateral/inferior
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe', 'nav-rastreio'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-
-  const fn = document.getElementById('nav-func');
-  if (fn) fn.style.display = 'flex';
-
-  // 2. Altera o título da seção de Frota para o Funcionário
-  const titles = document.querySelectorAll('.section-title');
-  titles.forEach(t => {
-    if (t.textContent.includes('Frota')) {
-      t.textContent = 'Detalhes do Veículo';
-    }
-  });
-
-  // 3. CSS Injetado (Blindagem da Aba Frota e Financeiro)
-  const style = document.getElementById('func-hide-style') || document.createElement('style');
-  style.id = 'func-hide-style';
-  
-  style.textContent = `
-    /* Esconde o botão de Adicionar Veículo (+ Veículo) */
-    .btn-add-veiculo, 
-    #btn-abrir-modal-veiculo, 
-    [onclick*="abrirModalVeiculo"], 
-    [onclick*="novoVeiculo"] { 
-      display: none !important; 
-    }
-
-    /* Esconde botões de editar e excluir dentro dos cards de frota */
-    .fleet-actions, 
-    [onclick*="editarVeiculo"], 
-    [onclick*="deletarVeiculo"] { 
-      display: none !important; 
-    }
-
-    /* Trava de segurança para elementos marcados como exclusivos do dono */
-    .dono-only { display: none !important; }
-    
-    /* Proteção de valores no Histórico e Tabelas */
-    #page-historico table th:nth-child(5), #page-historico table td:nth-child(5),
-    #page-historico table th:nth-child(6), #page-historico table td:nth-child(6),
-    #page-historico table th:nth-child(9), #page-historico table td:nth-child(9) {
-      display: none !important;
-    }
-
-    /* Bloqueio de campos financeiros no controle de viagens */
-    #campo-valor-frete, #lucro-preview, .viagem-valor, .money-text { 
-      display: none !important; 
-    }
-  `;
-  
-  document.head.appendChild(style);
-  console.log("🛠️ Visão Funcionário: Botão +Veículo e Financeiro removidos.");
-}
-
-function removeFuncRestrictions() {
-  // Mostra os botões novamente
-  ['nav-nova','nav-historico','nav-rankings','nav-dashboard','nav-equipe', 'nav-rastreio'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'flex'; // ou 'block'
-  });
-
-  // Remove o CSS de restrição
-  const style = document.getElementById('func-hide-style');
-  if (style) style.remove();
-}
-
-function showPageFunc() {
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-func')?.classList.add('active');
-  document.getElementById('nav-func')?.classList.add('active');
-  renderFuncDashboard();
-}
-
-// ── VISAO FUNCIONARIO ────────────────────────────────
-function renderFuncDashboard() {
-  const now = new Date(new Date().toLocaleString('en-US', { timeZone: TZ }));
-  const h = now.getHours();
-  const greet = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite';
-  const nome = currentUser?.nome?.split(' ')[0] || '';
-  const days   = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  
-  const el1 = document.getElementById('func-greeting');
-  const el2 = document.getElementById('func-date');
-  if (el1) el1.textContent = greet + (nome ? ', ' + nome : '') + ' 👋';
-  if (el2) el2.textContent = days[now.getDay()] + ', ' + now.getDate() + ' de ' + months[now.getMonth()];
-
-  const sel = document.getElementById('func-veiculo-select');
-  if (sel) {
-    const saved = localStorage.getItem('fm_func_veiculo_' + currentUser.uid);
-    sel.innerHTML = '<option value="">Selecione sua placa...</option>' +
-      veiculos.map(v => `<option value="${v.placa}" ${v.placa === saved ? 'selected' : ''}>${v.modelo} — ${v.placa}</option>`).join('');
-    if (saved) { sel.value = saved; funcMostrarVeiculo(saved); }
-  }
-
-  // --- NOVO: BOTÃO SELECIONAR CARGAS DISPONÍVEIS ---
-  const containerAcoes = document.getElementById('func-actions-container');
-  if (containerAcoes) {
-    // Filtra quantas cargas estão com status 'agendado' (disponíveis)
-    const totalDisponiveis = entregas.filter(e => e.status === 'agendado').length;
-
-    containerAcoes.innerHTML = `
-      <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 15px;">
-        
-        <button onclick="showPage('ativas')" class="btn-primary" style="
-          width: 100%; 
-          padding: 22px; 
-          border-radius: 18px; 
-          border: none; 
-          background: var(--accent); 
-          color: white; 
-          display: flex; 
-          align-items: center; 
-          justify-content: center; 
-          gap: 12px; 
-          font-weight: 800; 
-          font-size: 16px; 
-          cursor: pointer; 
-          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-          transition: transform 0.2s;
-        ">
-          <span style="font-size: 24px;">📦</span> 
-          SELECIONAR CARGAS DISPONÍVEIS
-          <span style="background: rgba(255,255,255,0.2); padding: 2px 10px; border-radius: 8px; font-size: 14px;">
-            ${totalDisponiveis}
-          </span>
-        </button>
-
-        <p style="text-align: center; font-size: 12px; color: var(--text2); opacity: 0.8;">
-          Toque acima para visualizar e iniciar uma nova entrega
-        </p>
-      </div>
-    `;
-  }
-}
-
-function funcSelecionarVeiculo() {
-  const sel = document.getElementById('func-veiculo-select');
-  const placa = sel.value;
-  if (!placa) { funcLimparVeiculo(); return; }
-  localStorage.setItem('fm_func_veiculo_' + currentUser.uid, placa);
-  if (fbDb && currentUser) {
-    fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + currentUser.uid + '/veiculo').set(placa);
-  }
-  funcMostrarVeiculo(placa);
-}
-
-function funcLimparVeiculo() {
-  localStorage.removeItem('fm_func_veiculo_' + (currentUser?.uid || ''));
-  document.getElementById('func-veiculo-info').style.display = 'none';
-  const sel = document.getElementById('func-veiculo-select');
-  if (sel) sel.value = '';
-}
-
-function funcMostrarVeiculo(placa) {
-  const v = veiculos.find(x => x.placa === placa);
-  if (!v) return;
-  document.getElementById('func-selecao-veiculo').style.display = 'block';
-  document.getElementById('func-veiculo-info').style.display = 'block';
-  document.getElementById('fv-nome').textContent    = v.modelo || '-';
-  document.getElementById('fv-ano').textContent     = v.ano ? 'Ano ' + v.ano : '-';
-  document.getElementById('fv-placa').textContent   = v.placa || '-';
-  document.getElementById('fv-consumo').textContent = v.consumo ? v.consumo + ' km/L' : '-';
-  document.getElementById('fv-revisao').textContent = v.proximaRevisao ? formatDate(v.proximaRevisao) : '-';
-  const fretes = entregas.filter(e => e.veiculo && e.veiculo.includes(placa) && e.status === 'concluido');
-  document.getElementById('fv-fretes').textContent = fretes.length;
-  const gastos = fretes.reduce((s, e) => s + (e.pedagioExtra||0) + (e.custoExtra||0), 0);
-  document.getElementById('fv-gastos').textContent = 'R$ ' + gastos.toFixed(2).replace('.',',');
-  const cargas = fretes.slice(-5).reverse();
-  const listEl = document.getElementById('func-cargas-list');
-  if (!cargas.length) { listEl.innerHTML = '<div class="no-data" style="padding:20px 0">Nenhuma carga neste veículo</div>'; return; }
-  listEl.innerHTML = cargas.map(e => `
-    <div class="func-carga-item">
-      <div class="func-dot" style="background:var(--green)"></div>
-      <div style="flex:1">
-        <div style="font-weight:600">${e.origem} → ${e.destino}</div>
-        <div style="font-size:11px;color:var(--text2);margin-top:2px">
-          ${formatDate(e.data)} • ${e.cliente || '-'}${e.carga ? ' • ' + e.carga : ''}${e.km ? ' • ' + e.km + ' km' : ''}
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-// ══ GESTÃO DE EQUIPE (Dono only) ══════════════════════
-let funcionariosCache = [];
-
-function toggleAddFunc() {
-  const p = document.getElementById('add-func-panel');
-  p.classList.toggle('hidden');
-  if (!p.classList.contains('hidden')) {
-    document.getElementById('nf-nome').value  = '';
-    document.getElementById('nf-email').value = '';
-    document.getElementById('nf-senha').value = '';
-  }
-}
-
-async function criarFuncionario() {
-  const nome  = document.getElementById('nf-nome').value.trim();
-  const email = document.getElementById('nf-email').value.trim();
-  const senha = document.getElementById('nf-senha').value;
-  if (!nome)            { showToast('⚠️ Informe o nome'); return; }
-  if (!email)           { showToast('⚠️ Informe o e-mail'); return; }
-  if (senha.length < 6) { showToast('⚠️ Senha com mínimo 6 caracteres'); return; }
-
-  const ativos = funcionariosCache.filter(f => f.ativo !== false).length;
-  const planoSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
-  const maxFunc = planoSnap.val() || SAAS_MAX_FUNC_BASE;
-  if (ativos >= maxFunc) {
-    abrirModalUpgrade();
-    return;
-  }
-
-  const btn = document.getElementById('btn-add-func');
-  btn.disabled = true; btn.textContent = 'Criando...';
-  try {
-    // Cria auth numa instância temporária para não deslogar o dono
-    const tempApp  = firebase.initializeApp(FB_CONFIG, 'tmp-' + Date.now());
-    const tempAuth = firebase.auth(tempApp);
-    const cred = await tempAuth.createUserWithEmailAndPassword(email, senha);
-    const uid  = cred.user.uid;
-    const profile = { nome, email, tipo: 'funcionario', empresaId: currentUser.empresaId, empresaNome: currentUser.empresaNome };
-    await fbDb.ref('usuarios/' + uid).set(profile);
-    await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + uid).set({
-      uid, nome, email, ativo: true, criadoEm: Date.now(), online: false, veiculo: null
-    });
-    await tempAuth.signOut();
-    await tempApp.delete();
-    toggleAddFunc();
-    showToast('✅ ' + nome + ' adicionado com sucesso!');
-    renderEquipe();
-  } catch(e) {
-    const msgs = { 'auth/email-already-in-use': 'E-mail já cadastrado no sistema.', 'auth/invalid-email': 'E-mail inválido.' };
-    showToast('❌ ' + (msgs[e.code] || e.message));
-  } finally {
-    btn.disabled = false; btn.textContent = '✅ Criar acesso';
-  }
-}
-
-async function toggleFuncionario(uid, desativar) {
-  if (!confirm(desativar ? 'Desativar acesso deste funcionário?' : 'Reativar acesso?')) return;
-  await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + uid + '/ativo').set(!desativar);
-  showToast(desativar ? '🔒 Acesso desativado' : '🔓 Acesso reativado');
-  renderEquipe();
-}
-
-async function removerFuncionario(uid, nome) {
-  if (!confirm('Remover ' + nome + '? Ele não conseguirá mais fazer login.')) return;
-  await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios/' + uid).remove();
-  await fbDb.ref('usuarios/' + uid + '/desativado').set(true);
-  showToast('🗑 ' + nome + ' removido');
-  renderEquipe();
-}
-
-async function handleAddFuncBtn() {
-  const planoSnap = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
-  const maxFunc = planoSnap.val() || SAAS_MAX_FUNC_BASE;
-  const ativos = funcionariosCache.filter(f => f.ativo !== false).length;
-  if (ativos >= maxFunc) {
-    abrirModalUpgrade();
-  } else {
-    toggleAddFunc();
-  }
-}
-
-function abrirModalUpgrade() {
-  const m = document.getElementById('modal-upgrade');
-  if (!m) return;
-  m.style.display = 'flex';
-  // Pré-seleciona o próximo plano acima do atual
-  const keys = Object.keys(PLANOS);
-  const planoAtualSnap = fbDb ? null : null; // lido depois
-  fbDb.ref('empresas/' + currentUser.empresaId + '/info').once('value').then(snap => {
-    const info = snap.val() || {};
-    const planoAtual = info.plano || 'solo';
-    const idx = keys.indexOf(planoAtual);
-    const proximoKey = idx >= 0 && idx < keys.length - 1 ? keys[idx + 1] : keys[keys.length - 1];
-    const el = document.getElementById('upgrade-card-' + proximoKey);
-    if (el) selecionarPlanoUpgrade(proximoKey, el);
-    else selecionarPlanoUpgrade('pro', document.getElementById('upgrade-card-pro'));
-  }).catch(() => {
-    selecionarPlanoUpgrade('pro', document.getElementById('upgrade-card-pro'));
-  });
-}
-function fecharModalUpgrade() {
-  const m = document.getElementById('modal-upgrade');
-  if (m) { m.style.display = 'none'; }
-}
-let _planoUpgradeSelecionado = 'pro';
-function selecionarPlanoUpgrade(plano, el) {
-  _planoUpgradeSelecionado = plano;
-  document.querySelectorAll('.upgrade-card').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-}
-function irParaUpgrade() {
-  const p = PLANOS[_planoUpgradeSelecionado];
-  fecharModalUpgrade();
-  // 👉 Substitua pela URL real da sua página de checkout
-  showToast('💬 Entre em contato para ativar o plano ' + p.nome + ' — R$ ' + p.preco + '/mês');
-}
-
-async function renderEquipe() {
-  if (!currentUser || currentUser.tipo !== 'dono') return;
-  const snap = await fbDb.ref('empresas/' + currentUser.empresaId + '/funcionarios').once('value');
-  funcionariosCache = [];
-  snap.forEach(child => funcionariosCache.push({ uid: child.key, ...child.val() }));
-
-  const onlineSnaps = await Promise.all(
-    funcionariosCache.map(f => fbDb.ref('usuarios/' + f.uid + '/online').once('value'))
-  );
-  funcionariosCache.forEach((f, i) => { f.online = onlineSnaps[i].val() || false; });
-
-  const ativos  = funcionariosCache.filter(f => f.ativo !== false).length;
-  const online  = funcionariosCache.filter(f => f.online).length;
-  const custoMes = 0; // custo calculado depois pelo plano
-
-  const eqTotal  = document.getElementById('eq-total');
-  const eqOnline = document.getElementById('eq-online');
-  const eqCusto  = document.getElementById('eq-custo');
-  const plNome   = document.getElementById('plano-nome');
-  const plDesc   = document.getElementById('plano-desc');
-  const plPreco  = document.getElementById('plano-preco');
-  if (eqTotal)  eqTotal.textContent  = ativos;
-  if (eqOnline) eqOnline.textContent = online;
-  if (eqCusto)  eqCusto.textContent  = '—'; // será atualizado logo abaixo
-
-  // Busca limite real do plano
-  const planoSnap2 = await fbDb.ref('empresas/' + currentUser.empresaId + '/info/maxFuncionarios').once('value');
-  const maxFunc2 = planoSnap2.val() || SAAS_MAX_FUNC_BASE;
-  const pct = Math.min(100, Math.round((ativos / maxFunc2) * 100));
-  const noLimite = ativos >= maxFunc2;
-
-  // Descobre qual plano pelo limite salvo
-  const planoKey = detectarPlano(maxFunc2);
-  const planoInfo = PLANOS[planoKey];
-  if (eqCusto)  eqCusto.textContent  = 'R$ ' + planoInfo.preco;
-  if (plNome)   plNome.textContent   = planoInfo.icone + ' ' + planoInfo.nome;
-  if (plDesc)   plDesc.textContent   = ativos + ' / ' + maxFunc2 + ' motorista' + (maxFunc2 !== 1 ? 's' : '');
-  if (plPreco)  plPreco.innerHTML    = 'R$ ' + planoInfo.preco + '<span style="font-size:9px;color:var(--text2);font-weight:400">/mês</span>';
-
-  const barra = document.getElementById('plano-barra');
-  if (barra) {
-    barra.style.width = pct + '%';
-    barra.style.background = noLimite
-      ? 'linear-gradient(90deg,var(--accent2),var(--red))'
-      : pct >= 75
-        ? 'linear-gradient(90deg,var(--yellow),var(--accent2))'
-        : 'linear-gradient(90deg,var(--accent),var(--accent3))';
-  }
-  const hint = document.getElementById('plano-upgrade-hint');
-  if (hint) hint.style.display = noLimite ? 'block' : 'none';
-
-  const btnAdd = document.getElementById('btn-add-func');
-  if (btnAdd) {
-    if (noLimite) {
-      btnAdd.disabled = true;
-      btnAdd.style.opacity = '.45';
-      btnAdd.title = 'Limite de motoristas atingido';
-    } else {
-      btnAdd.disabled = false;
-      btnAdd.style.opacity = '1';
-      btnAdd.title = '';
-    }
-  }
-
-  const lista = document.getElementById('equipe-lista');
-  if (!lista) return;
-  if (!funcionariosCache.length) {
-    lista.innerHTML = '<div class="no-data"><div class="no-data-icon">👥</div>Nenhum funcionário cadastrado ainda.</div>';
-    return;
-  }
-  lista.innerHTML = funcionariosCache.map(f => {
-    const inativo = f.ativo === false;
-    const vTag = f.veiculo ? `<div class="func-veiculo-tag">🚗 ${f.veiculo}</div>` : '';
-    return `<div class="func-card ${inativo ? 'inativo' : ''}">
-      <div class="func-avatar-sm ${f.online && !inativo ? 'online' : 'offline'}" style="background:rgba(0,212,255,.1)">👷</div>
-      <div class="func-info">
-        <div class="func-nome">${f.nome}</div>
-        <div class="func-email">${f.email}</div>
-        ${vTag}
-      </div>
-      <div class="func-status-dot ${f.online && !inativo ? 'online' : 'offline'}"></div>
-      <div class="func-actions">
-        <button class="func-action-btn warn" title="${inativo ? 'Reativar' : 'Desativar'}"
-          onclick="toggleFuncionario('${f.uid}',${!inativo})">${inativo ? '🔓' : '🔒'}</button>
-        <button class="func-action-btn danger" title="Remover"
-          onclick="removerFuncionario('${f.uid}','${f.nome.replace(/'/g,"\'")}')">🗑</button>
-      </div>
-    </div>`;
-  }).join('');
 }
 
 function showToast(msg) {
@@ -4113,431 +3144,106 @@ function showToast(msg) {
     t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e2a40;border:1px solid var(--glass-border);color:var(--text);padding:10px 20px;border-radius:20px;font-size:13px;z-index:9999;transition:opacity .3s;white-space:nowrap;font-family:Outfit,sans-serif;pointer-events:none';
     document.body.appendChild(t);
   }
-  t.textContent = msg; t.style.opacity = '1';
+  t.textContent = msg;
+  t.style.opacity = '1';
   clearTimeout(t._to);
   t._to = setTimeout(() => t.style.opacity = '0', 2800);
 }
 
-
-function tentarReconectarFirebase() {
-  // Firebase is now initialized via initFirebase() on page load
-  if (fbDb) carregarDadosFirebase();
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.classList.remove('open');
 }
 
+// ============================================
+// FUNÇÕES DE HISTÓRICO E RANKINGS
+// ============================================
+function renderHistorico() {}
+function renderRankings() {}
+function renderAtivas() {}
+function renderChecklistsHistorico() {}
+function atualizarFiltrosChecklist() {}
+function abrirChecklistVeiculo() {
+  showToast('🔧 Checklist em desenvolvimento');
+}
+function funcSelecionarVeiculo() {}
+function funcLimparVeiculo() {}
+
+// ============================================
+// FUNÇÕES DE RASTREIO
+// ============================================
+function conectarFirebase() {
+  showToast('🔌 Firebase já está conectado');
+}
+function usarModoDemo() {
+  showToast('🧪 Modo demo ativado');
+}
 function desconectarFirebase() {
-  localStorage.removeItem('fm_firebase_config');
-  if (fbApp) { try { fbApp.delete(); } catch(e){} fbApp = null; fbDb = null; }
-  demoMode = false;
-  pararTracking();
-  document.getElementById('rastreio-setup').style.display = 'block';
-  document.getElementById('rastreio-main').style.display = 'none';
-  if (leafletMap) { leafletMap.remove(); leafletMap = null; }
+  showToast('🔌 Desconectado');
 }
+function initRastreioPage() {}
+function toggleTracking() {}
 
-function showRastreioMain() {
-  document.getElementById('rastreio-setup').style.display = 'none';
-  document.getElementById('rastreio-main').style.display = 'block';
-  // Atualizar badge de status
-  const txt = document.getElementById('fb-status-text');
-  if (txt) txt.textContent = demoMode ? 'Modo Demo (GPS local)' : 'Firebase: fretemanager-60ef8 ✓';
+// ============================================
+// INICIALIZAÇÃO
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM carregado, iniciando aplicação...");
+  
+  initFirebase();
+  
+  const hoje = new Date().toISOString().split('T')[0];
+  const dataInput = document.getElementById('f-data');
+  if (dataInput) dataInput.value = hoje;
+  
   setTimeout(() => {
-    initMap();
-    renderVehicleSelector();
-    startDonoListener();
-  }, 100);
-}
-
-function initMap() {
-  if (leafletMap) return;
-  leafletMap = L.map('map', { zoomControl: true }).setView([-15.7801, -47.9292], 5);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
-    maxZoom: 19
-  }).addTo(leafletMap);
-}
-
-function setModo(modo) {
-  modoRastreio = modo;
-  const btnMotorista = document.getElementById('btn-modo-motorista');
-  const btnDono = document.getElementById('btn-modo-dono');
-  if (btnMotorista) btnMotorista.classList.toggle('active', modo === 'motorista');
-  if (btnDono) btnDono.classList.toggle('active', modo === 'dono');
-  document.getElementById('painel-motorista').style.display = modo === 'motorista' ? 'block' : 'none';
-  document.getElementById('painel-dono').style.display = modo === 'dono' ? 'block' : 'none';
-  if (modo === 'dono') startDonoListener();
-}
-
-function renderVehicleSelector() {
-  const el = document.getElementById('vehicle-selector-list');
-  if (!veiculos.length) {
-    el.innerHTML = '<div class="no-data" style="padding:14px">Cadastre veículos na aba Frota</div>';
-    return;
-  }
-  el.innerHTML = veiculos.map((v, i) => `
-    <div class="vsel-item ${selectedVehicleId === v.id ? 'selected' : ''}"
-         onclick="selectVehicle(${v.id})" id="vsel-${v.id}">
-      <div class="vsel-dot"></div>
-      <div style="font-size:18px">${v.tipo}</div>
-      <div class="vsel-info">
-        <div class="vsel-name">${v.modelo}</div>
-        <div class="vsel-plate">${v.placa}</div>
-      </div>
-      <div class="vsel-status" id="vsel-status-${v.id}">—</div>
-    </div>`).join('');
-}
-
-function selectVehicle(id) {
-  if (trackingAtivo) return;
-  selectedVehicleId = id;
-  renderVehicleSelector();
-}
-
-// ---- MOTORISTA: enviar posição ----
-function toggleTracking() {
-  if (trackingAtivo) pararTracking();
-  else iniciarTracking();
-}
-
-function iniciarTracking() {
-  if (!selectedVehicleId) { alert('Selecione um veículo primeiro.'); return; }
-  if (!navigator.geolocation) { alert('Seu dispositivo não suporta GPS.'); return; }
-
-  trackingAtivo = true;
-  myTrailPoints = [];
-  totalDistancia = 0;
-  lastPos = null;
-  trackingStart = Date.now();
-
-  const btn = document.getElementById('btn-tracking');
-  btn.innerHTML = '<span>⏹</span> Parar Rastreio';
-  btn.classList.add('stop');
-  document.getElementById('gps-info').textContent = '⏳ Obtendo sinal GPS...';
-
-  watchId = navigator.geolocation.watchPosition(
-    onGpsUpdate,
-    onGpsError,
-    { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
-  );
-
-  // Timer display
-  trackingTimer = setInterval(updateTrackingTimer, 1000);
-}
-
-function onGpsUpdate(pos) {
-  const { latitude: lat, longitude: lng, speed, accuracy } = pos.coords;
-  const speedKmh = speed != null ? Math.round(speed * 3.6) : null;
-  const ts = Date.now();
-
-  if (lastPos) totalDistancia += calcDistance(lastPos.lat, lastPos.lng, lat, lng);
-  lastPos = { lat, lng };
-  myTrailPoints.push([lat, lng]);
-
-  // Detectar parada suspeita
-  detectarParada(lat, lng, speedKmh, ts);
-
-  // Atualizar mapa
-  const vObj = veiculos.find(v => v.id === selectedVehicleId);
-  if (!myMarker) {
-    const icon = createVehicleIcon(VEHICLE_COLORS[0], vObj?.tipo || '🚗');
-    myMarker = L.marker([lat, lng], { icon }).addTo(leafletMap);
-    leafletMap.setView([lat, lng], 15);
-  } else {
-    myMarker.setLatLng([lat, lng]);
-    leafletMap.panTo([lat, lng]);
-  }
-  if (!myPolyline) {
-    myPolyline = L.polyline(myTrailPoints, { color: VEHICLE_COLORS[0], weight: 3, opacity: 0.8 }).addTo(leafletMap);
-  } else {
-    myPolyline.setLatLngs(myTrailPoints);
-  }
-
-  document.getElementById('stat-velocidade').textContent = speedKmh != null ? speedKmh + ' km/h' : '-- km/h';
-  document.getElementById('stat-distancia').textContent = totalDistancia.toFixed(1) + ' km';
-  document.getElementById('gps-info').textContent = 'GPS +/-' + Math.round(accuracy) + 'm';
-
-  // Enviar posicao ao vivo no Firebase
-  const payload = {
-    lat, lng, speed: speedKmh,
-    distancia: parseFloat(totalDistancia.toFixed(2)),
-    accuracy: Math.round(accuracy),
-    veiculo: vObj ? vObj.modelo : 'Veiculo',
-    placa: vObj ? vObj.placa : '',
-    tipo: vObj ? vObj.tipo : '🚗',
-    ts, ativo: true,
-    parada: stopStartTime ? true : false
-  };
-  if (!demoMode && fbDb) {
-    fbDb.ref('rastreio/' + selectedVehicleId).set(payload);
-    // Salvar historico a cada 20 minutos
-    if (ts - lastHistorySave >= HISTORY_INTERVAL_MS) {
-      lastHistorySave = ts;
-      fbDb.ref('historico_gps/' + selectedVehicleId + '/' + String(ts)).set({ lat, lng, speed: speedKmh, distancia: parseFloat(totalDistancia.toFixed(2)), ts });
-      limparHistoricoAntigo(selectedVehicleId);
+    if (document.getElementById('notas-fiscais-container')) {
+      adicionarCampoNota();
     }
-  }
-}
-
-function limparHistoricoAntigo(vehicleId) {
-  if (!fbDb) return;
-  const limite = Date.now() - (HISTORY_DAYS * 24 * 60 * 60 * 1000);
-  fbDb.ref('historico_gps/' + vehicleId).orderByKey().endAt(String(limite)).once('value', snap => {
-    const updates = {};
-    snap.forEach(child => { updates[child.key] = null; });
-    if (Object.keys(updates).length > 0) fbDb.ref('historico_gps/' + vehicleId).update(updates);
-  });
-}
-
-function detectarParada(lat, lng, speedKmh, ts) {
-  const vObj = veiculos.find(v => v.id === selectedVehicleId);
-  const isParado = speedKmh === null || speedKmh < 5;
-
-  if (!isParado) {
-    // Voltou a mover
-    if (stopStartTime) {
-      stopStartTime = null; stopPosition = null;
-      stopAlertFired[selectedVehicleId] = false;
-      delete activeAlertas[selectedVehicleId];
-      if (!demoMode && fbDb) fbDb.ref('alertas_parada/' + selectedVehicleId).remove();
-      renderAlertasBanner();
-    }
-    return;
-  }
-
-  if (!stopPosition) { stopStartTime = ts; stopPosition = { lat, lng }; return; }
-
-  const distM = calcDistance(stopPosition.lat, stopPosition.lng, lat, lng) * 1000;
-  if (distM > STOP_RADIUS_M) { stopStartTime = ts; stopPosition = { lat, lng }; stopAlertFired[selectedVehicleId] = false; return; }
-
-  const minParado = Math.floor((ts - stopStartTime) / 60000);
-  const threshMin = window.STOP_THRESHOLD_OVERRIDE || STOP_THRESHOLD_MIN;
-  if (minParado >= threshMin && !stopAlertFired[selectedVehicleId]) {
-    stopAlertFired[selectedVehicleId] = true;
-    const alerta = { lat: stopPosition.lat, lng: stopPosition.lng, minutos: minParado, veiculo: vObj ? vObj.modelo : 'Veiculo', placa: vObj ? vObj.placa : '', tipo: vObj ? vObj.tipo : '🚗', ts: stopStartTime, vehicleId: selectedVehicleId };
-    activeAlertas[selectedVehicleId] = alerta;
-    if (!demoMode && fbDb) fbDb.ref('alertas_parada/' + selectedVehicleId).set(alerta);
-    adicionarMarcadorParada(stopPosition.lat, stopPosition.lng, vObj, minParado);
-    renderAlertasBanner();
-  } else if (stopAlertFired[selectedVehicleId] && activeAlertas[selectedVehicleId]) {
-    // Atualizar minutos no alerta existente
-    activeAlertas[selectedVehicleId].minutos = minParado;
-    renderAlertasBanner();
-  }
-}
-
-function adicionarMarcadorParada(lat, lng, vObj, minutos) {
-  if (!leafletMap) return;
-  const icon = L.divIcon({
-    html: '<div style="background:#f56060;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:3px solid #fff;box-shadow:0 2px 12px rgba(245,96,96,.7)">!</div>',
-    className: '', iconSize: [32, 32], iconAnchor: [16, 16]
-  });
-  const popup = '<b style="color:#f56060">PARADA SUSPEITA</b><br>' + (vObj ? vObj.modelo + ' ' + vObj.placa + '<br>' : '') + 'Parado ha ' + minutos + ' min';
-  if (window._myStopMarker) { try { leafletMap.removeLayer(window._myStopMarker); } catch(e){} }
-  window._myStopMarker = L.marker([lat, lng], { icon }).bindPopup(popup).addTo(leafletMap).openPopup();
-}
-
-function renderAlertasBanner() {
-  const banner = document.getElementById('alertas-parada-banner');
-  if (!banner) return;
-  const lista = Object.values(activeAlertas);
-  if (!lista.length) { banner.style.display = 'none'; return; }
-  banner.style.display = 'block';
-  banner.innerHTML = lista.map(a => {
-    const min = a.minutos || Math.floor((Date.now() - (a.ts||Date.now())) / 60000);
-    return '<div class="alert-strip red" style="margin-bottom:8px;flex-wrap:wrap;gap:8px">' +
-      '<span style="font-size:22px">⚠️</span>' +
-      '<div style="flex:1"><strong>' + a.tipo + ' ' + a.veiculo + ' — ' + a.placa + '</strong><br>' +
-      'Parado ha <strong style="color:#f56060">' + min + ' minutos</strong> fora de rota detectada.' +
-      '<div style="font-size:10px;margin-top:3px;color:var(--muted)">Posicao: ' + (a.lat||0).toFixed(5) + ', ' + (a.lng||0).toFixed(5) + '</div></div>' +
-      '<button onclick="dispensarAlerta(\'' + a.vehicleId + '\')" style="background:transparent;border:1px solid var(--red);color:var(--red);padding:5px 12px;border-radius:6px;cursor:pointer;font-size:11px;white-space:nowrap">Dispensar</button>' +
-      '</div>';
-  }).join('');
-}
-
-function dispensarAlerta(vehicleId) {
-  delete activeAlertas[vehicleId];
-  stopAlertFired[vehicleId] = false;
-  stopStartTime = null;
-  if (window._myStopMarker) { try { leafletMap.removeLayer(window._myStopMarker); } catch(e){} window._myStopMarker = null; }
-  if (!demoMode && fbDb) fbDb.ref('alertas_parada/' + vehicleId).remove();
-  renderAlertasBanner();
-}
-
-function onGpsError(err) {
-  document.getElementById('gps-info').textContent = '❌ Erro GPS: ' + err.message;
-}
-
-function pararTracking() {
-  if (watchId) { navigator.geolocation.clearWatch(watchId); watchId = null; }
-  if (trackingTimer) { clearInterval(trackingTimer); trackingTimer = null; }
-  trackingAtivo = false;
-
-  const btn = document.getElementById('btn-tracking');
-  if (btn) {
-    btn.innerHTML = '<span>📍</span> Iniciar Rastreio';
-    btn.classList.remove('stop');
-  }
-
-  // Mark as inactive in Firebase
-  if (!demoMode && fbDb && selectedVehicleId) {
-    fbDb.ref('rastreio/' + selectedVehicleId + '/ativo').set(false);
-  }
-}
-
-function updateTrackingTimer() {
-  if (!trackingStart) return;
-  const elapsed = Math.floor((Date.now() - trackingStart) / 1000);
-  const m = Math.floor(elapsed / 60);
-  const s = elapsed % 60;
-  const el = document.getElementById('stat-tempo-ativo');
-  if (el) el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-}
-
-// ---- DONO: ouvir posições ----
-let donoListener = null;
-function startDonoListener() {
-  if (demoMode || !fbDb) {
-    document.getElementById('dono-vehicle-list').innerHTML = '<div class="no-data" style="padding:14px">Modo demo: use outro celular como motorista com Firebase configurado.</div>';
-    return;
-  }
-  if (donoListener) return;
-  donoListener = fbDb.ref('rastreio').on('value', snapshot => {
-    const data = snapshot.val() || {};
-    updateDonoMap(data);
-  });
-  // Ouvir alertas de parada de todos os veiculos
-  fbDb.ref('alertas_parada').on('value', snap => {
-    const data = snap.val() || {};
-    activeAlertas = {};
-    Object.entries(data).forEach(([vid, alerta]) => {
-      activeAlertas[vid] = alerta;
-    });
-    renderAlertasBanner();
-  });
-}
-
-function updateDonoMap(data) {
-  const entries = Object.entries(data);
-  const listEl = document.getElementById('dono-vehicle-list');
-
-  if (!entries.length) {
-    listEl.innerHTML = '<div class="no-data" style="padding:14px">Nenhum veículo online</div>';
-    return;
-  }
-
-  listEl.innerHTML = entries.map(([id, v], i) => {
-    const cor = VEHICLE_COLORS[i % VEHICLE_COLORS.length];
-    const ago = v.ts ? Math.floor((Date.now() - v.ts) / 1000) : null;
-    const agoStr = ago != null ? (ago < 60 ? ago + 's atrás' : Math.floor(ago/60) + 'min atrás') : '';
-    const speedStr = v.speed != null ? v.speed + ' km/h' : '--';
-    return `<div class="vsel-item" style="${v.ativo ? 'border-color:' + cor : 'opacity:.6'}">
-      <div class="vsel-dot" style="background:${v.ativo ? cor : 'var(--border)'}; ${v.ativo ? 'animation:pulse 1.5s infinite' : ''}"></div>
-      <div style="font-size:18px">${v.tipo || '🚗'}</div>
-      <div class="vsel-info">
-        <div class="vsel-name">${v.veiculo || 'Veículo'}</div>
-        <div class="vsel-plate">${v.placa || ''} • ${speedStr}</div>
-      </div>
-      <div class="vsel-status">${v.ativo ? '🟢' : '⚫'} ${agoStr}</div>
-    </div>`;
-  }).join('');
-
-  // Update map markers
-  entries.forEach(([id, v], i) => {
-    if (!v.lat || !v.lng) return;
-    const cor = VEHICLE_COLORS[i % VEHICLE_COLORS.length];
-    if (!leafletMarkers[id]) {
-      const icon = createVehicleIcon(cor, v.tipo || '🚗');
-      const marker = L.marker([v.lat, v.lng], { icon })
-        .bindPopup((v.parada ? '<b style="color:#f56060">⚠️ PARADA SUSPEITA</b><br>' : '') + `<b>${v.veiculo}</b><br>${v.placa}<br>${v.speed != null ? v.speed + ' km/h' : ''}<br>${v.distancia != null ? v.distancia + ' km' : ''}`)
-        .addTo(leafletMap);
-      const polyline = L.polyline([[v.lat, v.lng]], { color: cor, weight: 3, opacity: 0.7 }).addTo(leafletMap);
-      leafletMarkers[id] = { marker, polyline, points: [[v.lat, v.lng]] };
-    } else {
-      const m = leafletMarkers[id];
-      m.marker.setLatLng([v.lat, v.lng]);
-      m.marker.setPopupContent(`<b>${v.veiculo}</b><br>${v.placa}<br>${v.speed != null ? v.speed + ' km/h' : ''}<br>${v.distancia != null ? v.distancia.toFixed(1) + ' km' : ''}`);
-      m.points.push([v.lat, v.lng]);
-      m.polyline.setLatLngs(m.points);
-    }
-  });
-
-  // Fit bounds to all vehicles
-  const allPoints = entries.filter(([,v]) => v.lat && v.lng).map(([,v]) => [v.lat, v.lng]);
-  if (allPoints.length) {
-    if (allPoints.length === 1) leafletMap.setView(allPoints[0], 15);
-    else leafletMap.fitBounds(L.latLngBounds(allPoints), { padding: [40, 40] });
-  }
-}
-
-// ---- HELPERS ----
-function createVehicleIcon(color, emoji) {
-  const svg = `<div style="
-    background:${color};
-    color:#0e0f0e;
-    width:36px;height:36px;
-    border-radius:50% 50% 50% 0;
-    transform:rotate(-45deg);
-    display:flex;align-items:center;justify-content:center;
-    border:2px solid rgba(0,0,0,0.3);
-    box-shadow:0 2px 8px rgba(0,0,0,0.5);
-    font-size:16px;
-  "><span style="transform:rotate(45deg)">${emoji}</span></div>`;
-  return L.divIcon({ html: svg, className: '', iconSize: [36, 36], iconAnchor: [18, 36] });
-}
-
-function calcDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-function atualizarThresholdParada(val) {
-  const n = parseInt(val);
-  if (n >= 5 && n <= 120) {
-    window.STOP_THRESHOLD_OVERRIDE = n;
-  }
-}
-
-// Override STOP_THRESHOLD_MIN dynamically
-Object.defineProperty(window, 'STOP_THRESHOLD_MIN_EFFECTIVE', {
-  get: () => window.STOP_THRESHOLD_OVERRIDE || 15
+  }, 500);
+  
+  renderAvatar();
 });
 
-// ---- INIT ----
-// Pre-carregar config Firebase real
-(function() {
-  const config = {
-    apiKey: "AIzaSyARKsBG5LFy6L5-USZIgPxSz6sTlO79eU4",
-    authDomain: "fretemanager-60ef8.firebaseapp.com",
-    databaseURL: "https://fretemanager-60ef8-default-rtdb.firebaseio.com",
-    projectId: "fretemanager-60ef8",
-    storageBucket: "fretemanager-60ef8.firebasestorage.app",
-    messagingSenderId: "977410315261",
-    appId: "1:977410315261:web:ebaf0794c7d887321abf94"
-  };
-  if (!localStorage.getItem('fm_firebase_config')) {
-    localStorage.setItem('fm_firebase_config', JSON.stringify(config));
-  }
-})();
-document.getElementById('f-data').value = new Date().toLocaleDateString('sv-SE', { timeZone: TZ });
-// Render avatar from saved photo
-renderAvatar();
-// Set greeting date
-const dashDate = document.getElementById('dash-date');
-if (dashDate) {
-  const days = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
-  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const now = new Date();
-  // Display date in Brasilia timezone
-  const nowBRT = new Date(now.toLocaleString('en-US', { timeZone: TZ }));
-  dashDate.textContent = days[nowBRT.getDay()] + ', ' + nowBRT.getDate() + ' de ' + months[nowBRT.getMonth()];
-}
-syncFrotaSelects();
-initFirebase(); // Ensure Firebase starts
-// Don't render dashboard here - initFirebase/applyUserSession handles it after auth
-// tentarReconectarFirebase is now handled by initFirebase
-// Restart timers handled when page opens
+// Exportar funções para o escopo global
+window.fazerLogin = fazerLogin;
+window.fazerCadastro = fazerCadastro;
+window.fazerLogout = fazerLogout;
+window.authTab = authTab;
+window.contarEmpresa = contarEmpresa;
+window.showPage = showPage;
+window.showPageFunc = showPageFunc;
+window.toggleAddFunc = toggleAddFunc;
+window.criarFuncionario = criarFuncionario;
+window.adicionarCampoNota = adicionarCampoNota;
+window.removerNotaFiscal = removerNotaFiscal;
+window.atualizarNotasFiscais = atualizarNotasFiscais;
+window.limparForm = limparForm;
+window.salvarEntrega = salvarEntrega;
+window.recalcularCusto = recalcularCusto;
+window.toggleCusto = toggleCusto;
+window.salvarConfigCusto = salvarConfigCusto;
+window.abrirChecklistVeiculo = abrirChecklistVeiculo;
+window.toggleAvatarMenu = toggleAvatarMenu;
+window.fecharAvatarMenu = fecharAvatarMenu;
+window.escolherFoto = escolherFoto;
+window.tirarFoto = tirarFoto;
+window.onAvatarFileSelected = onAvatarFileSelected;
+window.removerFoto = removerFoto;
+window.closeModal = closeModal;
+window.conectarFirebase = conectarFirebase;
+window.usarModoDemo = usarModoDemo;
+window.desconectarFirebase = desconectarFirebase;
+window.renderHistorico = renderHistorico;
+window.renderRankings = renderRankings;
+window.renderAtivas = renderAtivas;
+window.renderChecklistsHistorico = renderChecklistsHistorico;
+window.atualizarFiltrosChecklist = atualizarFiltrosChecklist;
+window.funcSelecionarVeiculo = funcSelecionarVeiculo;
+window.funcLimparVeiculo = funcLimparVeiculo;
+window.abrirModalVeiculo = abrirModalVeiculo;
+window.salvarVeiculo = salvarVeiculo;
+window.deletarVeiculo = deletarVeiculo;
 </script>
 </body>
 </html>
